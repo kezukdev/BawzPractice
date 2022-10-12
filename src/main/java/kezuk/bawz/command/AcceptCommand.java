@@ -52,7 +52,7 @@ public class AcceptCommand implements CommandExecutor {
 		target.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + player.getName() + ChatColor.DARK_AQUA + " have accept the duel request!");
 		player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have accept the duel request from " + ChatColor.AQUA + target.getName());
 		MatchManager match = new MatchManager();
-		final Ladders ladder = 	RequestManager.request.get(player.getUniqueId()).getLadder();
+		final Ladders ladder = 	RequestManager.request.get(player.getUniqueId());
 		List<UUID> firstList = Lists.newArrayList(player.getUniqueId());
 		List<UUID> secondList = Lists.newArrayList(target.getUniqueId());
 		match.startMath(firstList, secondList, ladder, false);
