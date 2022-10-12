@@ -1,0 +1,24 @@
+name: BawzPractice
+version: 0.2-a
+author: kezukdev
+website: https://github.com/kezukdev
+description: BawzPractice developed by Kezuk.
+main: kezuk.bawz.Practice
+commands:
+  arena:
+    aliases: [arenas]
+    description: The simple arena command.
+  inventory:
+    aliases: [inv]
+    description: After match this inventory was created.
+  duel:
+    aliases: [duels]
+    description: Duel anyone with this command.
+  spectate:
+    aliases: [spec, s, spectates]
+    description: Spectate any player currently in fight.
+  rank:
+    aliases: [ranks]
+    description: Rank anyone on the server!
+  build:
+  accept:
