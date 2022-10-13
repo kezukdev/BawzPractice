@@ -1,6 +1,7 @@
 package kezuk.bawz.party;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,12 +13,14 @@ import com.google.common.collect.Lists;
 import kezuk.bawz.Practice;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
+import net.minecraft.util.com.google.common.collect.Maps;
 
 public class PartyManager {
 	
 	private UUID leader;
 	private PartyState status;
 	private List<UUID> partyList;
+	private static HashMap<UUID, PartyManager> partyMap;
 	
 	public PartyManager(final UUID uuid) {
 		this.leader = uuid;
@@ -26,8 +29,11 @@ public class PartyManager {
 		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 		this.status = PartyState.SPAWN;
 		this.partyList = Lists.newArrayList();
+		partyMap = Maps.newHashMap();
 		this.partyList.add(uuid);
+		partyMap.put(uuid, this);
 		Practice.getPartys().putIfAbsent(uuid, this);
+		Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have been created the party!");
 	}
 	
 	public void addToParty(final UUID uuid) {
@@ -36,6 +42,7 @@ public class PartyManager {
 		}
 		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 		PlayerManager.getPlayers().get(uuid).setPlayerStatus(Status.PARTY);
+		partyMap.put(uuid, this);
 		this.partyList.add(uuid);
 	}
 	
@@ -48,6 +55,7 @@ public class PartyManager {
 				this.partyList.remove(uuid);
 				Practice.getPartys().remove(uuid);
 				Practice.getPartys().putIfAbsent(newLeader, this);
+				partyMap.remove(uuid);
 				Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have left your party the new leader is " + ChatColor.WHITE + Bukkit.getPlayer(newLeader).getName());
 				for (UUID partyUUID : this.partyList) {
 					Bukkit.getPlayer(partyUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have left the party the new leader is " + ChatColor.WHITE + Bukkit.getPlayer(newLeader).getName());
@@ -56,10 +64,12 @@ public class PartyManager {
 			if (this.partyList.size() == 1) {
 				Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been disband your party!");
 				this.partyList.clear();
+				partyMap.clear();
 				Practice.getPartys().remove(uuid);
 			}
 		}
 		if (uuid != this.getLeader()) {
+			partyMap.remove(uuid);
 			this.partyList.remove(uuid);
 			for (UUID partyUUID : this.partyList) {
 				Bukkit.getPlayer(partyUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have left the party.");
@@ -68,6 +78,10 @@ public class PartyManager {
 		if (!disconnect) {
 			PlayerManager.getPlayers().get(uuid).sendToSpawn();
 		}
+	}
+	
+	public static HashMap<UUID, PartyManager> getPartyMap() {
+		return partyMap;
 	}
 	
 	public void setStatus(PartyState status) {

@@ -102,12 +102,12 @@ public class InventoryManager {
         for (int i = 0; i < 9; ++i) {
             this.startHostInventory.setItem(i, glass);
         }
-        final ItemStack size25 = ItemSerializer.serialize(new ItemStack(Material.ANVIL), (short)0, ChatColor.AQUA + "25 Players Size");
-        final ItemStack size50 = ItemSerializer.serialize(new ItemStack(Material.NETHER_STAR), (short)0, ChatColor.DARK_AQUA + "50 Players Size");
-        final ItemStack size75 = ItemSerializer.serialize(new ItemStack(Material.BEACON), (short)0, ChatColor.AQUA + "75 Players Size");
-        this.startHostInventory.setItem(2, size25);
-        this.startHostInventory.setItem(4, size50);
-        this.startHostInventory.setItem(6, size75);
+        final ItemStack ffa = ItemSerializer.serialize(new ItemStack(Material.FLINT), (short)0, ChatColor.AQUA + "FFA");
+        final ItemStack sumo = ItemSerializer.serialize(new ItemStack(Material.ANVIL), (short)0, ChatColor.DARK_AQUA + "SUMO");
+        final ItemStack oitc = ItemSerializer.serialize(new ItemStack(Material.GOLD_SWORD), (short)0, ChatColor.AQUA + "OITC");
+        this.startHostInventory.setItem(2, ffa);
+        this.startHostInventory.setItem(4, sumo);
+        this.startHostInventory.setItem(6, oitc);
     }
     
     private void setEditorInventory() {

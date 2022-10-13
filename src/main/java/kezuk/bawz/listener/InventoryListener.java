@@ -9,6 +9,7 @@ import kezuk.bawz.*;
 import kezuk.bawz.core.Tag;
 import kezuk.bawz.match.MatchManager;
 import kezuk.bawz.match.MatchStatus;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.*;
 import kezuk.bawz.request.DuelRequestStatus;
 import kezuk.bawz.request.RequestManager;
@@ -54,6 +55,9 @@ public class InventoryListener implements Listener
             	}
             	if (event.getCurrentItem().getType() == Material.DIAMOND) {
             		event.getWhoClicked().openInventory(Practice.getInstance().getLeaderboardInventory());
+            	}
+            	if (event.getCurrentItem().getType() == Material.CAKE) {
+            		new PartyManager(event.getWhoClicked().getUniqueId());
             	}
             	if (event.getCurrentItem().getType() == Material.ENDER_PORTAL) {
                     List<ItemStack> matchs = Lists.newArrayList();
@@ -150,7 +154,7 @@ public class InventoryListener implements Listener
         }
         if (event.getInventory().getName().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
         	event.setCancelled(true);
-        	if (event.getCurrentItem().getItemMeta().getDisplayName().contains("go to")) {
+        	if (event.getCurrentItem().getType().equals(Material.PISTON_STICKY_BASE)) {
         		final Player player = (Player) event.getWhoClicked();
         		player.closeInventory();
         		String name = event.getCurrentItem().getItemMeta().getLore().get(1);

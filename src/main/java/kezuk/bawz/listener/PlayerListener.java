@@ -12,6 +12,7 @@ import kezuk.bawz.*;
 import kezuk.bawz.host.HostManager;
 import kezuk.bawz.match.MatchManager;
 import kezuk.bawz.match.MatchStatus;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.*;
 import net.luckperms.api.cacheddata.CachedMetaData;
 
@@ -32,6 +33,9 @@ public class PlayerListener implements Listener
     public void onPlayerLeft(final PlayerQuitEvent event) {
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.QUEUE)) {
             Practice.getInstance().getQueueManager().leaveQueue(event.getPlayer().getUniqueId());
+        }
+        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.PARTY)) {
+        	PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), true);
         }
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED) {
         	Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).endMatch(event.getPlayer().getUniqueId(), Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getOpponent(event.getPlayer().getUniqueId()), PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID(), false);
@@ -103,6 +107,15 @@ public class PlayerListener implements Listener
                 event.setCancelled(true);
                 event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getUtilsInventory());
                 return;
+            }
+        }
+        if (pm.getPlayerStatus().equals(Status.PARTY)) {
+            if (item == null) {
+                return;
+            }
+            if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
+                event.setCancelled(true);
+                PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), false);
             }
         }
         if (pm.getPlayerStatus().equals(Status.QUEUE)) {
