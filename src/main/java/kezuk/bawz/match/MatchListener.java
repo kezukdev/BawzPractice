@@ -11,6 +11,8 @@ import org.bukkit.scheduler.*;
 import kezuk.bawz.*;
 import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
+import kezuk.bawz.party.PartyState;
+import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.player.*;
 import org.bukkit.*;
 import java.lang.reflect.*;
@@ -24,7 +26,7 @@ public class MatchListener implements Listener {
         final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
     	final MatchManager match = Practice.getMatchs().get(pm.getMatchUUID());
     	final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(pm.getMatchUUID());
-        if (match != null && pm.getPlayerStatus() == Status.FIGHT && match.getStatus().equals(MatchStatus.PLAYING) || match != null && pm.getPlayerStatus() == Status.PARTY && ffaMatch.getStatus().equals(MatchStatus.PLAYING) || match != null && pm.getPlayerStatus() == Status.HOST && ffaMatch.getStatus().equals(MatchStatus.STARTING)) {
+        if (match != null && pm.getPlayerStatus() == Status.FIGHT && match.getStatus().equals(MatchStatus.PLAYING) || match != null) {
         	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
         		event.setDamage(0.0D);
         		return;
@@ -35,6 +37,17 @@ public class MatchListener implements Listener {
         	}
             return;
         }
+        if (ffaMatch != null && ffaMatch.getStatus().equals(MatchStatus.PLAYING)) {
+        	if (ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+        		event.setDamage(0.0D);
+        		return;
+        	}
+        	if (ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
+        		event.setDamage(0.0D);
+        		return;
+        	}
+        	return;
+        }
         event.setCancelled(true);
     }
     
@@ -43,45 +56,79 @@ public class MatchListener implements Listener {
     	if (!(event.getDamager() instanceof Player)) return;
         final Player damaged = (Player)event.getEntity();
         final Player damager = (Player)event.getDamager();
-        final MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
-        final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
-        if (match != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && match.getStatus().equals(MatchStatus.PLAYING) || ffaMatch != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.PARTY) && ffaMatch.getStatus().equals(MatchStatus.PLAYING) ||  ffaMatch != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.HOST) && ffaMatch.getStatus().equals(MatchStatus.PLAYING)) {
-        	if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo" || ffaMatch.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
-                if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() != 0L && PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() > System.currentTimeMillis()) {
+        if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.PARTY) || PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) || PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.HOST)) {
+            final MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
+            final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
+            if (match != null) {
+                if (damaged.canSee(damager) && match.getStatus().equals(MatchStatus.PLAYING)) {
+                	if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
+                        if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() != 0L && PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() > System.currentTimeMillis()) {
+                            return;
+                        }
+                        PlayerManager.getPlayers().get(damaged.getUniqueId()).updateNextHitTick();
+                    }
+                    final PlayerManager dmr = PlayerManager.getPlayers().get(damager.getUniqueId());
+                    dmr.getMatchStats().setHits(dmr.getMatchStats().getHits() + 1);
+                    if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().getCombo() > 0) {
+                    	PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
+                    }
+                    dmr.getMatchStats().setCombo(dmr.getMatchStats().getCombo() + 1);
+                    if (dmr.getMatchStats().getCombo() > dmr.getMatchStats().getLongestCombo()) {
+                    	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
+                    }
+                	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
+                        event.setDamage(0.0D);
+                        return;
+                    }
+                	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+                        event.setDamage(0.0D);
+                        final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
+                        damager.setExp(hitExp);
+                        damager.setLevel(dmr.getMatchStats().getCombo());
+                        PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
+                        if (dmr.getMatchStats().getHits() == 100) {
+                        	Practice.getMatchs().get(dmr.getMatchUUID()).endMatch(damaged.getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);
+                        }
+                        return;
+                    }
                     return;
                 }
-                PlayerManager.getPlayers().get(damaged.getUniqueId()).updateNextHitTick();
             }
-            final PlayerManager dmr = PlayerManager.getPlayers().get(damager.getUniqueId());
-            dmr.getMatchStats().setHits(dmr.getMatchStats().getHits() + 1);
-            if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().getCombo() > 0) {
-            	PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
-            }
-            dmr.getMatchStats().setCombo(dmr.getMatchStats().getCombo() + 1);
-            if (dmr.getMatchStats().getCombo() > dmr.getMatchStats().getLongestCombo()) {
-            	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
-            }
-        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
-                event.setDamage(0.0D);
-                return;
-            }
-        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
-                event.setDamage(0.0D);
-                final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
-                damager.setExp(hitExp);
-                damager.setLevel(dmr.getMatchStats().getCombo());
-                PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
-                if (dmr.getMatchStats().getHits() == 100) {
-                	if (match != null) {
-                    	Practice.getMatchs().get(dmr.getMatchUUID()).endMatch(damaged.getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);
-                	}
-                	if (ffaMatch != null) {
-                    	Practice.getFfaMatchs().get(dmr.getMatchUUID()).addKill(damaged.getUniqueId(), damager.getUniqueId());	
-                	}
+            if (ffaMatch != null) {
+                if (damaged.canSee(damager) && ffaMatch.getStatus().equals(MatchStatus.PLAYING)) {
+                	if (ffaMatch.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
+                        if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() != 0L && PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() > System.currentTimeMillis()) {
+                            return;
+                        }
+                        PlayerManager.getPlayers().get(damaged.getUniqueId()).updateNextHitTick();
+                    }
+                    final PlayerManager dmr = PlayerManager.getPlayers().get(damager.getUniqueId());
+                    dmr.getMatchStats().setHits(dmr.getMatchStats().getHits() + 1);
+                    if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().getCombo() > 0) {
+                    	PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
+                    }
+                    dmr.getMatchStats().setCombo(dmr.getMatchStats().getCombo() + 1);
+                    if (dmr.getMatchStats().getCombo() > dmr.getMatchStats().getLongestCombo()) {
+                    	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
+                    }
+                	if (ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
+                        event.setDamage(0.0D);
+                        return;
+                    }
+                	if (ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+                        event.setDamage(0.0D);
+                        final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
+                        damager.setExp(hitExp);
+                        damager.setLevel(dmr.getMatchStats().getCombo());
+                        PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
+                        if (dmr.getMatchStats().getHits() == 100) {
+                        	Practice.getFfaMatchs().get(dmr.getMatchUUID()).addKill(damaged.getUniqueId(), damager.getUniqueId());	
+                        }
+                        return;
+                    }
+                    return;
                 }
-                return;
             }
-            return;
         }
         event.setCancelled(true);
     }
@@ -89,7 +136,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onDrop(final PlayerDropItemEvent e) {
         final PlayerManager playerManager = PlayerManager.getPlayers().get(e.getPlayer().getUniqueId());
-        if (playerManager.getPlayerStatus() == Status.FIGHT) {
+        if (playerManager.getPlayerStatus() == Status.FIGHT || playerManager.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(e.getPlayer().getUniqueId()).getStatus().equals(PartyState.FIGHT)) {
             if (e.getItemDrop().getItemStack().getType() == Material.DIAMOND_SWORD || e.getItemDrop().getItemStack().getType() == Material.IRON_AXE || e.getItemDrop().getItemStack().getType() == Material.DIAMOND_SWORD || e.getItemDrop().getItemStack().getType() == Material.STONE_SWORD) {
                 e.setCancelled(true);
                 return;
@@ -161,7 +208,7 @@ public class MatchListener implements Listener {
 	public void onReceiveDroppedItems(PlayerPickupItemEvent event) {
 		final Player player = event.getPlayer();
 		final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
-		if (pm.getPlayerStatus().equals(Status.FIGHT)) {
+		if (pm.getPlayerStatus().equals(Status.FIGHT) || pm.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(player.getUniqueId()).getStatus().equals(PartyState.FIGHT)) {
 			return;
 		}
 		event.setCancelled(true);
@@ -229,6 +276,9 @@ public class MatchListener implements Listener {
             if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.FIGHT)) {
                 Practice.getMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()).endMatch(player.getUniqueId(), player.getKiller().getUniqueId(), PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID(), true);	
             }
+        	if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.PARTY) || PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.HOST) && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()) != null) {
+        		Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()).addKill(player.getUniqueId(), player.getKiller().getUniqueId());
+        	}
         }
     }
 }

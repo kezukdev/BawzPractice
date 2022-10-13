@@ -148,7 +148,7 @@ public class InventoryListener implements Listener
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getDuelInventory().getName())) {
                 final Player target = pm.getTargetDuel();
-                new RequestManager(event.getWhoClicked().getUniqueId(), target.getUniqueId(), event.getCurrentItem().getItemMeta().getDisplayName(), false);
+                new RequestManager(event.getWhoClicked().getUniqueId(), target.getUniqueId(), event.getCurrentItem().getItemMeta().getDisplayName());
                 event.getWhoClicked().closeInventory();
                 pm.setDuelRequest(DuelRequestStatus.CANNOT);
             }
@@ -188,6 +188,9 @@ public class InventoryListener implements Listener
         		event.getWhoClicked().closeInventory();
         		ffaMatch.startMatch(PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getPartyList(), Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()));
         	}
+        }
+        if (pm.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getStatus().equals(PartyState.FIGHT)) {
+        	return;
         }
         if (event.getClickedInventory().getName().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
         	event.setCancelled(true);

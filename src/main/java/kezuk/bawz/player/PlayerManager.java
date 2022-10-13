@@ -23,7 +23,6 @@ public class PlayerManager {
     private Long nextHitTick;
     private DuelRequestStatus duelRequest;
     private MatchStats matchStats;
-    private boolean roundable;
     private Player targetDuel;
     private Tag tag;
     private int[] elos;
@@ -184,14 +183,6 @@ public class PlayerManager {
     
     public int[] getElos() {
 		return elos;
-	}
-    
-    public void setRoundable(boolean roundable) {
-		this.roundable = roundable;
-	}
-    
-    public boolean isRoundable() {
-		return roundable;
 	}
     
     static {

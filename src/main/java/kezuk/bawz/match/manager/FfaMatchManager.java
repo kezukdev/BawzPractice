@@ -59,6 +59,11 @@ public class FfaMatchManager {
 				player.hidePlayer(playerExcludeInGame);
 			}
 			allOnline.clear();
+			for (UUID player2 : this.players) {
+				final Player players2 = Bukkit.getPlayer(player2);
+				players2.showPlayer(player);
+				player.showPlayer(players2);
+			}
 			player.closeInventory();
 			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.PARTY)) {
 				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.FIGHT);
@@ -69,6 +74,7 @@ public class FfaMatchManager {
 			player.getInventory().clear();
 			player.getInventory().setArmorContents(kit.armor());
 			player.getInventory().setContents(kit.content());
+			player.setMaximumNoDamageTicks(ladder.damageTicks());
 			PlayerManager.getPlayers().get(uuid).setMatchUUID(matchUUID);
 			player.updateInventory();
             ((CraftPlayer)Bukkit.getServer().getPlayer(uuid)).getHandle().setKnockbackProfile(ladder.knockback());
@@ -90,7 +96,7 @@ public class FfaMatchManager {
 	                	Bukkit.getServer().getPlayer(uuid).sendMessage(MessageSerializer.MATCH_START_IN + ChatColor.AQUA + i + ChatColor.DARK_AQUA + " seconds.");
 	                    i -= 1;
 	                    if (i <= 0) {
-	                    	Practice.getMatchs().get(matchUUID).setStatus(MatchStatus.PLAYING);
+	                    	Practice.getFfaMatchs().get(matchUUID).setStatus(MatchStatus.PLAYING);
 	                        Bukkit.getServer().getPlayer(uuid).sendMessage(MessageSerializer.MATCH_STARTED);
 	                        this.cancel();
 	                    }
@@ -102,13 +108,13 @@ public class FfaMatchManager {
 	
 	public void addKill(final UUID uuid, final UUID killer) {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(uuid).getMatchUUID());
+		match.getAlive().remove(uuid);
 		if (match.getAlive().size() == 1) {
 			for (UUID winner : match.getAlive()) {
 				this.endMatch(winner);
 			}
 			return;
 		}
-		match.getAlive().remove(uuid);
 		match.getSpectator().add(uuid);
 		for (UUID ig : match.getAlive()) {
 			Bukkit.getPlayer(ig).hidePlayer(Bukkit.getPlayer(uuid));
@@ -155,13 +161,16 @@ public class FfaMatchManager {
 	
 	public void endMatch(final UUID winnerUUID) {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(winnerUUID).getMatchUUID());
-		for (UUID uuid : match.getPlayers()) {
-			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID) + ChatColor.AQUA + " have won the ffa match!");
-			final Player player = Bukkit.getPlayer(uuid);
+		List<UUID> allList = Lists.newArrayList(match.getAlive());
+		allList.addAll(match.getSpectator());
+		for (UUID uuid : allList) {
+			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.AQUA + " have won the ffa match!");
 			final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
 			if (pm.getPlayerStatus().equals(Status.PARTY)) {
 				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.SPAWN);
-		        Practice.getInstance().getItemsManager().givePartyItems(player);
+				for (UUID partyUUID : PartyManager.getPartyMap().get(uuid).getPartyList()) {
+			        Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(partyUUID));	
+				}
 		        Bukkit.getServer().getPlayer(uuid).teleport(new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f));
 		        Bukkit.getServer().getPlayer(uuid).setHealth(Bukkit.getServer().getPlayer(uuid).getMaxHealth());
 		        Bukkit.getServer().getPlayer(uuid).setFoodLevel(20);
@@ -207,5 +216,9 @@ public class FfaMatchManager {
 	
 	public MatchStatus getStatus() {
 		return status;
+	}
+	
+	public void setStatus(MatchStatus status) {
+		this.status = status;
 	}
 }

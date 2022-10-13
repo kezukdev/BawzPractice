@@ -60,7 +60,6 @@ public class AcceptCommand implements CommandExecutor {
 		secondList.clear();
 		pmTarget.setDuelRequest(DuelRequestStatus.CAN);
 		pmTarget.setTargetDuel(null);
-		pmTarget.setRoundable(false);
 		return false;
 	}
 

@@ -21,12 +21,12 @@ public class RequestManager {
 	public static WeakHashMap<UUID, Ladders> request;
 	private Ladders ladder;
 	
-	public RequestManager(final UUID uuid, final UUID targetUUID, final String ladderName, final boolean roundable) {
+	public RequestManager(final UUID uuid, final UUID targetUUID, final String ladderName) {
 		request = new WeakHashMap<>();
 		final Ladders ladder = Ladders.getLadder(ladderName);
 		this.ladder = ladder;
 		request.put(targetUUID, ladder);
-        final TextComponent requestMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have sent a duel request in " + ChatColor.AQUA + ladder.displayName() + (PlayerManager.getPlayers().get(uuid).isRoundable() ? ChatColor.DARK_AQUA + " with round." : ChatColor.DARK_AQUA + "."));
+        final TextComponent requestMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have sent a duel request in " + ChatColor.AQUA + ladder.displayName() + ChatColor.DARK_AQUA + ".");
         requestMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accept " + Bukkit.getServer().getPlayer(uuid).getName()));
         requestMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click for accept the duel request.").create()));
         Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Your duel request as been sent to " + ChatColor.RESET + Bukkit.getPlayer(targetUUID).getName());

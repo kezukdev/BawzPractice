@@ -65,7 +65,7 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
 				return false;
 			}
-			final Player target = Bukkit.getPlayer(args[0]);
+			final Player target = Bukkit.getPlayer(args[1]);
 			if (target == null) {
 				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
 				return false;
