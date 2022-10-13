@@ -7,8 +7,11 @@ public enum Status
     FIGHT,
     
     SPECTATE,
+    EDITOR,
     
     HOST,
+    TOURNAMENT,
+    PARTY,
 	
 	BUILD;
 }

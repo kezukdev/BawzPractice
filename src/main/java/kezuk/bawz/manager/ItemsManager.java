@@ -29,4 +29,15 @@ public class ItemsManager
         player.getInventory().setItem(8, leave);
         player.updateInventory();
     }
+    
+    public void givePartyItems(final Player player) {
+        final ItemStack match = ItemSerializer.serialize(new ItemStack(Material.GOLD_AXE),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Match", null, true);
+        final ItemStack management = ItemSerializer.serialize(new ItemStack(Material.PAPER),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Party Management", null, true);
+        final ItemStack leave = ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Leave Party", null, true);
+        player.getInventory().clear();
+        player.getInventory().setItem(0, match);
+        player.getInventory().setItem(4, management);
+        player.getInventory().setItem(8, leave);
+        player.updateInventory();
+    }
 }

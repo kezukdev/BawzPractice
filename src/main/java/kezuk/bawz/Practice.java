@@ -28,6 +28,7 @@ import kezuk.bawz.leaderboard.LeaderboardInventory;
 import kezuk.bawz.leaderboard.LeaderboardManager;
 import kezuk.bawz.manager.*;
 import kezuk.bawz.match.*;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.queue.*;
 import kezuk.bawz.register.*;
 import net.luckperms.api.LuckPerms;
@@ -58,6 +59,7 @@ public class Practice extends JavaPlugin {
     private Thread leaderboardThread;
     public LuckPerms luckPerms;
     private List<Ladders> ladder;
+    public static HashMap<UUID, PartyManager> partys;
     public static HashMap<UUID, MatchManager> matchs;
     
     public Practice() {
@@ -183,5 +185,9 @@ public class Practice extends JavaPlugin {
     
     public List<Ladders> getLadder() {
 		return ladder;
+	}
+    
+    public static HashMap<UUID, PartyManager> getPartys() {
+		return partys;
 	}
 }
