@@ -5,6 +5,7 @@ kezuk\bawz\listener\ServerListener.class
 com\bizarrealex\aether\scoreboard\BoardAdapter.class
 kezuk\bawz\match\MatchManager$1.class
 kezuk\bawz\match\MatchSeeInventory.class
+kezuk\bawz\party\PartyManager.class
 kezuk\bawz\core\Tag.class
 kezuk\bawz\match\MatchManager.class
 kezuk\bawz\core\TagType.class
@@ -13,7 +14,6 @@ kezuk\bawz\command\AcceptCommand.class
 kezuk\bawz\stockage\ConfigFile.class
 kezuk\bawz\command\BuildCommand.class
 kezuk\bawz\listener\PlayerListener.class
-kezuk\bawz\request\RequestManager$Request.class
 com\bizarrealex\aether\scoreboard\BoardEntry.class
 com\bizarrealex\aether\scoreboard\cooldown\BoardFormat.class
 kezuk\bawz\ladders\kit\Boxing.class
@@ -47,6 +47,7 @@ kezuk\bawz\host\HostManager.class
 kezuk\bawz\queue\QueueManager.class
 kezuk\bawz\queue\QueueManager$Queue.class
 kezuk\bawz\ladders\kit\NoDebuff.class
+kezuk\bawz\party\PartyState.class
 kezuk\bawz\player\Status.class
 kezuk\bawz\utils\LocationSerializer.class
 kezuk\bawz\arena\ArenaType.class
