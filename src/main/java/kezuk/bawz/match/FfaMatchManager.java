@@ -1,0 +1,210 @@
+package kezuk.bawz.match;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.google.common.collect.Lists;
+
+import kezuk.bawz.Practice;
+import kezuk.bawz.arena.ArenaManager;
+import kezuk.bawz.ladders.Kit;
+import kezuk.bawz.ladders.Ladders;
+import kezuk.bawz.party.PartyManager;
+import kezuk.bawz.party.PartyState;
+import kezuk.bawz.player.PlayerManager;
+import kezuk.bawz.player.Status;
+import kezuk.bawz.utils.MessageSerializer;
+import net.md_5.bungee.api.ChatColor;
+
+public class FfaMatchManager {
+	
+	private List<UUID> players;
+	private UUID matchUUID;
+	private Ladders ladder;
+	private List<UUID> alive;
+	private List<UUID> spectator;
+	private MatchStatus status;
+	private ArenaManager arena;
+	
+	public void startMatch(final List<UUID> players, final Ladders ladder) {
+		this.matchUUID = UUID.randomUUID();
+		this.ladder = ladder;
+		this.players = players;
+		this.alive = Lists.newArrayList(players);
+		this.status = MatchStatus.STARTING;
+		this.spectator = Lists.newArrayList();
+		Practice.getFfaMatchs().put(matchUUID, this);
+		this.arena = ArenaManager.getRandomArena(ladder.arenaType());
+		final List<Player> allOnline = Lists.newArrayList(Bukkit.getOnlinePlayers());
+		for (UUID uuid : players) {
+        	if (Practice.getInstance().getOfflineInventories().containsKey(uuid)) {
+        		Practice.getInstance().getOfflineInventories().remove(uuid);
+        		Bukkit.getServer().getPlayer(uuid).closeInventory();
+        	}
+			final Player player = Bukkit.getServer().getPlayer(uuid);
+			allOnline.remove(player);
+			for (Player playerExcludeInGame : allOnline) {
+				playerExcludeInGame.hidePlayer(player);
+				player.hidePlayer(playerExcludeInGame);
+			}
+			allOnline.clear();
+			player.closeInventory();
+			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.PARTY)) {
+				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.FIGHT);
+			}
+			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "FFA Match as been started with " + ChatColor.WHITE + players.size() + ChatColor.DARK_AQUA + " players!");
+			player.teleport(arena.getLoc1());
+			final Kit kit = (Kit) ladder;
+			player.getInventory().clear();
+			player.getInventory().setArmorContents(kit.armor());
+			player.getInventory().setContents(kit.content());
+			PlayerManager.getPlayers().get(uuid).setMatchUUID(matchUUID);
+			player.updateInventory();
+            ((CraftPlayer)Bukkit.getServer().getPlayer(uuid)).getHandle().setKnockbackProfile(ladder.knockback());
+            ((CraftLivingEntity)Bukkit.getServer().getPlayer(uuid)).getHandle().setKnockbackProfile(ladder.knockback());
+            if (ladder.displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 9999999, 1)));
+            }
+            if (ladder.displayName().equals(ChatColor.DARK_AQUA + "Combo")) {
+            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 9999999, 0)));
+            }
+            new BukkitRunnable() {
+	            int i = 5;
+
+	            @Override
+	            public void run() {
+	                if (status == MatchStatus.FINISHED) {
+	                    this.cancel();
+	                } else {
+	                	Bukkit.getServer().getPlayer(uuid).sendMessage(MessageSerializer.MATCH_START_IN + ChatColor.AQUA + i + ChatColor.DARK_AQUA + " seconds.");
+	                    i -= 1;
+	                    if (i <= 0) {
+	                    	Practice.getMatchs().get(matchUUID).setStatus(MatchStatus.PLAYING);
+	                        Bukkit.getServer().getPlayer(uuid).sendMessage(MessageSerializer.MATCH_STARTED);
+	                        this.cancel();
+	                    }
+	                }
+	            }
+	        }.runTaskTimer(Practice.getInstance(), 20L, 20L);
+		}
+	}
+	
+	public void addKill(final UUID uuid, final UUID killer) {
+		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(uuid).getMatchUUID());
+		if (match.getAlive().size() == 1) {
+			for (UUID winner : match.getAlive()) {
+				this.endMatch(winner);
+			}
+			return;
+		}
+		match.getAlive().remove(uuid);
+		match.getSpectator().add(uuid);
+		for (UUID ig : match.getAlive()) {
+			Bukkit.getPlayer(ig).hidePlayer(Bukkit.getPlayer(uuid));
+		}
+		for (UUID spectator : match.getSpectator()) {
+			Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(spectator));
+		}
+		Bukkit.getPlayer(uuid).setArrowsStuck(0);
+		for (PotionEffect effect : Bukkit.getPlayer(uuid).getActivePotionEffects()) {
+			Bukkit.getPlayer(uuid).removePotionEffect(effect.getType());
+		}
+		Bukkit.getPlayer(uuid).setSaturation(100000.0f);
+		Bukkit.getPlayer(uuid).setAllowFlight(true);
+		Bukkit.getPlayer(uuid).setFlying(true);
+		Practice.getInstance().getItemsManager().giveLeaveItems(Bukkit.getPlayer(uuid), "Spectate Party Match");
+		List<UUID> allInMatch = Lists.newArrayList(match.getAlive());
+		allInMatch.addAll(match.getSpectator());
+		for (UUID all : allInMatch) {
+			if (killer != null) {
+				Bukkit.getPlayer(all).sendMessage(Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have got killed by " + ChatColor.WHITE + Bukkit.getPlayer(killer).getName());	
+			}
+			else {
+				Bukkit.getPlayer(all).sendMessage(Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " has slain!");	
+			}
+		}
+		allInMatch.clear();
+	}
+	
+	public void addDisconnected(final UUID uuid) {
+		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(uuid).getMatchUUID());
+		match.getPlayers().remove(uuid);
+		if (match.getAlive().contains(uuid)) {
+			match.getAlive().remove(uuid);
+			if (match.getAlive().size() == 1) {
+				for (UUID alive : match.getAlive()) {
+					this.endMatch(alive);
+				}
+			}
+		}
+		if (match.getSpectator().contains(uuid)) {
+			match.getSpectator().remove(uuid);	
+		}
+	}
+	
+	public void endMatch(final UUID winnerUUID) {
+		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(winnerUUID).getMatchUUID());
+		for (UUID uuid : match.getPlayers()) {
+			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID) + ChatColor.AQUA + " have won the ffa match!");
+			final Player player = Bukkit.getPlayer(uuid);
+			final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
+			if (pm.getPlayerStatus().equals(Status.PARTY)) {
+				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.SPAWN);
+		        Practice.getInstance().getItemsManager().givePartyItems(player);
+		        Bukkit.getServer().getPlayer(uuid).teleport(new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f));
+		        Bukkit.getServer().getPlayer(uuid).setHealth(Bukkit.getServer().getPlayer(uuid).getMaxHealth());
+		        Bukkit.getServer().getPlayer(uuid).setFoodLevel(20);
+		        Bukkit.getServer().getPlayer(uuid).setSaturation(20);
+		        Bukkit.getServer().getPlayer(uuid).extinguish();
+		        Bukkit.getServer().getPlayer(uuid).setArrowsStuck(0);
+		        Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(10);
+		        Bukkit.getServer().getPlayer(uuid).setLevel(0);
+		        Bukkit.getServer().getPlayer(uuid).setExp(0.0f);
+		        Bukkit.getServer().getPlayer(uuid).setAllowFlight(false);
+		        Bukkit.getServer().getPlayer(uuid).setFlying(false);
+				Practice.getFfaMatchs().remove(this.matchUUID);
+				return;
+			}
+			pm.sendToSpawn();
+			Practice.getFfaMatchs().remove(this.matchUUID);
+		}
+	}
+	
+	public List<UUID> getSpectator() {
+		return spectator;
+	}
+	
+	public List<UUID> getAlive() {
+		return alive;
+	}
+	
+	public ArenaManager getArena() {
+		return arena;
+	}
+	
+	public Ladders getLadder() {
+		return ladder;
+	}
+	
+	public UUID getMatchUUID() {
+		return matchUUID;
+	}
+	
+	public List<UUID> getPlayers() {
+		return players;
+	}
+	
+	public MatchStatus getStatus() {
+		return status;
+	}
+}

@@ -19,6 +19,10 @@ public class InventoryManager {
     private Inventory utilsInventory;
     private Inventory unrankedInventory;
     private Inventory rankedInventory;
+    private Inventory splitInventory;
+    private Inventory ffaInventory;
+    private Inventory queueInventory;
+    private Inventory partyMatchInventory;
     private Inventory duelInventory;
     private Inventory tagTypeInventory;
     private Inventory tagClassicInventory;
@@ -35,6 +39,10 @@ public class InventoryManager {
         this.utilsInventory = Bukkit.createInventory((InventoryHolder)null, 27, ChatColor.DARK_GRAY + "Utils:");
         this.unrankedInventory = Bukkit.createInventory((InventoryHolder)null, 18, ChatColor.DARK_GRAY + "Unranked:");
         this.rankedInventory = Bukkit.createInventory((InventoryHolder)null, 18, ChatColor.DARK_GRAY + "Ranked:");
+        this.partyMatchInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Party Match:");
+        this.splitInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Split:");
+        this.ffaInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "FFA:");
+        this.queueInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "2v2 Queue:");
     	this.duelInventory = Bukkit.createInventory((InventoryHolder)null, 18, ChatColor.DARK_GRAY + "Duel:");
         this.tagTypeInventory = Bukkit.createInventory((InventoryHolder)null, 27, ChatColor.DARK_GRAY + "Tag Type Selector:");
         this.tagClassicInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Tag Classic Selector:");
@@ -48,6 +56,9 @@ public class InventoryManager {
         this.setPersonnalInventory();
         this.setUtilsInventory();
         this.setUnrankedInventory();
+        this.setSplitInventory();
+        this.setFFAInventory();
+        this.setQueueInventory();
         this.setDuelInventory();
         this.setRankedInventory();
         this.setTagTypeInventory();
@@ -55,8 +66,47 @@ public class InventoryManager {
         this.setTagJapanInventory();
         this.setTagRegionInventory();
         this.setEditorInventory();
+        this.setPartyMatchInventory();
         this.setStartHostInventory();
     }
+
+	private void setSplitInventory() {
+		this.splitInventory.clear();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+    		this.splitInventory.addItem(item);
+		}
+	}
+	
+	private void setFFAInventory() {
+		this.ffaInventory.clear();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+    		this.ffaInventory.addItem(item);
+		}
+	}
+	
+	private void setQueueInventory() {
+		this.queueInventory.clear();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + Practice.getInstance().getQueueManager().getQueuedFromLadder(ladder, false, true))));
+    		this.queueInventory.addItem(item);
+		}
+	}
+
+	private void setPartyMatchInventory() {
+		this.partyMatchInventory.clear();
+		final ItemStack ffa = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_SWORD), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "FFA");
+		final ItemStack queue = ItemSerializer.serialize(new ItemStack(Material.EMERALD), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "2v2");
+		final ItemStack split = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_CHESTPLATE), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "SPLIT");
+		final ItemStack duel = ItemSerializer.serialize(new ItemStack(Material.CHEST), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Duel Other Parties");
+		this.partyMatchInventory.setItem(3, ffa);
+		this.partyMatchInventory.setItem(4, queue);
+		this.partyMatchInventory.setItem(5, split);
+		this.partyMatchInventory.setItem(8, duel);
+	}
+	
+	
 
 	public void setDuelInventory() {
     	this.duelInventory.clear();
@@ -172,7 +222,7 @@ public class InventoryManager {
     private void setUnrankedInventory() {
     	this.unrankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + Practice.getInstance().getQueueManager().getQueuedFromLadder(ladder, false))));
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + Practice.getInstance().getQueueManager().getQueuedFromLadder(ladder, false, false))));
     		this.unrankedInventory.addItem(item);
     	}
     }
@@ -180,7 +230,7 @@ public class InventoryManager {
     private void setRankedInventory() {
     	this.rankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + Practice.getInstance().getQueueManager().getQueuedFromLadder(ladder, true))));
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + Practice.getInstance().getQueueManager().getQueuedFromLadder(ladder, true, false))));
     		this.rankedInventory.addItem(item);
     	}
     }
@@ -249,5 +299,21 @@ public class InventoryManager {
     
     public Inventory getLadderInventory() {
 		return ladderInventory;
+	}
+    
+    public Inventory getPartyMatchInventory() {
+		return partyMatchInventory;
+	}
+    
+    public Inventory getFfaInventory() {
+		return ffaInventory;
+	}
+    
+    public Inventory getQueueInventory() {
+		return queueInventory;
+	}
+    
+    public Inventory getSplitInventory() {
+		return splitInventory;
 	}
 }

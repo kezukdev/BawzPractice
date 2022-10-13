@@ -21,7 +21,8 @@ public class MatchListener implements Listener {
         final Player player = (Player)event.getEntity();
         final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
     	final MatchManager match = Practice.getMatchs().get(pm.getMatchUUID());
-        if (match != null && pm.getPlayerStatus() == Status.FIGHT && match.getStatus().equals(MatchStatus.PLAYING)) {
+    	final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(pm.getMatchUUID());
+        if (match != null && pm.getPlayerStatus() == Status.FIGHT && match.getStatus().equals(MatchStatus.PLAYING) || match != null && pm.getPlayerStatus() == Status.PARTY && ffaMatch.getStatus().equals(MatchStatus.PLAYING) || match != null && pm.getPlayerStatus() == Status.HOST && ffaMatch.getStatus().equals(MatchStatus.STARTING)) {
         	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
         		event.setDamage(0.0D);
         		return;
@@ -41,8 +42,9 @@ public class MatchListener implements Listener {
         final Player damaged = (Player)event.getEntity();
         final Player damager = (Player)event.getDamager();
         final MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
-        if (match != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && match.getStatus().equals(MatchStatus.PLAYING)) {
-        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Combo")) {
+        final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
+        if (match != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && match.getStatus().equals(MatchStatus.PLAYING) || ffaMatch != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.PARTY) && ffaMatch.getStatus().equals(MatchStatus.PLAYING) ||  ffaMatch != null && damaged.canSee(damager) && PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.HOST) && ffaMatch.getStatus().equals(MatchStatus.PLAYING)) {
+        	if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo" || ffaMatch.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
                 if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() != 0L && PlayerManager.getPlayers().get(damaged.getUniqueId()).getNextHitTick() > System.currentTimeMillis()) {
                     return;
                 }
@@ -57,18 +59,23 @@ public class MatchListener implements Listener {
             if (dmr.getMatchStats().getCombo() > dmr.getMatchStats().getLongestCombo()) {
             	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
             }
-        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
+        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
                 event.setDamage(0.0D);
                 return;
             }
-        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
                 event.setDamage(0.0D);
                 final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
                 damager.setExp(hitExp);
                 damager.setLevel(dmr.getMatchStats().getCombo());
                 PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setCombo(0);
                 if (dmr.getMatchStats().getHits() == 100) {
-                	Practice.getMatchs().get(dmr.getMatchUUID()).endMatch(damaged.getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);
+                	if (match != null) {
+                    	Practice.getMatchs().get(dmr.getMatchUUID()).endMatch(damaged.getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);
+                	}
+                	if (ffaMatch != null) {
+                    	Practice.getFfaMatchs().get(dmr.getMatchUUID()).addKill(damaged.getUniqueId(), damager.getUniqueId());	
+                	}
                 }
                 return;
             }
@@ -179,7 +186,7 @@ public class MatchListener implements Listener {
         event.setDeathMessage((String)null);
         event.getDrops().clear();
         final Player player = event.getEntity();
-        if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.FIGHT)) {
+        if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) || PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.PARTY) || PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.HOST)) {
             final Location deathLocation = player.getLocation();
             new BukkitRunnable() {
                 public void run() {
@@ -205,14 +212,21 @@ public class MatchListener implements Listener {
                 }
             }.runTaskLater((Plugin)Practice.getInstance(), 2L);
             if (!(player.getKiller() instanceof Player)) {
-            	MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID());
-            	List<UUID> opponentList = match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList();
-            	for (UUID uuid : opponentList) {
-                    match.endMatch(player.getUniqueId(), uuid, PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID(), true);
+            	if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.FIGHT)) {
+                	MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID());
+                	List<UUID> opponentList = match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList();
+                	for (UUID uuid : opponentList) {
+                        match.endMatch(player.getUniqueId(), uuid, PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID(), true);
+                	}	
+            	}
+            	if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.PARTY) || PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.HOST) && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()) != null) {
+            		Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()).addKill(player.getUniqueId(), null);
             	}
             	return;
             }
-            Practice.getMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()).endMatch(player.getUniqueId(), player.getKiller().getUniqueId(), PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID(), true);
+            if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus().equals(Status.FIGHT)) {
+                Practice.getMatchs().get(PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID()).endMatch(player.getUniqueId(), player.getKiller().getUniqueId(), PlayerManager.getPlayers().get(player.getUniqueId()).getMatchUUID(), true);	
+            }
         }
     }
 }

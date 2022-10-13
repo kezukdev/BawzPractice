@@ -7,9 +7,12 @@ import com.google.common.collect.Lists;
 import co.aikar.idb.DB;
 import kezuk.bawz.*;
 import kezuk.bawz.core.Tag;
+import kezuk.bawz.ladders.Ladders;
+import kezuk.bawz.match.FfaMatchManager;
 import kezuk.bawz.match.MatchManager;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.party.PartyManager;
+import kezuk.bawz.party.PartyState;
 import kezuk.bawz.player.*;
 import kezuk.bawz.request.DuelRequestStatus;
 import kezuk.bawz.request.RequestManager;
@@ -34,12 +37,12 @@ public class InventoryListener implements Listener
         	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getUnrankedInventory().getName())) {
             	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-                Practice.getInstance().getQueueManager().addPlayerToQueue(event.getWhoClicked().getUniqueId(), false, event.getCurrentItem().getItemMeta().getDisplayName());
+                Practice.getInstance().getQueueManager().addPlayerToQueue(event.getWhoClicked().getUniqueId(), false, event.getCurrentItem().getItemMeta().getDisplayName(), false);
                 event.getWhoClicked().closeInventory();
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getRankedInventory().getName())) {
             	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-                Practice.getInstance().getQueueManager().addPlayerToQueue(event.getWhoClicked().getUniqueId(), true, event.getCurrentItem().getItemMeta().getDisplayName());
+                Practice.getInstance().getQueueManager().addPlayerToQueue(event.getWhoClicked().getUniqueId(), true, event.getCurrentItem().getItemMeta().getDisplayName(), false);
                 event.getWhoClicked().closeInventory();
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getPersonnalInventory().getName())) {
@@ -57,6 +60,7 @@ public class InventoryListener implements Listener
             		event.getWhoClicked().openInventory(Practice.getInstance().getLeaderboardInventory());
             	}
             	if (event.getCurrentItem().getType() == Material.CAKE) {
+            		event.getWhoClicked().closeInventory();
             		new PartyManager(event.getWhoClicked().getUniqueId());
             	}
             	if (event.getCurrentItem().getType() == Material.ENDER_PORTAL) {
@@ -152,7 +156,40 @@ public class InventoryListener implements Listener
         if (Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.FINISHED) {
         	return;
         }
-        if (event.getInventory().getName().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
+        if (pm.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getStatus().equals(PartyState.SPAWN)) {
+        	event.setCancelled(true);
+        	if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getPartyMatchInventory().getName())) {
+        		if (PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getPartyList().size() > 1) {
+            		if (event.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)) {
+            			event.getWhoClicked().openInventory(Practice.getInstance().getInventoryManager().getFfaInventory());
+            		}
+            		if (event.getCurrentItem().getType().equals(Material.EMERALD)) {
+            			if (PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getPartyList().size() > 2) {
+                			event.getWhoClicked().closeInventory();
+                			final Player player = (Player) event.getWhoClicked();
+                			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You can't join the 2v2 you just have need of 2 players.");
+            				return;
+            			}
+            			event.getWhoClicked().openInventory(Practice.getInstance().getInventoryManager().getQueueInventory());
+            		}
+            		if (event.getCurrentItem().getType().equals(Material.DIAMOND_CHESTPLATE)) {
+            			event.getWhoClicked().openInventory(Practice.getInstance().getInventoryManager().getSplitInventory());
+            		}
+            		return;
+        		}
+        		else {
+        			event.getWhoClicked().closeInventory();
+        			final Player player = (Player) event.getWhoClicked();
+        			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You need minimum two players in party for made that!");
+        		}
+        	}
+        	if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getFfaInventory().getName())) {
+        		FfaMatchManager ffaMatch = new FfaMatchManager();
+        		event.getWhoClicked().closeInventory();
+        		ffaMatch.startMatch(PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getPartyList(), Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()));
+        	}
+        }
+        if (event.getClickedInventory().getName().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
         	event.setCancelled(true);
         	if (event.getCurrentItem().getType().equals(Material.PISTON_STICKY_BASE)) {
         		final Player player = (Player) event.getWhoClicked();

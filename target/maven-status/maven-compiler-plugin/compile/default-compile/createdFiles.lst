@@ -11,6 +11,7 @@ kezuk\bawz\match\MatchManager.class
 kezuk\bawz\core\TagType.class
 kezuk\bawz\ladders\kit\Combo.class
 kezuk\bawz\command\AcceptCommand.class
+kezuk\bawz\match\FfaMatchManager.class
 kezuk\bawz\stockage\ConfigFile.class
 kezuk\bawz\command\BuildCommand.class
 kezuk\bawz\listener\PlayerListener.class
@@ -59,6 +60,7 @@ kezuk\bawz\player\PlayerManager.class
 kezuk\bawz\ladders\Kit.class
 kezuk\bawz\match\MatchManager$2.class
 kezuk\bawz\database\DataSQL.class
+kezuk\bawz\match\FfaMatchManager$1.class
 kezuk\bawz\utils\MessageSerializer.class
 kezuk\bawz\ladders\kit\Debuff.class
 kezuk\bawz\listener\InventoryListener.class

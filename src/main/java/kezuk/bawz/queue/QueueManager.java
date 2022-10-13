@@ -20,11 +20,11 @@ public class QueueManager
         this.queue = Maps.newConcurrentMap();
     }
     
-    public void addPlayerToQueue(final UUID uuid, final boolean ranked, final String ladderName) {
+    public void addPlayerToQueue(final UUID uuid, final boolean ranked, final String ladderName, final boolean partyTo2) {
     	final Ladders ladder = Ladders.getLadder(ladderName);
         if (!this.queue.containsKey(uuid)) {
             final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
-            this.queue.put(uuid, new Queue(ranked, ladder));
+            this.queue.put(uuid, new Queue(ranked, ladder, partyTo2));
             pm.setPlayerStatus(Status.QUEUE);
             pm.sendToQueue();
             Practice.getInstance().getInventoryManager().updateQueueInventory(ranked);
@@ -68,7 +68,7 @@ public class QueueManager
         }
     }
     
-	public int getQueuedFromLadder(Ladders ladder, boolean ranked) {
+	public int getQueuedFromLadder(Ladders ladder, boolean ranked, boolean partyTo2) {
 		int count = 0;
 		for (Map.Entry<UUID, Queue> map : this.queue.entrySet()) {
 			Queue value = map.getValue();
@@ -80,12 +80,15 @@ public class QueueManager
 	}
     
     public class Queue {
+    	
         private boolean ranked;
         private Ladders ladder;
+        private boolean partyTo2;
         
-        public Queue(final boolean ranked, final Ladders ladder) {
+        public Queue(final boolean ranked, final Ladders ladder, final boolean partyTo2) {
             this.ranked = ranked;
             this.ladder = ladder;
+            this.partyTo2 = partyTo2;
         }
         
         public boolean isRanked() {
@@ -94,6 +97,10 @@ public class QueueManager
         
         public Ladders getLadder() {
 			return ladder;
+		}
+        
+        public boolean isPartyTo2() {
+			return partyTo2;
 		}
     }
 }

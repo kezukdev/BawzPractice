@@ -13,6 +13,7 @@ import kezuk.bawz.host.HostManager;
 import kezuk.bawz.match.MatchManager;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.party.PartyManager;
+import kezuk.bawz.party.PartyState;
 import kezuk.bawz.player.*;
 import net.luckperms.api.cacheddata.CachedMetaData;
 
@@ -37,8 +38,14 @@ public class PlayerListener implements Listener
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.PARTY)) {
         	PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), true);
         }
-        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED) {
+        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED && Practice.getMatchs().containsKey(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID())) {
         	Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).endMatch(event.getPlayer().getUniqueId(), Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getOpponent(event.getPlayer().getUniqueId()), PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID(), false);
+        }
+        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.HOST) && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED && Practice.getFfaMatchs().containsKey(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID())) {
+        	Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).addDisconnected(event.getPlayer().getUniqueId());
+        }
+        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.PARTY) && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED && Practice.getFfaMatchs().containsKey(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID())) {
+        	Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).addDisconnected(event.getPlayer().getUniqueId());
         }
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.SPECTATE)) {
         	Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getSpectator().remove(event.getPlayer().getUniqueId());
@@ -85,36 +92,36 @@ public class PlayerListener implements Listener
         final Action action = event.getAction();
         final PlayerManager pm = PlayerManager.getPlayers().get(event.getPlayer().getUniqueId());
         if (pm.getPlayerStatus().equals(Status.SPAWN)) {
+            event.setCancelled(true);
             if (item == null) {
                 return;
             }
             if (item.getType().equals((Object)Material.STONE_SWORD) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
-                event.setCancelled(true);
                 event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getUnrankedInventory());
                 return;
             }
             if (item.getType().equals((Object)Material.DIAMOND_SWORD) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
-                event.setCancelled(true);
                 event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getRankedInventory());
                 return;
             }
             if (item.getType().equals((Object)Material.NETHER_STAR) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
-                event.setCancelled(true);
                 event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getPersonnalInventory());
                 return;
             }
             if (item.getType().equals((Object)Material.BOOK) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
-                event.setCancelled(true);
                 event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getUtilsInventory());
                 return;
             }
         }
-        if (pm.getPlayerStatus().equals(Status.PARTY)) {
+        if (pm.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).getStatus() != PartyState.FIGHT) {
+            event.setCancelled(true);
             if (item == null) {
                 return;
             }
+            if (item.getType().equals((Object)Material.GOLD_AXE) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
+            	event.getPlayer().openInventory(Practice.getInstance().getInventoryManager().getPartyMatchInventory());
+            }
             if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
-                event.setCancelled(true);
                 PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), false);
             }
         }

@@ -61,11 +61,14 @@ public class Practice extends JavaPlugin {
     private List<Ladders> ladder;
     public static HashMap<UUID, PartyManager> partys;
     public static HashMap<UUID, MatchManager> matchs;
+    public static HashMap<UUID, FfaMatchManager> ffaMatchs;
     
     public Practice() {
     	this.ladder = Arrays.asList(new NoDebuff(), new Debuff(), new Axe(), new Bow(), new Combo(), new Soup(), new Sumo(), new Boxing());
         this.offlineInventories = new WeakHashMap<UUID, MatchSeeInventory>();
         matchs = Maps.newHashMap();
+        partys = Maps.newHashMap();
+        ffaMatchs = Maps.newHashMap();
     }
     
     public void onEnable() {
@@ -189,5 +192,9 @@ public class Practice extends JavaPlugin {
     
     public static HashMap<UUID, PartyManager> getPartys() {
 		return partys;
+	}
+    
+    public static HashMap<UUID, FfaMatchManager> getFfaMatchs() {
+		return ffaMatchs;
 	}
 }

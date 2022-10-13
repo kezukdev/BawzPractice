@@ -65,7 +65,7 @@ public class PartyManager {
 				Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been disband your party!");
 				this.partyList.clear();
 				partyMap.clear();
-				Practice.getPartys().remove(uuid);
+				Practice.getPartys().remove(uuid, this);
 			}
 		}
 		if (uuid != this.getLeader()) {
