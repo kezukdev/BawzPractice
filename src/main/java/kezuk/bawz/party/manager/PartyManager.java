@@ -1,4 +1,4 @@
-package kezuk.bawz.party;
+package kezuk.bawz.party.manager;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import com.google.common.collect.Lists;
 
 import kezuk.bawz.Practice;
+import kezuk.bawz.party.PartyState;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import net.minecraft.util.com.google.common.collect.Maps;
@@ -78,6 +79,10 @@ public class PartyManager {
 		if (!disconnect) {
 			PlayerManager.getPlayers().get(uuid).sendToSpawn();
 		}
+	}
+	
+	public void inviteToParty(final UUID uuid, final UUID targetUUID) {
+		
 	}
 	
 	public static HashMap<UUID, PartyManager> getPartyMap() {

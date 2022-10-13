@@ -10,10 +10,10 @@ import org.bukkit.inventory.*;
 
 import kezuk.bawz.*;
 import kezuk.bawz.host.HostManager;
-import kezuk.bawz.match.MatchManager;
 import kezuk.bawz.match.MatchStatus;
-import kezuk.bawz.party.PartyManager;
+import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
+import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.player.*;
 import net.luckperms.api.cacheddata.CachedMetaData;
 

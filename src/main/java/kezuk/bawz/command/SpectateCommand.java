@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import com.google.common.collect.Lists;
 
 import kezuk.bawz.Practice;
-import kezuk.bawz.match.MatchManager;
+import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import kezuk.bawz.utils.ItemSerializer;

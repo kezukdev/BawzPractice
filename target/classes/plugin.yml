@@ -22,3 +22,4 @@ commands:
     description: Rank anyone on the server!
   build:
   accept:
+  party:

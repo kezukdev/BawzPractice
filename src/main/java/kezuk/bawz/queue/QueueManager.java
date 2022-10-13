@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 
 import kezuk.bawz.*;
 import kezuk.bawz.ladders.*;
-import kezuk.bawz.match.MatchManager;
+import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.*;
 import kezuk.bawz.utils.*;
 

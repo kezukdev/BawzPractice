@@ -1,10 +1,12 @@
-package kezuk.bawz.match;
+package kezuk.bawz.match.manager;
 
 import com.google.common.collect.Lists;
 import co.aikar.idb.DB;
 import kezuk.bawz.*;
 import kezuk.bawz.arena.*;
 import kezuk.bawz.ladders.*;
+import kezuk.bawz.match.MatchSeeInventory;
+import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.player.*;
 import kezuk.bawz.utils.*;
 

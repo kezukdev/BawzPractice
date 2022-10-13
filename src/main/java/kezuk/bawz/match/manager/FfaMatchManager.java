@@ -1,4 +1,4 @@
-package kezuk.bawz.match;
+package kezuk.bawz.match.manager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,8 +19,9 @@ import kezuk.bawz.Practice;
 import kezuk.bawz.arena.ArenaManager;
 import kezuk.bawz.ladders.Kit;
 import kezuk.bawz.ladders.Ladders;
-import kezuk.bawz.party.PartyManager;
+import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.party.PartyState;
+import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import kezuk.bawz.utils.MessageSerializer;

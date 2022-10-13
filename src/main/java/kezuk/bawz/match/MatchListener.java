@@ -9,6 +9,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.scheduler.*;
 
 import kezuk.bawz.*;
+import kezuk.bawz.match.manager.FfaMatchManager;
+import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.*;
 import org.bukkit.*;
 import java.lang.reflect.*;

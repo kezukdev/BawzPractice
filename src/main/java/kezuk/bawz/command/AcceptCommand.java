@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.Lists;
 
 import kezuk.bawz.ladders.Ladders;
-import kezuk.bawz.match.MatchManager;
+import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import kezuk.bawz.request.DuelRequestStatus;
