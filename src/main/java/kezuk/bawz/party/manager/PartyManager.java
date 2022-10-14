@@ -24,27 +24,27 @@ public class PartyManager {
 	private static HashMap<UUID, PartyManager> partyMap;
 	
 	public PartyManager(final UUID uuid) {
-		this.leader = uuid;
 		final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
 		pm.setPlayerStatus(Status.PARTY);
-		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 		this.status = PartyState.SPAWN;
 		this.partyList = Lists.newArrayList();
 		partyMap = Maps.newHashMap();
 		this.partyList.add(uuid);
+		this.leader = uuid;
 		partyMap.put(uuid, this);
 		Practice.getPartys().putIfAbsent(uuid, this);
 		Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have been created the party!");
+		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 	}
 	
 	public void addToParty(final UUID uuid) {
 		for (UUID partyUUID : this.partyList) {
 			Bukkit.getPlayer(partyUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have joined the party!");
 		}
-		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 		PlayerManager.getPlayers().get(uuid).setPlayerStatus(Status.PARTY);
 		partyMap.put(uuid, this);
 		this.partyList.add(uuid);
+		Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(uuid));
 	}
 	
 	public void removeToParty(final UUID uuid, final boolean disconnect) {
@@ -79,10 +79,6 @@ public class PartyManager {
 		if (!disconnect) {
 			PlayerManager.getPlayers().get(uuid).sendToSpawn();
 		}
-	}
-	
-	public void inviteToParty(final UUID uuid, final UUID targetUUID) {
-		
 	}
 	
 	public static HashMap<UUID, PartyManager> getPartyMap() {

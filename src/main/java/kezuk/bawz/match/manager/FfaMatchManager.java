@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -46,23 +47,20 @@ public class FfaMatchManager {
 		this.spectator = Lists.newArrayList();
 		Practice.getFfaMatchs().put(matchUUID, this);
 		this.arena = ArenaManager.getRandomArena(ladder.arenaType());
-		final List<Player> allOnline = Lists.newArrayList(Bukkit.getOnlinePlayers());
 		for (UUID uuid : players) {
         	if (Practice.getInstance().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getOfflineInventories().remove(uuid);
         		Bukkit.getServer().getPlayer(uuid).closeInventory();
         	}
 			final Player player = Bukkit.getServer().getPlayer(uuid);
-			allOnline.remove(player);
-			for (Player playerExcludeInGame : allOnline) {
-				playerExcludeInGame.hidePlayer(player);
-				player.hidePlayer(playerExcludeInGame);
-			}
-			allOnline.clear();
-			for (UUID player2 : this.players) {
-				final Player players2 = Bukkit.getPlayer(player2);
-				players2.showPlayer(player);
-				player.showPlayer(players2);
+			for (FfaMatchManager match : Practice.getFfaMatchs().values()) {
+				final List<UUID> allPlayers = Lists.newArrayList(match.getPlayers());
+				allPlayers.removeAll(this.players);
+				allPlayers.addAll(match.getSpectator());
+				for (UUID lotOfPlayer : allPlayers) {
+					Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
+					player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));
+				}
 			}
 			player.closeInventory();
 			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.PARTY)) {
@@ -147,6 +145,9 @@ public class FfaMatchManager {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(uuid).getMatchUUID());
 		match.getPlayers().remove(uuid);
 		if (match.getAlive().contains(uuid)) {
+			for (UUID uuidIG : match.getAlive()) {
+				Bukkit.getPlayer(uuidIG).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have disconnected.");
+			}
 			match.getAlive().remove(uuid);
 			if (match.getAlive().size() == 1) {
 				for (UUID alive : match.getAlive()) {
@@ -161,32 +162,44 @@ public class FfaMatchManager {
 	
 	public void endMatch(final UUID winnerUUID) {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(winnerUUID).getMatchUUID());
-		List<UUID> allList = Lists.newArrayList(match.getAlive());
+		List<UUID> allList = Lists.newArrayList();
+		allList.addAll(match.getPlayers());
 		allList.addAll(match.getSpectator());
+		match.setStatus(MatchStatus.FINISHED);
 		for (UUID uuid : allList) {
 			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.AQUA + " have won the ffa match!");
-			final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
-			if (pm.getPlayerStatus().equals(Status.PARTY)) {
-				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.SPAWN);
-				for (UUID partyUUID : PartyManager.getPartyMap().get(uuid).getPartyList()) {
-			        Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(partyUUID));	
-				}
-		        Bukkit.getServer().getPlayer(uuid).teleport(new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f));
-		        Bukkit.getServer().getPlayer(uuid).setHealth(Bukkit.getServer().getPlayer(uuid).getMaxHealth());
-		        Bukkit.getServer().getPlayer(uuid).setFoodLevel(20);
-		        Bukkit.getServer().getPlayer(uuid).setSaturation(20);
-		        Bukkit.getServer().getPlayer(uuid).extinguish();
-		        Bukkit.getServer().getPlayer(uuid).setArrowsStuck(0);
-		        Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(10);
-		        Bukkit.getServer().getPlayer(uuid).setLevel(0);
-		        Bukkit.getServer().getPlayer(uuid).setExp(0.0f);
-		        Bukkit.getServer().getPlayer(uuid).setAllowFlight(false);
-		        Bukkit.getServer().getPlayer(uuid).setFlying(false);
-				Practice.getFfaMatchs().remove(this.matchUUID);
-				return;
-			}
-			pm.sendToSpawn();
-			Practice.getFfaMatchs().remove(this.matchUUID);
+            new BukkitRunnable() {
+                public void run() {
+        			final PlayerManager pm = PlayerManager.getPlayers().get(uuid);
+        			if (pm.getPlayerStatus().equals(Status.PARTY)) {
+        				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.SPAWN);
+        		        Bukkit.getServer().getPlayer(uuid).teleport(new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f));
+        		        Bukkit.getServer().getPlayer(uuid).setHealth(Bukkit.getServer().getPlayer(uuid).getMaxHealth());
+        		        Bukkit.getServer().getPlayer(uuid).setFoodLevel(20);
+        		        Bukkit.getServer().getPlayer(uuid).setSaturation(20);
+        		        Bukkit.getServer().getPlayer(uuid).extinguish();
+        		        Bukkit.getServer().getPlayer(uuid).setArrowsStuck(0);
+        		        Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(10);
+        		        Bukkit.getServer().getPlayer(uuid).setLevel(0);
+        		        Bukkit.getServer().getPlayer(uuid).setExp(0.0f);
+        		        Bukkit.getServer().getPlayer(uuid).setAllowFlight(false);
+        		        Bukkit.getServer().getPlayer(uuid).setFlying(false);
+        		        Bukkit.getServer().getPlayer(uuid).getInventory().clear();
+        		        Bukkit.getServer().getPlayer(uuid).getInventory().setArmorContents(null);
+        		        Bukkit.getServer().getPlayer(uuid).updateInventory();
+        		        for (PotionEffect effect : Bukkit.getServer().getPlayer(uuid).getActivePotionEffects()) {
+        		        	Bukkit.getServer().getPlayer(uuid).removePotionEffect(effect.getType());
+        		        }
+        				for (UUID partyUUID : PartyManager.getPartyMap().get(uuid).getPartyList()) {
+        			        Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(partyUUID));	
+        				}
+        				Practice.getFfaMatchs().remove(matchUUID);
+        				return;
+        			}
+        			pm.sendToSpawn();
+        			Practice.getFfaMatchs().remove(matchUUID);
+                }
+            }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
 		}
 	}
 	

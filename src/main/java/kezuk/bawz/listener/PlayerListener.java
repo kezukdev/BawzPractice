@@ -35,9 +35,6 @@ public class PlayerListener implements Listener
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.QUEUE)) {
             Practice.getInstance().getQueueManager().leaveQueue(event.getPlayer().getUniqueId());
         }
-        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.PARTY)) {
-        	PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), true);
-        }
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.FIGHT) && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()) != null && Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getStatus() != MatchStatus.FINISHED && Practice.getMatchs().containsKey(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID())) {
         	Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).endMatch(event.getPlayer().getUniqueId(), Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getOpponent(event.getPlayer().getUniqueId()), PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID(), false);
         }
@@ -49,6 +46,9 @@ public class PlayerListener implements Listener
         }
         if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.SPECTATE)) {
         	Practice.getMatchs().get(PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getMatchUUID()).getSpectator().remove(event.getPlayer().getUniqueId());
+        }
+        if (PlayerManager.getPlayers().get(event.getPlayer().getUniqueId()).getPlayerStatus().equals(Status.PARTY)) {
+        	PartyManager.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), true);
         }
         event.setQuitMessage((String)null);
     }

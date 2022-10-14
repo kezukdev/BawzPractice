@@ -40,6 +40,7 @@ com\bizarrealex\aether\Aether.class
 kezuk\bawz\ladders\kit\Bow.class
 kezuk\bawz\match\MatchStats.class
 kezuk\bawz\request\RequestManager$1.class
+kezuk\bawz\match\manager\FfaMatchManager$2.class
 kezuk\bawz\match\manager\FfaMatchManager.class
 kezuk\bawz\arena\ArenaManager.class
 kezuk\bawz\request\RequestManager.class

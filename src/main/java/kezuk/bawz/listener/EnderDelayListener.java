@@ -39,7 +39,7 @@ public class EnderDelayListener implements Listener {
 			final ItemStack item = event.getItem();
 			if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && item.getType() == Material.ENDER_PEARL && player.getGameMode() != GameMode.CREATIVE) {
 				PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
-				if (pm.getPlayerStatus() != Status.FIGHT || Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.PLAYING) {
+				if (Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.PLAYING || Practice.getFfaMatchs().get(pm.getMatchUUID()) != null && Practice.getFfaMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.PLAYING) {
 					event.setUseItemInHand(Result.DENY);
 					player.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
 					player.updateInventory();
@@ -63,8 +63,8 @@ public class EnderDelayListener implements Listener {
 	public void onTeleport(PlayerTeleportEvent event) {
 		if (event.getCause() == TeleportCause.ENDER_PEARL) {
 			final Player player = event.getPlayer();
-			
-			if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus() != Status.FIGHT) event.setCancelled(true);
+			final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
+			if (Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.PLAYING || Practice.getFfaMatchs().get(pm.getMatchUUID()) != null && Practice.getFfaMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.PLAYING) event.setCancelled(true);
 		}
 	}
 }

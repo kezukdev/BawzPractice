@@ -3,6 +3,7 @@ package kezuk.bawz.manager;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 
+import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.utils.*;
 
 import org.bukkit.*;
@@ -35,7 +36,9 @@ public class ItemsManager
         final ItemStack management = ItemSerializer.serialize(new ItemStack(Material.PAPER),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Party Management", null, true);
         final ItemStack leave = ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Leave Party", null, true);
         player.getInventory().clear();
-        player.getInventory().setItem(0, match);
+        if (PartyManager.getPartyMap().get(player.getUniqueId()).getLeader().equals(player.getUniqueId())) {
+            player.getInventory().setItem(0, match);	
+        }
         player.getInventory().setItem(4, management);
         player.getInventory().setItem(8, leave);
         player.updateInventory();
