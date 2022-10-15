@@ -29,6 +29,7 @@ public class Register
         Practice.getInstance().getCommand("build").setExecutor((CommandExecutor)new BuildCommand());
         Practice.getInstance().getCommand("accept").setExecutor((CommandExecutor)new AcceptCommand());
         Practice.getInstance().getCommand("party").setExecutor((CommandExecutor)new PartyCommand());
+        Practice.getInstance().getCommand("join").setExecutor((CommandExecutor)new JoinCommand());
     }
     
     private void registerListener() {

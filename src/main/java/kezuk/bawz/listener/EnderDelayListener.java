@@ -2,7 +2,6 @@ package kezuk.bawz.listener;
 
 import java.text.DecimalFormat;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -16,14 +15,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-
 import kezuk.bawz.Practice;
 import kezuk.bawz.match.MatchStats;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.player.PlayerManager;
-import kezuk.bawz.player.Status;
 import kezuk.bawz.utils.MessageSerializer;
 
 public class EnderDelayListener implements Listener {	

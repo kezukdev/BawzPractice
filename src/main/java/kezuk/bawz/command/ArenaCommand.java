@@ -4,6 +4,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 
 import kezuk.bawz.arena.*;
+import kezuk.bawz.utils.MessageSerializer;
 import net.minecraft.util.org.apache.commons.lang3.EnumUtils;
 
 import org.bukkit.*;
@@ -14,16 +15,15 @@ public class ArenaCommand implements CommandExecutor {
 	
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if(!(sender instanceof Player)) return true;
-        if (!sender.hasPermission("practice.command.arena")) {
-        	sender.sendMessage(ChatColor.RED + "You don't have required permissions!");
+        if (!sender.hasPermission("bawz.arena")) {
+        	sender.sendMessage(ChatColor.AQUA + "You don't have required permissions!");
         	return true;
         }
         if(args.length == 0) {
             sender.sendMessage(" ");
-            sender.sendMessage(ChatColor.DARK_RED + "Correct Usage: /arena");
-            sender.sendMessage(ChatColor.RED + "    list");
-            sender.sendMessage(ChatColor.RED + "    create <arenaType> <name>");
-            sender.sendMessage(ChatColor.RED + "    setspawn<1/2> <name>");
+            sender.sendMessage(ChatColor.AQUA + "/arena list");
+            sender.sendMessage(ChatColor.AQUA + "/arena create <arenaType> <name>");
+            sender.sendMessage(ChatColor.AQUA + "/arena set<1/mid/2> <name>");
         }else if(args.length == 1)
         {
             if(args[0].equalsIgnoreCase("list"))
@@ -37,20 +37,25 @@ public class ArenaCommand implements CommandExecutor {
             }
         }else if(args.length == 2)
         {
-            if(args[0].equalsIgnoreCase("setspawn1") || args[0].equalsIgnoreCase("setspawn2"))
+            if(args[0].equalsIgnoreCase("set1") || args[0].equalsIgnoreCase("setmid") || args[0].equalsIgnoreCase("set2"))
             {
                 if (ArenaManager.getArena(args[1]) != null) {
                     ArenaManager arenaManager = ArenaManager.getArena(args[1]);
                     Player player = (Player) sender;
-                    if (args[0].equalsIgnoreCase("setspawn1")) {
+                    if (args[0].equalsIgnoreCase("set1")) {
                         arenaManager.setLoc1(player.getLocation());
-                        sender.sendMessage(ChatColor.GREEN + "You have set the spawn 1 of arena " + ChatColor.LIGHT_PURPLE + arenaManager.getName());
-                    } else if (args[0].equalsIgnoreCase("setspawn2")) {
+                        sender.sendMessage(MessageSerializer.ARENA_LOC);
+                    }
+                    else if (args[0].equalsIgnoreCase("setmid")) {
+                        arenaManager.setMiddle(player.getLocation());
+                        sender.sendMessage(MessageSerializer.ARENA_LOC);
+                    }
+                    else if (args[0].equalsIgnoreCase("set2")) {
                         arenaManager.setLoc2(player.getLocation());
-                        sender.sendMessage(ChatColor.GREEN + "You have set the spawn 2 of arena " + ChatColor.LIGHT_PURPLE + arenaManager.getName());
+                        sender.sendMessage(MessageSerializer.ARENA_LOC);
                     }
                 }else{
-                    sender.sendMessage(ChatColor.RED + "This arena does'nt exist!");
+                    sender.sendMessage(MessageSerializer.ARENA_NOT_EXIST);
                 }
             } else{
                 sender.sendMessage(invalidArguement);
@@ -64,12 +69,12 @@ public class ArenaCommand implements CommandExecutor {
                     if(ArenaManager.getArena(args[2]) == null)
                     {
                         new ArenaManager(args[2], ArenaType.valueOf(args[1].toUpperCase()));
-                        sender.sendMessage(ChatColor.GREEN + "You have create the "+args[1]+" arena " + ChatColor.LIGHT_PURPLE + args[2]);
+                        sender.sendMessage(MessageSerializer.ARENA_CREATED);
                     }else{
-                        sender.sendMessage(ChatColor.RED + "This arena does'nt exist!");
+                        sender.sendMessage(MessageSerializer.ARENA_EXIST);
                     }
                 }else{
-                    sender.sendMessage(ChatColor.RED + "This type doesn't exist!");
+                    sender.sendMessage(MessageSerializer.ARENA_NOT_EXIST);
                 }
             }else{
                 sender.sendMessage(invalidArguement);

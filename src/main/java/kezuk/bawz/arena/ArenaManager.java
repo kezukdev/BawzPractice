@@ -15,22 +15,24 @@ public class ArenaManager {
     private String name;
     private ArenaType arenaType;
     private Location loc1;
+    private Location middle;
     private Location loc2;
     
-    public ArenaManager(final String name, final ArenaType arenaType, final Location loc1, final Location loc2) {
+    public ArenaManager(final String name, final ArenaType arenaType, final Location loc1, final Location middle, final Location loc2) {
         this.name = name;
         this.arenaType = arenaType;
         this.loc1 = loc1;
+        this.middle = middle;
         this.loc2 = loc2;
         ArenaManager.all.add(this);
     }
     
     public ArenaManager(final String name, final ArenaType arenaType) {
-        this(name, arenaType, null, null);
+        this(name, arenaType, null, null, null);
     }
     
     public ArenaManager(final String name) {
-        this(name, null, null, null);
+        this(name, null, null, null, null);
     }
     
     public static ArenaManager getArena(final String name) {
@@ -43,6 +45,7 @@ public class ArenaManager {
         }
         Practice.getInstance().arenaConfig.set("arenas." + this.getName() + ".type", (Object)this.getArenaType().toString());
         Practice.getInstance().arenaConfig.set("arenas." + this.getName() + ".pos1", (Object)this.getStringLocation(this.loc1));
+        Practice.getInstance().arenaConfig.set("arenas." + this.getName() + ".mid", (Object)this.getStringLocation(this.middle));
         Practice.getInstance().arenaConfig.set("arenas." + this.getName() + ".pos2", (Object)this.getStringLocation(this.loc2));
     }
     
@@ -68,6 +71,8 @@ public class ArenaManager {
         }
         this.arenaType = ArenaType.valueOf(Practice.getInstance().arenaConfig.getString("arenas." + this.getName() + ".type").toUpperCase());
         this.loc1 = this.getSplitLocation(1);
+        final String[] split = Practice.getInstance().arenaConfig.getString("arenas." + this.getName() + ".mid").split(":");
+        this.middle = new Location(Bukkit.getWorld(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]), Float.parseFloat(split[4]), Float.parseFloat(split[5]));
         this.loc2 = this.getSplitLocation(2);
     }
     
@@ -97,6 +102,14 @@ public class ArenaManager {
     public Location getLoc1() {
         return this.loc1;
     }
+    
+    public Location getMiddle() {
+		return middle;
+	}
+    
+    public void setMiddle(Location middle) {
+		this.middle = middle;
+	}
     
     public Location getLoc2() {
         return this.loc2;

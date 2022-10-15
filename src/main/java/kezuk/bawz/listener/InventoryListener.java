@@ -7,6 +7,8 @@ import com.google.common.collect.Lists;
 import co.aikar.idb.DB;
 import kezuk.bawz.*;
 import kezuk.bawz.core.Tag;
+import kezuk.bawz.host.HostManager;
+import kezuk.bawz.host.HostType;
 import kezuk.bawz.ladders.Ladders;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.match.manager.FfaMatchManager;
@@ -139,12 +141,13 @@ public class InventoryListener implements Listener
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getStartHostInventory().getName())) {
             	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) return;
-                String title = event.getCurrentItem().getItemMeta().getDisplayName();
-                String arr[] = title.split(" ", 2);
-                int number = Integer.parseInt(ChatColor.stripColor(arr[0]));
-                Practice.getInstance().getHostManager().startHost(event.getWhoClicked().getUniqueId(), number);
+            	if (event.getCurrentItem().getType().equals(Material.FLINT)) {
+            		event.getWhoClicked().openInventory(Practice.getInstance().getInventoryManager().getFfaHostInventory());
+            		return;
+            	}
+                HostType type = HostType.valueOf(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+                Practice.getInstance().getHostManager().startHost(event.getWhoClicked().getUniqueId(), 20, type);
                 event.getWhoClicked().closeInventory();
-                Bukkit.broadcastMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + event.getWhoClicked().getName() + ChatColor.DARK_AQUA + " have launch a sumo host event with " + ChatColor.AQUA + number + ChatColor.DARK_AQUA + " size!");
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getDuelInventory().getName())) {
                 final Player target = pm.getTargetDuel();
@@ -152,6 +155,11 @@ public class InventoryListener implements Listener
                 event.getWhoClicked().closeInventory();
                 pm.setDuelRequest(DuelRequestStatus.CANNOT);
             }
+        }
+        if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getFfaHostInventory().getName())) {
+        	final Ladders ladder = Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName());
+        	HostManager host = new HostManager();
+        	host.startHost(event.getWhoClicked().getUniqueId(), 20, HostType.FFA, ladder);
         }
         if (Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.FINISHED) {
         	return;

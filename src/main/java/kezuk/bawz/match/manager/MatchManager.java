@@ -113,7 +113,7 @@ public class MatchManager {
         final ArrayList<UUID> allPlayers = Lists.newArrayList(firstList);
         allPlayers.addAll(secondList);
         Practice.getMatchs().get(matchUUID).setStatus(MatchStatus.FINISHED);
-        Practice.getMatchs().get(matchUUID).clearDrops();
+        this.clearDrops();
         final TextComponent inventoriesMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + "Inventories" + ChatColor.RESET + ": ");
         for (final UUID winnerUUID : secondList) {
             final TextComponent name1 = new TextComponent(ChatColor.GREEN + Bukkit.getServer().getPlayer(winnerUUID).getName());
@@ -205,6 +205,12 @@ public class MatchManager {
         firstList.clear();
         secondList.clear();
         allPlayers.clear();
+        try {
+			this.finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public UUID getOpponent(final UUID uuid) {
@@ -249,10 +255,18 @@ public class MatchManager {
     	Practice.getInstance().getItemsManager().giveLeaveItems(Bukkit.getServer().getPlayer(uuid), "Spectate");
     }
     
-    public Set<UUID> getDropped() {
-		return dropped;
+	public void addDrops(Item item) {
+		this.dropped.add(item.getUniqueId());
 	}
-    
+	
+	public void removeDrops(Item item) {
+		this.dropped.remove(item.getUniqueId());
+	}
+	
+	public boolean containDrops(Item item) {
+		return this.dropped.contains(item.getUniqueId());
+	}
+	
 	public void clearDrops() {
 		if (this.dropped.isEmpty()) {
 			return;

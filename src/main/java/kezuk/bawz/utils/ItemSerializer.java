@@ -1,6 +1,5 @@
 package kezuk.bawz.utils;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.*;
 import java.util.*;
 import org.bukkit.inventory.meta.*;

@@ -2,12 +2,16 @@ package kezuk.bawz.match.manager;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import kezuk.bawz.Practice;
 import kezuk.bawz.arena.ArenaManager;
@@ -35,6 +40,7 @@ public class FfaMatchManager {
 	private Ladders ladder;
 	private List<UUID> alive;
 	private List<UUID> spectator;
+    private Set<UUID> dropped;
 	private MatchStatus status;
 	private ArenaManager arena;
 	
@@ -42,6 +48,7 @@ public class FfaMatchManager {
 		this.matchUUID = UUID.randomUUID();
 		this.ladder = ladder;
 		this.players = players;
+		this.dropped = Sets.newConcurrentHashSet();
 		this.alive = Lists.newArrayList(players);
 		this.status = MatchStatus.STARTING;
 		this.spectator = Lists.newArrayList();
@@ -67,7 +74,7 @@ public class FfaMatchManager {
 				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.FIGHT);
 			}
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "FFA Match as been started with " + ChatColor.WHITE + players.size() + ChatColor.DARK_AQUA + " players!");
-			player.teleport(arena.getLoc1());
+			player.teleport(arena.getMiddle());
 			final Kit kit = (Kit) ladder;
 			player.getInventory().clear();
 			player.getInventory().setArmorContents(kit.armor());
@@ -113,6 +120,7 @@ public class FfaMatchManager {
 			}
 			return;
 		}
+		match.getPlayers().remove(uuid);
 		match.getSpectator().add(uuid);
 		for (UUID ig : match.getAlive()) {
 			Bukkit.getPlayer(ig).hidePlayer(Bukkit.getPlayer(uuid));
@@ -166,6 +174,7 @@ public class FfaMatchManager {
 		allList.addAll(match.getPlayers());
 		allList.addAll(match.getSpectator());
 		match.setStatus(MatchStatus.FINISHED);
+        this.clearDrops();
 		for (UUID uuid : allList) {
 			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.AQUA + " have won the ffa match!");
             new BukkitRunnable() {
@@ -194,12 +203,47 @@ public class FfaMatchManager {
         			        Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(partyUUID));	
         				}
         				Practice.getFfaMatchs().remove(matchUUID);
+        		        try {
+        					this.finalize();
+        				} catch (Throwable e) {
+        					// TODO Auto-generated catch block
+        					e.printStackTrace();
+        				}
         				return;
         			}
         			pm.sendToSpawn();
         			Practice.getFfaMatchs().remove(matchUUID);
+        	        try {
+        				this.finalize();
+        			} catch (Throwable e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
+		}
+	}
+	
+	public void addDrops(Item item) {
+		this.dropped.add(item.getUniqueId());
+	}
+	
+	public void removeDrops(Item item) {
+		this.dropped.remove(item.getUniqueId());
+	}
+	
+	public boolean containDrops(Item item) {
+		return this.dropped.contains(item.getUniqueId());
+	}
+	
+	public void clearDrops() {
+		if (this.dropped.isEmpty()) {
+			return;
+		}
+		final World world = Bukkit.getWorld("world");
+		for (Entity entities : world.getEntities()) {
+			if (entities == null || !(entities instanceof Item) && !this.dropped.contains(entities.getUniqueId())) continue;
+			entities.remove();
 		}
 	}
 	

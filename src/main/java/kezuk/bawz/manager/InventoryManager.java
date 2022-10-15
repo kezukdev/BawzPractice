@@ -21,6 +21,7 @@ public class InventoryManager {
     private Inventory rankedInventory;
     private Inventory splitInventory;
     private Inventory ffaInventory;
+    private Inventory ffaHostInventory;
     private Inventory queueInventory;
     private Inventory partyMatchInventory;
     private Inventory duelInventory;
@@ -32,6 +33,7 @@ public class InventoryManager {
 	private Inventory editorInventory;
 	private Inventory ladderInventory;
     private Inventory startHostInventory;
+    private MultipageSerializer eventRunningInventory;
     private MultipageSerializer spectateInventory;
     
     public InventoryManager() {
@@ -42,6 +44,7 @@ public class InventoryManager {
         this.partyMatchInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Party Match:");
         this.splitInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Split:");
         this.ffaInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "FFA:");
+        this.ffaHostInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Host FFA:");
         this.queueInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "2v2 Queue:");
     	this.duelInventory = Bukkit.createInventory((InventoryHolder)null, 18, ChatColor.DARK_GRAY + "Duel:");
         this.tagTypeInventory = Bukkit.createInventory((InventoryHolder)null, 27, ChatColor.DARK_GRAY + "Tag Type Selector:");
@@ -51,6 +54,7 @@ public class InventoryManager {
         this.editableInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Choose ladder to edit:");
 		this.editorInventory = Bukkit.createInventory(null, 45, ChatColor.DARK_GRAY + "Editor:");
 		this.ladderInventory = Bukkit.createInventory(null, 36, ChatColor.DARK_GRAY + "Ladder:");
+        this.eventRunningInventory = new MultipageSerializer(Lists.newArrayList(), ChatColor.DARK_GRAY + "Event", ItemSerializer.serialize(new ItemStack(Material.ANVIL), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Current Event" + ChatColor.GRAY + " * "));
         this.spectateInventory = new MultipageSerializer(Lists.newArrayList(), ChatColor.DARK_GRAY + "Spectate", ItemSerializer.serialize(new ItemStack(Material.COMPASS), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Current Fight" + ChatColor.GRAY + " * "));
         this.startHostInventory = Bukkit.createInventory((InventoryHolder)null, 9, ChatColor.DARK_GRAY + "Host:");
         this.setPersonnalInventory();
@@ -58,6 +62,7 @@ public class InventoryManager {
         this.setUnrankedInventory();
         this.setSplitInventory();
         this.setFFAInventory();
+        this.setHostFFAInventory();
         this.setQueueInventory();
         this.setDuelInventory();
         this.setRankedInventory();
@@ -69,6 +74,14 @@ public class InventoryManager {
         this.setPartyMatchInventory();
         this.setStartHostInventory();
     }
+
+	private void setHostFFAInventory() {
+		this.ffaHostInventory.clear();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+    		this.ffaHostInventory.addItem(item);
+		}
+	}
 
 	private void setSplitInventory() {
 		this.splitInventory.clear();
@@ -309,11 +322,19 @@ public class InventoryManager {
 		return ffaInventory;
 	}
     
+    public Inventory getFfaHostInventory() {
+		return ffaHostInventory;
+	}
+    
     public Inventory getQueueInventory() {
 		return queueInventory;
 	}
     
     public Inventory getSplitInventory() {
 		return splitInventory;
+	}
+    
+    public MultipageSerializer getEventRunningInventory() {
+		return eventRunningInventory;
 	}
 }

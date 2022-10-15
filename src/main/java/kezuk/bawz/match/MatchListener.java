@@ -141,6 +141,12 @@ public class MatchListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
+            if (Practice.getMatchs().containsKey(playerManager.getMatchUUID())) {
+            	Practice.getMatchs().get(playerManager.getMatchUUID()).addDrops(e.getItemDrop());
+            }
+            if (Practice.getFfaMatchs().containsKey(playerManager.getMatchUUID())) {
+            	Practice.getFfaMatchs().get(playerManager.getMatchUUID()).addDrops(e.getItemDrop());
+            }
         }
         else {
             e.setCancelled(true);
@@ -218,14 +224,19 @@ public class MatchListener implements Listener {
 	public void onSpawnInWorldEntity(EntitySpawnEvent event) {
 		if (event.getEntity() instanceof Item) {
 			final Item itemDropped = (Item) event.getEntity();
-			
 			if (itemDropped.getItemStack().getType() == Material.GLASS_BOTTLE || itemDropped.getItemStack().getType() == Material.BOWL) return;
 			if (itemDropped.getOwner() != null && itemDropped.getOwner() instanceof Player) {
 				final UUID playerUUID = itemDropped.getOwner().getUniqueId();
-				final MatchManager duel = Practice.getMatchs().get(PlayerManager.getPlayers().get(playerUUID).getMatchUUID());
-				if (duel == null) return;
-				
-				duel.getDropped().add(itemDropped.getUniqueId());
+				if (Practice.getMatchs().containsKey(PlayerManager.getPlayers().get(playerUUID).getMatchUUID())){
+					final MatchManager duel = Practice.getMatchs().get(PlayerManager.getPlayers().get(playerUUID).getMatchUUID());
+					if (duel == null) return;
+					duel.addDrops(itemDropped);	
+				}
+				if (Practice.getFfaMatchs().containsKey(PlayerManager.getPlayers().get(playerUUID).getMatchUUID())){
+					final FfaMatchManager duel = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(playerUUID).getMatchUUID());
+					if (duel == null) return;
+					duel.addDrops(itemDropped);	
+				}
 			}
 		}
 	}

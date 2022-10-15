@@ -58,6 +58,10 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
 				return false;
 			}
+			if (PartyRequestManager.getRequestParty().get(player.getUniqueId()) != null) {
+				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait, you have already sended a invitations");
+				return false;
+			}
 			new PartyRequestManager(target.getUniqueId(), player.getUniqueId());
 		}
 		else if (args[0].equalsIgnoreCase("accept") && args.length == 2) {
@@ -75,7 +79,7 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The target is not in party!");
 				return false;
 			}
-			if (PartyRequestManager.getRequestParty().get(target.getUniqueId()) != null && PartyRequestManager.getRequestParty().get(target.getUniqueId()).getInvited() == player.getUniqueId()) {
+			if (PartyRequestManager.getRequestParty().containsKey(target.getUniqueId()) && PartyRequestManager.getRequestParty().get(target.getUniqueId()).getInvited().equals(player.getUniqueId())) {
 				PartyRequestManager.getRequestParty().get(target.getUniqueId()).acceptInvite();
 				return false;
 			}
