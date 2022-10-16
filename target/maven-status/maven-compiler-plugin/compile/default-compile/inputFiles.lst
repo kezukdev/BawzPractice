@@ -30,6 +30,7 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\sto
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\core\Tag.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\leaderboard\LeaderboardManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\Practice.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\utils\DiscordWebhook.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\arena\ArenaType.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\leaderboard\LeaderboardInventory.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\DuelCommand.java
@@ -40,6 +41,7 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\edi
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\utils\MultipageSerializer.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarrealex\aether\scoreboard\BoardEntry.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\SpectateCommand.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\JoinCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\AcceptCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\party\manager\PartyManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\PartyCommand.java
@@ -63,6 +65,7 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\par
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\listener\PlayerListener.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\manager\FfaMatchManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\DuelRequestStatus.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\host\HostType.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\utils\LocationSerializer.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\database\DataSQL.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarrealex\aether\example\ExampleBoardAdapter.java

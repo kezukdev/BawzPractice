@@ -153,7 +153,7 @@ public class PlayerListener implements Listener
             }
             if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
             	event.setCancelled(true);
-            	HostManager.getHosts().get(pm.getHostUUID()).removeMember(event.getPlayer().getUniqueId());
+            	Practice.getHosts().get(pm.getHostUUID()).removeMember(event.getPlayer().getUniqueId());
             }
         }
     }

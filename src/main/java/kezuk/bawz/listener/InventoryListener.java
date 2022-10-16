@@ -139,6 +139,23 @@ public class InventoryListener implements Listener
                 String first = arr[0];
                 Practice.getMatchs().get(PlayerManager.getPlayers().get(Bukkit.getServer().getPlayer(ChatColor.stripColor(first)).getUniqueId()).getMatchUUID()).addSpectatorToMatch(player.getUniqueId(), Bukkit.getServer().getPlayer(ChatColor.stripColor(first)).getUniqueId());
             }
+            if (event.getClickedInventory().getName().equals(ChatColor.DARK_GRAY + "Event")) {
+            	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.COMPASS || event.getCurrentItem().getType() == Material.PAPER) return;
+            	final Player player = (Player) event.getWhoClicked();
+	            if (event.getCurrentItem().getType() == Material.ARROW) {
+	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+	                Practice.getInstance().getInventoryManager().getSpectateInventory().open(player, Integer.parseInt(str));
+	                return;
+	            }
+	            else if (event.getCurrentItem().getType() == Material.LEVER) {
+	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+	                Practice.getInstance().getInventoryManager().getSpectateInventory().open(player, Integer.parseInt(str));
+	                return;
+	            }
+            	player.closeInventory();
+            	final UUID hostUUID = UUID.fromString(event.getCurrentItem().getItemMeta().getLore().get(3));
+            	Practice.getHosts().get(hostUUID).addMember(event.getWhoClicked().getUniqueId(), hostUUID);
+            }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getStartHostInventory().getName())) {
             	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) return;
             	if (event.getCurrentItem().getType().equals(Material.FLINT)) {

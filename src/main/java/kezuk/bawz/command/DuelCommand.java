@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import kezuk.bawz.Practice;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
-import kezuk.bawz.request.DuelRequestStatus;
+import kezuk.bawz.request.RequestManager;
 import kezuk.bawz.utils.MessageSerializer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -37,7 +37,7 @@ public class DuelCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Sorry but you cannot duel yourself!");
 			return false;
 		}
-		if (pm.getDuelRequest() != DuelRequestStatus.CAN) {
+		if (RequestManager.getRequest().get(player.getUniqueId()) != null) {
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait your another request has expired.");
 			return false;
 		}

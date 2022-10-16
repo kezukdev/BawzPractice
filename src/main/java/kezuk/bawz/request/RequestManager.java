@@ -18,14 +18,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class RequestManager {
 	
-	public static WeakHashMap<UUID, Ladders> request;
+	public static WeakHashMap<UUID, Request> request;
 	private Ladders ladder;
 	
 	public RequestManager(final UUID uuid, final UUID targetUUID, final String ladderName) {
 		request = new WeakHashMap<>();
 		final Ladders ladder = Ladders.getLadder(ladderName);
 		this.ladder = ladder;
-		request.put(targetUUID, ladder);
+		request.put(uuid, new Request(uuid, targetUUID, ladder));
         final TextComponent requestMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " have sent a duel request in " + ChatColor.AQUA + ladder.displayName() + ChatColor.DARK_AQUA + ".");
         requestMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accept " + Bukkit.getServer().getPlayer(uuid).getName()));
         requestMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click for accept the duel request.").create()));
@@ -47,11 +47,35 @@ public class RequestManager {
         }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 300L);
 	}
 	
+	public class Request {
+		private UUID requester;
+		private UUID requested;
+		private Ladders ladder;
+		
+		public Request(final UUID requester, final UUID requested, final Ladders ladder) {
+			this.requester = requester;
+			this.requested = requested;
+			this.ladder = ladder;
+		}
+		
+		public Ladders getLadder() {
+			return ladder;
+		}
+		
+		public UUID getRequested() {
+			return requested;
+		}
+		
+		public UUID getRequester() {
+			return requester;
+		}
+	}
+	
 	public Ladders getLadder() {
 		return ladder;
 	}
 	
-	public static WeakHashMap<UUID, Ladders> getRequest() {
+	public static WeakHashMap<UUID, Request> getRequest() {
 		return request;
 	}
 }

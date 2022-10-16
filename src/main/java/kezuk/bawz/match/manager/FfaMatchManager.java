@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 
 import kezuk.bawz.Practice;
 import kezuk.bawz.arena.ArenaManager;
+import kezuk.bawz.host.HostStatus;
 import kezuk.bawz.ladders.Kit;
 import kezuk.bawz.ladders.Ladders;
 import kezuk.bawz.match.MatchStatus;
@@ -72,6 +73,9 @@ public class FfaMatchManager {
 			player.closeInventory();
 			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.PARTY)) {
 				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.FIGHT);
+			}
+			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.HOST)) {
+				Practice.getHosts().get(PlayerManager.getPlayers().get(uuid).getHostUUID()).setStatus(HostStatus.PLAYING);
 			}
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "FFA Match as been started with " + ChatColor.WHITE + players.size() + ChatColor.DARK_AQUA + " players!");
 			player.teleport(arena.getMiddle());
@@ -174,6 +178,9 @@ public class FfaMatchManager {
 		allList.addAll(match.getPlayers());
 		allList.addAll(match.getSpectator());
 		match.setStatus(MatchStatus.FINISHED);
+		if (PlayerManager.getPlayers().get(winnerUUID).getPlayerStatus().equals(Status.HOST)) {
+			Practice.getHosts().get(PlayerManager.getPlayers().get(winnerUUID).getHostUUID()).setStatus(HostStatus.FINSIHED);
+		}
         this.clearDrops();
 		for (UUID uuid : allList) {
 			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.AQUA + " have won the ffa match!");

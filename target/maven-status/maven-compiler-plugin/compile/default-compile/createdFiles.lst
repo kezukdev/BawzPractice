@@ -5,6 +5,7 @@ kezuk\bawz\listener\ServerListener.class
 com\bizarrealex\aether\scoreboard\BoardAdapter.class
 kezuk\bawz\match\MatchSeeInventory.class
 kezuk\bawz\core\Tag.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject$Field.class
 kezuk\bawz\core\TagType.class
 kezuk\bawz\editor\EditorManager.class
 kezuk\bawz\ladders\kit\Combo.class
@@ -16,6 +17,7 @@ kezuk\bawz\command\BuildCommand.class
 kezuk\bawz\listener\PlayerListener.class
 kezuk\bawz\command\PartyCommand.class
 kezuk\bawz\party\manager\PartyRequestManager$1.class
+kezuk\bawz\request\RequestManager$Request.class
 com\bizarrealex\aether\scoreboard\BoardEntry.class
 com\bizarrealex\aether\scoreboard\cooldown\BoardFormat.class
 kezuk\bawz\ladders\kit\Boxing.class
@@ -29,6 +31,7 @@ com\bizarrealex\aether\example\ExampleBoardAdapter.class
 kezuk\bawz\board\PracticeBoard.class
 kezuk\bawz\register\Register.class
 com\bizarrealex\aether\Aether$1.class
+kezuk\bawz\utils\DiscordWebhook.class
 kezuk\bawz\match\MatchStatus.class
 kezuk\bawz\ladders\kit\Soup.class
 kezuk\bawz\ladders\kit\Sumo.class
@@ -40,21 +43,29 @@ com\bizarrealex\aether\Aether.class
 kezuk\bawz\ladders\kit\Bow.class
 kezuk\bawz\match\MatchStats.class
 kezuk\bawz\request\RequestManager$1.class
+kezuk\bawz\command\JoinCommand.class
 kezuk\bawz\match\manager\FfaMatchManager$2.class
 kezuk\bawz\match\manager\FfaMatchManager.class
 kezuk\bawz\arena\ArenaManager.class
 kezuk\bawz\request\RequestManager.class
 com\bizarrealex\aether\scoreboard\Board.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject$Footer.class
 kezuk\bawz\party\InviteRequest.class
+kezuk\bawz\host\HostManager$1.class
 kezuk\bawz\utils\ItemSerializer.class
 com\bizarrealex\aether\scoreboard\cooldown\BoardCooldown.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject$Author.class
 kezuk\bawz\command\ArenaCommand.class
 kezuk\bawz\host\HostManager.class
 kezuk\bawz\match\manager\MatchManager$1.class
 kezuk\bawz\queue\QueueManager.class
 kezuk\bawz\queue\QueueManager$Queue.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject$Thumbnail.class
 kezuk\bawz\ladders\kit\NoDebuff.class
+kezuk\bawz\utils\DiscordWebhook$JSONObject.class
 kezuk\bawz\party\PartyState.class
+kezuk\bawz\utils\DiscordWebhook$1.class
 kezuk\bawz\player\Status.class
 kezuk\bawz\utils\LocationSerializer.class
 kezuk\bawz\arena\ArenaType.class
@@ -63,6 +74,7 @@ kezuk\bawz\manager\InventoryManager.class
 kezuk\bawz\leaderboard\LeaderboardManager.class
 kezuk\bawz\request\DuelRequestStatus.class
 kezuk\bawz\player\PlayerManager.class
+kezuk\bawz\utils\DiscordWebhook$EmbedObject$Image.class
 kezuk\bawz\ladders\Kit.class
 kezuk\bawz\database\DataSQL.class
 kezuk\bawz\utils\MessageSerializer.class
@@ -76,4 +88,5 @@ kezuk\bawz\utils\MultipageSerializer.class
 kezuk\bawz\ladders\kit\Axe.class
 kezuk\bawz\match\manager\MatchManager.class
 kezuk\bawz\match\MatchListener$1.class
+kezuk\bawz\host\HostType.class
 kezuk\bawz\core\ChatListener.class
