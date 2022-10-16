@@ -58,6 +58,7 @@ public class HostManager {
 		embed.setDescription(Bukkit.getPlayer(creatorUUID).getName() + " have launch a event in game connect for join this!");
 		embed.setColor(Color.CYAN);
 		webhook.addEmbed(embed);
+		PlayerManager.getPlayers().get(creatorUUID).setHostStatus(PlayerHostStatus.WAITTING);
 		PlayerManager.getPlayers().get(creatorUUID).setPlayerStatus(Status.HOST);
 		PlayerManager.getPlayers().get(creatorUUID).setHostUUID(hostUUID);
 		Practice.getInstance().getItemsManager().giveLeaveItems(Bukkit.getServer().getPlayer(creatorUUID), "Host");
@@ -86,6 +87,7 @@ public class HostManager {
 		final Player player = Bukkit.getServer().getPlayer(uuid);
 		PlayerManager.getPlayers().get(uuid).setPlayerStatus(Status.HOST);
 		PlayerManager.getPlayers().get(uuid).setHostUUID(hostUUID);
+		PlayerManager.getPlayers().get(uuid).setHostStatus(PlayerHostStatus.WAITTING);
 		Practice.getInstance().getItemsManager().giveLeaveItems(player, "Host");
 		for (UUID inHost : Practice.getHosts().get(hostUUID).getMembers()) {
 			Bukkit.getServer().getPlayer(inHost).sendMessage(MessageSerializer.JOIN_HOST + ChatColor.DARK_AQUA + player.getName());
@@ -100,6 +102,7 @@ public class HostManager {
 			return;
 		}
 		PlayerManager.getPlayers().get(uuid).setHostUUID(null);
+		PlayerManager.getPlayers().get(uuid).setHostStatus(null);
 		host.getMembers().remove(uuid);
 		PlayerManager.getPlayers().get(uuid).sendToSpawn();
 		Bukkit.getServer().getPlayer(uuid).sendMessage(MessageSerializer.LEAVE_HOST);
@@ -110,6 +113,7 @@ public class HostManager {
 			PlayerManager.getPlayers().get(inHost).sendToSpawn();
 			Bukkit.getServer().getPlayer(inHost).sendMessage(MessageSerializer.DESTROY_HOST);
 			PlayerManager.getPlayers().get(inHost).setHostUUID(null);
+			PlayerManager.getPlayers().get(inHost).setHostStatus(null);
 		}
 		Practice.getHosts().get(hostUUID).getMembers().clear();
 		Practice.getHosts().remove(hostUUID);
@@ -122,7 +126,7 @@ public class HostManager {
         	public void run() {
         		cooldown -= 1;
         		HostManager host = Practice.getHosts().get(hostUUID);
-        		if (host.getStatus() != HostStatus.STARTING) {
+        		if (host == null) {
         			this.cancel();
         			return;
         		}

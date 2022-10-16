@@ -189,7 +189,7 @@ public class MatchListener implements Listener {
 	    MatchManager match = Practice.getMatchs().get(playerData.getMatchUUID());
 	    FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(playerData.getMatchUUID());
 	    HostManager host = Practice.getHosts().get(playerData.getHostUUID());
-	    if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || ffaMatch != null && ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || host != null && host.getType().equals(HostType.SUMO)) {
+	    if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || ffaMatch != null && ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || host != null && host.getType().equals(HostType.SUMO) && playerData.getHostStatus().equals(PlayerHostStatus.TELEPORTED) && playerData.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
 	    	if (match != null && match.getStatus().equals(MatchStatus.STARTING) || ffaMatch != null && ffaMatch.getStatus().equals(MatchStatus.STARTING) || host != null && playerData.getHostStatus().equals(PlayerHostStatus.TELEPORTED)) {
 	    		if (from.getX() != to.getX() || from.getZ() != to.getZ())
 	    			event.setTo(from.setDirection(to.getDirection())); 

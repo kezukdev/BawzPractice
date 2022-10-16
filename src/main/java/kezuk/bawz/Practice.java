@@ -55,7 +55,6 @@ public class Practice extends JavaPlugin {
     private QueueManager queueManager;
     public Inventory leaderboardInventory;
     private LeaderboardManager leaderboardManager;
-    private HostManager hostManager;
     public Connection connection;
     private Map<UUID, MatchSeeInventory> offlineInventories;
     private Thread leaderboardThread;
@@ -90,7 +89,6 @@ public class Practice extends JavaPlugin {
         this.itemsManager = new ItemsManager();
         this.queueManager = new QueueManager();
         this.inventoryManager = new InventoryManager();
-        this.hostManager = new HostManager();
         new Aether(this, new PracticeBoard());
         new Register();
     }
@@ -181,10 +179,6 @@ public class Practice extends JavaPlugin {
     public Map<UUID, MatchSeeInventory> getOfflineInventories() {
         return this.offlineInventories;
     }
-    
-    public HostManager getHostManager() {
-		return hostManager;
-	}
     
     public static Practice getInstance() {
         return Practice.instance;

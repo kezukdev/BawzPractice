@@ -163,7 +163,8 @@ public class InventoryListener implements Listener
             		return;
             	}
                 HostType type = HostType.valueOf(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
-                Practice.getInstance().getHostManager().startHost(event.getWhoClicked().getUniqueId(), 20, type);
+                HostManager host = new HostManager();
+                host.startHost(event.getWhoClicked().getUniqueId(), 20, type);
                 event.getWhoClicked().closeInventory();
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getDuelInventory().getName())) {
