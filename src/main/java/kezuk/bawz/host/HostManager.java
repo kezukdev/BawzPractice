@@ -2,12 +2,13 @@ package kezuk.bawz.host;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,16 +26,18 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.util.com.google.common.collect.Maps;
 
 public class HostManager {
 	
 	private int size;
 	private UUID creator;
 	private UUID hostUUID;
+	private UUID firstUUID;
+	private UUID secondUUID;
 	private HostType type;
 	private HostStatus status;
 	private List<UUID> members;
+	private List<UUID> alivePlayer;
 	private Ladders ladder;
 	
 	public void startHost(final UUID creatorUUID, int size, final HostType type) {
@@ -178,9 +181,85 @@ public class HostManager {
         				FfaMatchManager match = new FfaMatchManager();
         				match.startMatch(host.getMembers(), host.getLadder());
         			}
+        			if (host.getType().equals(HostType.SUMO)) {
+        				startSumo();
+        			}
         		}
         	}
 		}.runTaskTimer(Practice.getInstance(), 20L, 20L);
+	}
+	
+	public void pickupTwoPlayer() {
+		Collections.shuffle(alivePlayer);
+		this.setFirstUUID(alivePlayer.get(0));
+		this.setSecondUUID(alivePlayer.get(1));
+	}
+	
+	public void startSumo() {
+		this.alivePlayer = Lists.newArrayList(members);
+		pickupTwoPlayer();
+		Bukkit.getPlayer(firstUUID).teleport(getPos1());
+		Bukkit.getPlayer(secondUUID).teleport(getPos2());
+		for (UUID uuids : members) {
+			Bukkit.getPlayer(uuids).sendMessage(ChatColor.GRAY + "[" + ChatColor.AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(firstUUID).getName() + ChatColor.DARK_AQUA + " vs " + ChatColor.WHITE + Bukkit.getPlayer(secondUUID).getName());
+		}
+		PlayerManager.getPlayers().get(firstUUID).setHostStatus(PlayerHostStatus.TELEPORTED);
+		PlayerManager.getPlayers().get(secondUUID).setHostStatus(PlayerHostStatus.TELEPORTED);
+		startSumoRunnable();
+	}
+	
+	public void startSumoRunnable() {
+		new BukkitRunnable() {
+			int i = 5;
+			@Override
+        	public void run() {
+				i =- 1;
+				Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Match starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
+				Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Match starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
+				if (i <= 0) {
+					Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
+					Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
+					PlayerManager.getPlayers().get(firstUUID).setHostStatus(PlayerHostStatus.FIGHTING);
+					PlayerManager.getPlayers().get(secondUUID).setHostStatus(PlayerHostStatus.FIGHTING);
+					this.cancel();
+				}
+			}
+		}.runTaskTimer(Practice.getInstance(), 20L, 20L);
+	}
+	
+	public void endHostSumo(final UUID winnerUUID) {
+		Bukkit.broadcastMessage(ChatColor.GRAY + " [" + ChatColor.AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.DARK_AQUA + " have won the sumo host!");
+		for (UUID uuid : members) {
+			PlayerManager.getPlayers().get(uuid).sendToSpawn();
+		}
+	}
+	
+	public Location getPos1() {
+		return new Location(null, size, size, size, size, size);
+	}
+	
+	public Location getPos2() {
+		return new Location(null, size, size, size, size, size);
+	}
+	
+	public List<UUID> getAlivePlayer() {
+		return alivePlayer;
+	}
+	
+	public UUID getFirstUUID() {
+		return firstUUID;
+	}
+	
+	public UUID getSecondUUID() {
+		return secondUUID;
+	}
+	
+	public void setFirstUUID(UUID firstUUID) {
+		this.firstUUID = firstUUID;
+	}
+	
+	public void setSecondUUID(UUID secondUUID) {
+		this.secondUUID = secondUUID;
 	}
 	
 	public UUID getHostUUID() {

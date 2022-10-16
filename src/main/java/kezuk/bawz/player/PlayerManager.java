@@ -6,6 +6,8 @@ import org.bukkit.potion.*;
 import co.aikar.idb.DB;
 import kezuk.bawz.*;
 import kezuk.bawz.core.Tag;
+import kezuk.bawz.host.HostStats;
+import kezuk.bawz.host.PlayerHostStatus;
 import kezuk.bawz.ladders.Ladders;
 import kezuk.bawz.match.*;
 import kezuk.bawz.request.DuelRequestStatus;
@@ -22,6 +24,8 @@ public class PlayerManager {
     private UUID hostUUID;
     private Long nextHitTick;
     private DuelRequestStatus duelRequest;
+    private PlayerHostStatus hostStatus;
+    private HostStats hostStats;
     private MatchStats matchStats;
     private Player targetDuel;
     private Tag tag;
@@ -34,6 +38,7 @@ public class PlayerManager {
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
         this.nextHitTick = 0L;
         this.matchStats = new MatchStats();
+        this.hostStats = new HostStats();
         this.tag = Tag.NORMAL;
         this.duelRequest = DuelRequestStatus.CAN;
         PlayerManager.players.putIfAbsent(uuid, this);
@@ -59,6 +64,22 @@ public class PlayerManager {
             Bukkit.getServer().getPlayer(this.uuid).removePotionEffect(effect.getType());
         }
     }
+    
+    public HostStats getHostStats() {
+		return hostStats;
+	}
+    
+    public void setHostStats(HostStats hostStats) {
+		this.hostStats = hostStats;
+	}
+    
+    public void setHostStatus(PlayerHostStatus hostStatus) {
+		this.hostStatus = hostStatus;
+	}
+    
+    public PlayerHostStatus getHostStatus() {
+		return hostStatus;
+	}
     
     public void setTargetDuel(Player targetDuel) {
 		this.targetDuel = targetDuel;

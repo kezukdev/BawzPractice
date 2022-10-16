@@ -9,6 +9,9 @@ import org.bukkit.event.entity.*;
 import org.bukkit.scheduler.*;
 
 import kezuk.bawz.*;
+import kezuk.bawz.host.HostManager;
+import kezuk.bawz.host.HostType;
+import kezuk.bawz.host.PlayerHostStatus;
 import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
@@ -48,6 +51,12 @@ public class MatchListener implements Listener {
         	}
         	return;
         }
+        if (Practice.getHosts().get(pm.getHostUUID()) != null && pm.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
+        	if (Practice.getHosts().get(pm.getHostUUID()).getType().equals(HostType.SUMO)) {
+            	event.setDamage(0.0);	
+        	}
+        	return;
+        }
         event.setCancelled(true);
     }
     
@@ -56,6 +65,14 @@ public class MatchListener implements Listener {
     	if (!(event.getDamager() instanceof Player)) return;
         final Player damaged = (Player)event.getEntity();
         final Player damager = (Player)event.getDamager();
+        final PlayerManager pm = PlayerManager.getPlayers().get(damaged.getUniqueId());
+        if (Practice.getHosts().get(pm.getHostUUID()) != null && pm.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
+        	if (Practice.getHosts().get(pm.getHostUUID()).getType().equals(HostType.SUMO)) {
+        		pm.getHostStats().setLastAttacker(damager.getUniqueId());
+            	event.setDamage(0.0);	
+        	}
+        	return;
+        }
         if (PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.PARTY) || PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.FIGHT) || PlayerManager.getPlayers().get(damaged.getUniqueId()).getPlayerStatus().equals(Status.HOST)) {
             final MatchManager match = Practice.getMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
             final FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchUUID());
@@ -112,6 +129,7 @@ public class MatchListener implements Listener {
                     	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
                     }
                 	if (ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
+                		PlayerManager.getPlayers().get(damaged.getUniqueId()).getMatchStats().setLastAttacker(damager.getUniqueId());
                         event.setDamage(0.0D);
                         return;
                     }
@@ -154,7 +172,7 @@ public class MatchListener implements Listener {
     }
     
     @EventHandler
-    public void onSplash(ProjectileLaunchEvent event) {
+    public void onLaunch(ProjectileLaunchEvent event) {
     	final Player player = (Player) event.getEntity().getShooter();
     	final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
     	if (event.getEntity() instanceof ThrownPotion) {
@@ -169,17 +187,35 @@ public class MatchListener implements Listener {
 		Location from = event.getFrom();
 	    Location to = event.getTo();
 	    MatchManager match = Practice.getMatchs().get(playerData.getMatchUUID());
-	    if (match != null && playerData.getPlayerStatus() == Status.FIGHT && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
-	    	if (match != null && match.getStatus().equals(MatchStatus.STARTING)) {
+	    FfaMatchManager ffaMatch = Practice.getFfaMatchs().get(playerData.getMatchUUID());
+	    HostManager host = Practice.getHosts().get(playerData.getHostUUID());
+	    if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || ffaMatch != null && ffaMatch.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || host != null && host.getType().equals(HostType.SUMO)) {
+	    	if (match != null && match.getStatus().equals(MatchStatus.STARTING) || ffaMatch != null && ffaMatch.getStatus().equals(MatchStatus.STARTING) || host != null && playerData.getHostStatus().equals(PlayerHostStatus.TELEPORTED)) {
 	    		if (from.getX() != to.getX() || from.getZ() != to.getZ())
 	    			event.setTo(from.setDirection(to.getDirection())); 
 	    		}
-	    		else if (match.getStatus() == MatchStatus.PLAYING) {
+	    		else if (match.getStatus() == MatchStatus.PLAYING || ffaMatch.getStatus() == MatchStatus.PLAYING || playerData.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
 	    			Location loc = player.getLocation();
 	    			loc.setY(loc.getY() - 2.0D);
-	    			if (player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_WATER || player.getWorld().getBlockAt(loc).getType() == Material.WATER || player.getWorld().getBlockAt(loc).getType() == Material.LAVA || player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_LAVA)
-	    				match.endMatch(player.getUniqueId(),match.getOpponent(player.getUniqueId()),playerData.getMatchUUID(), true); 
-	    			} 
+	    			if (host == null) {
+	    				if (ffaMatch == null) {
+			    			if (player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_WATER || player.getWorld().getBlockAt(loc).getType() == Material.WATER || player.getWorld().getBlockAt(loc).getType() == Material.LAVA || player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_LAVA)
+			    				match.endMatch(player.getUniqueId(),match.getOpponent(player.getUniqueId()),playerData.getMatchUUID(), true); 	
+	    				}
+	    				else {
+			    			if (player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_WATER || player.getWorld().getBlockAt(loc).getType() == Material.WATER || player.getWorld().getBlockAt(loc).getType() == Material.LAVA || player.getWorld().getBlockAt(loc).getType() == Material.STATIONARY_LAVA)
+			    				ffaMatch.addKill(player.getUniqueId(), PlayerManager.getPlayers().get(player.getUniqueId()).getMatchStats().getLastAttacker()); 
+	    				}
+		    		} 
+	    			else {
+	    				host.getAlivePlayer().remove(player.getUniqueId());
+	    				if (host.getAlivePlayer().size() == 1) {
+	    					host.endHostSumo(PlayerManager.getPlayers().get(player.getUniqueId()).getHostStats().getLastAttacker());
+	    					return;
+	    				}
+	    				host.startSumo();
+	    			}
+	    		}
 	    	} 
 	  }
 	 

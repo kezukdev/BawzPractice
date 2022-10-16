@@ -1,5 +1,7 @@
 package kezuk.bawz.match;
 
+import java.util.UUID;
+
 public class MatchStats
 {
     private int hits;
@@ -8,6 +10,7 @@ public class MatchStats
     private int longestCombo;
     private int thrownPotions;
     private int round;
+    private UUID lastAttacker;
 	private Long enderpearlCooldown;
     
     public MatchStats() {
@@ -23,11 +26,20 @@ public class MatchStats
     public void resetStats() {
         this.hits = 0;
         this.combo = 0;
+        this.lastAttacker = null;
         this.missedPotions = 0;
         this.longestCombo = 0;
         this.thrownPotions = 0;
 		this.removeEnderPearlCooldown();
     }
+    
+    public void setLastAttacker(UUID lastAttacker) {
+		this.lastAttacker = lastAttacker;
+	}
+    
+    public UUID getLastAttacker() {
+		return lastAttacker;
+	}
     
     public void setRound(int round) {
 		this.round = round;

@@ -174,15 +174,17 @@ public class FfaMatchManager {
 	
 	public void endMatch(final UUID winnerUUID) {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(winnerUUID).getMatchUUID());
-		List<UUID> allList = Lists.newArrayList();
-		allList.addAll(match.getPlayers());
-		allList.addAll(match.getSpectator());
 		match.setStatus(MatchStatus.FINISHED);
 		if (PlayerManager.getPlayers().get(winnerUUID).getPlayerStatus().equals(Status.HOST)) {
 			Practice.getHosts().get(PlayerManager.getPlayers().get(winnerUUID).getHostUUID()).setStatus(HostStatus.FINSIHED);
 		}
         this.clearDrops();
-		for (UUID uuid : allList) {
+        for (UUID spectatorUUID : match.getSpectator()) {
+        	if (!match.getPlayers().contains(spectatorUUID)) {
+                match.getPlayers().addAll(match.getSpectator());
+        	}
+        }
+		for (UUID uuid : match.getPlayers()) {
 			Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(winnerUUID).getName() + ChatColor.AQUA + " have won the ffa match!");
             new BukkitRunnable() {
                 public void run() {
