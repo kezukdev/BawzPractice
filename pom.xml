@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>kezuk.bawz</groupId>
   <artifactId>bPractice</artifactId>
-  <version>0.2-a</version>
+  <version>0.4-b</version>
   <name>BawzPractice</name>
   
     <properties>

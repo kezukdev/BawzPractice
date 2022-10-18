@@ -11,7 +11,7 @@ public class Deny {
 	
 	public Deny(final UUID requested, final UUID requester) {
 		if (PlayerManager.getPlayers().get(requested).getRequest() != null && PlayerManager.getPlayers().get(requested).getRequest().get(requester) != null) {
-			if (!PlayerManager.getPlayers().get(requested).haveDuelCooldownActive()) {
+			if (PlayerManager.getPlayers().get(requester).getDuelCooldown() == 0L) {
 				Bukkit.getPlayer(requested).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The duel request from " + ChatColor.WHITE + Bukkit.getPlayer(requester).getName() + ChatColor.AQUA + " have expired!");
 				PlayerManager.getPlayers().get(requested).getRequest().remove(requester);
 				return;

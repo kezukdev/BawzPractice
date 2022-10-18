@@ -15,7 +15,7 @@ import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.*;
 import kezuk.bawz.request.Requesting;
 import kezuk.bawz.utils.ItemSerializer;
@@ -173,7 +173,7 @@ public class InventoryListener implements Listener
                 event.getWhoClicked().closeInventory();
             }
         }
-        if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getFfaHostInventory().getName())) {
+        if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getInventoryManager().getFfaHostInventory().getName())) {
         	final Ladders ladder = Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName());
         	HostManager host = new HostManager();
         	event.getWhoClicked().closeInventory();

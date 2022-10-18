@@ -15,7 +15,7 @@ import kezuk.bawz.host.PlayerHostStatus;
 import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.*;
 import org.bukkit.*;
 import java.lang.reflect.*;

@@ -25,9 +25,8 @@ import org.bukkit.plugin.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.entity.*;
-import org.bukkit.event.Listener;
 
-public class MatchManager implements Listener {
+public class MatchManager {
 
     private Ladders ladder;
     private UUID matchUUID;
@@ -39,10 +38,6 @@ public class MatchManager implements Listener {
     private Set<UUID> dropped;
     private List<UUID> spectator;
     
-    public MatchManager() {
-    	Bukkit.getPluginManager().registerEvents(new MatchListener(), Practice.getInstance());
-    }
-    
     public void startMath(final List<UUID> firstList, final List<UUID> secondList, final Ladders ladder, boolean ranked) {
     	this.matchUUID = UUID.randomUUID();
         this.ladder = ladder;
@@ -51,11 +46,11 @@ public class MatchManager implements Listener {
         this.secondList = Lists.newArrayList(secondList);
         this.status = MatchStatus.STARTING;
         this.dropped = Sets.newHashSet();
-        Practice.getMatchs().put(this.matchUUID, this);
         final ArrayList<UUID> allPlayers = Lists.newArrayList(firstList);
         allPlayers.addAll(secondList);
-        final ArenaManager arena = ArenaManager.getRandomArena(ladder.arenaType());
-        this.arena = arena;
+        this.arena = ArenaManager.getRandomArena(ladder.arenaType());
+        spectator = Lists.newArrayList();
+        Practice.getMatchs().put(this.matchUUID, this);
         for (final UUID uuid : allPlayers) {
         	if (Practice.getInstance().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getOfflineInventories().remove(uuid);
@@ -108,7 +103,6 @@ public class MatchManager implements Listener {
 	                }
 	            }
 	        }.runTaskTimer(Practice.getInstance(), 20L, 20L);
-            spectator = Lists.newArrayList();
         }
 		allPlayers.clear();
     }

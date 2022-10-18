@@ -21,11 +21,11 @@ public class Requesting {
 		pmTarget.getRequest().put(requester, new Request(requester, requested, ladder));
         final TextComponent requestMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(requester).getName() + ChatColor.DARK_AQUA + " have sent to you a duel request into " + ChatColor.WHITE + ChatColor.stripColor(ladder));
         final TextComponent accept = new TextComponent(ChatColor.GRAY + " (" + ChatColor.AQUA + "Accept" + ChatColor.GRAY + ")");
-        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accept " + Bukkit.getPlayer(requester).getName()));
-        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Accept the duel request!").create()));
+        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, (ladder == "Party" ? "/party accept " : "/accept ") + Bukkit.getPlayer(requester).getName()));
+        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Accept the " + (ladder == "Party" ? "Party" : "Duel") + " request!").create()));
         requestMessage.addExtra((BaseComponent)accept);
         final TextComponent deny = new TextComponent(ChatColor.GRAY + " (" + ChatColor.RED + "Deny" + ChatColor.GRAY + ")");
-        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/deny " + Bukkit.getPlayer(requester).getName()));
+        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, (ladder == "Party" ? "/party deny " : "/deny ")  + Bukkit.getPlayer(requester).getName()));
         deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Deny the duel request!").create()));
         requestMessage.addExtra((BaseComponent)deny);
         Bukkit.getPlayer(requested).spigot().sendMessage(requestMessage);

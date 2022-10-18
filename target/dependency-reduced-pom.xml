@@ -4,7 +4,7 @@
   <groupId>kezuk.bawz</groupId>
   <artifactId>bPractice</artifactId>
   <name>BawzPractice</name>
-  <version>0.2-a</version>
+  <version>0.4-b</version>
   <build>
     <plugins>
       <plugin>

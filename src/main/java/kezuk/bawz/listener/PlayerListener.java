@@ -12,7 +12,7 @@ import kezuk.bawz.*;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.*;
 import net.luckperms.api.cacheddata.CachedMetaData;
 

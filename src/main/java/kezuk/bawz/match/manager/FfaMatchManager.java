@@ -26,10 +26,9 @@ import kezuk.bawz.arena.ArenaManager;
 import kezuk.bawz.host.HostStatus;
 import kezuk.bawz.ladders.Kit;
 import kezuk.bawz.ladders.Ladders;
-import kezuk.bawz.match.MatchListener;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.party.PartyState;
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import kezuk.bawz.utils.MessageSerializer;
@@ -46,10 +45,6 @@ public class FfaMatchManager {
 	private MatchStatus status;
 	private ArenaManager arena;
 	
-	public FfaMatchManager() {
-		Bukkit.getPluginManager().registerEvents(new MatchListener(), Practice.getInstance());
-	}
-	
 	public void startMatch(final List<UUID> players, final Ladders ladder) {
 		this.matchUUID = UUID.randomUUID();
 		this.ladder = ladder;
@@ -59,21 +54,19 @@ public class FfaMatchManager {
 		this.status = MatchStatus.STARTING;
 		this.spectator = Lists.newArrayList();
 		this.arena = ArenaManager.getRandomArena(ladder.arenaType());
-		for (UUID uuid : players) {
-        	if (Practice.getInstance().getOfflineInventories().containsKey(uuid)) {
-        		Practice.getInstance().getOfflineInventories().remove(uuid);
-        		Bukkit.getServer().getPlayer(uuid).closeInventory();
-        	}
-			final Player player = Bukkit.getServer().getPlayer(uuid);
-			for (FfaMatchManager match : Practice.getFfaMatchs().values()) {
-				final List<UUID> allPlayers = Lists.newArrayList(match.getPlayers());
-				allPlayers.removeAll(this.players);
-				allPlayers.addAll(match.getSpectator());
-				for (UUID lotOfPlayer : allPlayers) {
-					Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
-					player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));
-				}
+		for (FfaMatchManager match : Practice.getFfaMatchs().values()) {
+			final List<UUID> allPlayers = Lists.newArrayList(match.getPlayers());
+			allPlayers.removeAll(this.players);
+			allPlayers.addAll(match.getSpectator());
+			for (UUID lotOfPlayer : allPlayers) {
+				final Player player = Bukkit.getServer().getPlayer(lotOfPlayer);
+				Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
+				player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));
 			}
+		}
+		Practice.getFfaMatchs().put(matchUUID, this);
+		for (UUID uuid : players) {
+			final Player player = Bukkit.getServer().getPlayer(uuid);
 			player.closeInventory();
 			if (PlayerManager.getPlayers().get(uuid).getPlayerStatus().equals(Status.PARTY)) {
 				PartyManager.getPartyMap().get(uuid).setStatus(PartyState.FIGHT);
@@ -116,7 +109,6 @@ public class FfaMatchManager {
 	                }
 	            }
 	        }.runTaskTimer(Practice.getInstance(), 20L, 20L);
-			Practice.getFfaMatchs().put(matchUUID, this);
 		}
 	}
 	

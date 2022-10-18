@@ -46,6 +46,7 @@ com\bizarrealex\aether\scoreboard\BoardAdapter.class
 kezuk\bawz\match\MatchSeeInventory.class
 kezuk\bawz\core\Tag.class
 kezuk\bawz\utils\DiscordWebhook$EmbedObject$Field.class
+kezuk\bawz\command\DenyCommand.class
 kezuk\bawz\queue\task\EloRange$1.class
 kezuk\bawz\command\AcceptCommand.class
 kezuk\bawz\host\PlayerHostStatus.class

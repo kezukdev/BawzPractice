@@ -3,7 +3,7 @@ package kezuk.bawz.manager;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.utils.*;
 
 import org.bukkit.*;

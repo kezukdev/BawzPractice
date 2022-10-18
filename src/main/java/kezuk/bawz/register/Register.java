@@ -28,17 +28,19 @@ public class Register
         Practice.getInstance().getCommand("spectate").setExecutor((CommandExecutor)new SpectateCommand());
         Practice.getInstance().getCommand("build").setExecutor((CommandExecutor)new BuildCommand());
         Practice.getInstance().getCommand("accept").setExecutor((CommandExecutor)new AcceptCommand());
+        Practice.getInstance().getCommand("deny").setExecutor((CommandExecutor)new DenyCommand());
         Practice.getInstance().getCommand("party").setExecutor((CommandExecutor)new PartyCommand());
         Practice.getInstance().getCommand("join").setExecutor((CommandExecutor)new JoinCommand());
     }
     
     private void registerListener() {
         final PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents((Listener)new EnderDelayListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new InventoryListener(), (Plugin)Practice.getInstance());
-        pm.registerEvents((Listener)new PlayerListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new ServerListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new ChatListener(), (Plugin)Practice.getInstance());
+        pm.registerEvents((Listener)new EnderDelayListener(), (Plugin)Practice.getInstance());
+        pm.registerEvents((Listener)new MatchListener(), (Plugin)Practice.getInstance());
+        pm.registerEvents((Listener)new PlayerListener(), (Plugin)Practice.getInstance());
     }
     
     

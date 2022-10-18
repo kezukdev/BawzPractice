@@ -1,4 +1,4 @@
-package kezuk.bawz.party.manager;
+package kezuk.bawz.party;
 
 import java.util.Collections;
 import java.util.HashMap;

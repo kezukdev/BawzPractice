@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import kezuk.bawz.party.manager.PartyManager;
-import kezuk.bawz.party.manager.PartyRequestManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
+import kezuk.bawz.request.Requesting;
 import kezuk.bawz.utils.MessageSerializer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -58,11 +58,7 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
 				return false;
 			}
-			if (PartyRequestManager.getRequestParty().get(player.getUniqueId()) == null) {
-				new PartyRequestManager(target.getUniqueId(), player.getUniqueId());
-				return false;
-			}
-			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait, you have already sended a invitations");
+			new Requesting(player.getUniqueId(), target.getUniqueId(), "Party");
 		}
 		else if (args[0].equalsIgnoreCase("accept") && args.length == 2) {
 			if (pm.getPlayerStatus() != Status.SPAWN) {

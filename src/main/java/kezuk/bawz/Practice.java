@@ -30,7 +30,7 @@ import kezuk.bawz.manager.*;
 import kezuk.bawz.match.*;
 import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
-import kezuk.bawz.party.manager.PartyManager;
+import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.queue.*;
 import kezuk.bawz.queue.task.EloRange;
 import kezuk.bawz.register.*;
