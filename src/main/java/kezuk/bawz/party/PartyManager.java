@@ -11,7 +11,6 @@ import org.bukkit.ChatColor;
 import com.google.common.collect.Lists;
 
 import kezuk.bawz.Practice;
-import kezuk.bawz.party.PartyState;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import net.minecraft.util.com.google.common.collect.Maps;
@@ -50,10 +49,10 @@ public class PartyManager {
 	public void removeToParty(final UUID uuid, final boolean disconnect) {
 		if (uuid == this.getLeader()) {
 			if (this.partyList.size() > 1) {
+				this.partyList.remove(uuid);
 				Collections.shuffle(partyList);
 				final UUID newLeader = this.partyList.get(0);
 				this.setLeader(newLeader);
-				this.partyList.remove(uuid);
 				Practice.getPartys().remove(uuid);
 				Practice.getPartys().putIfAbsent(newLeader, this);
 				partyMap.remove(uuid);
