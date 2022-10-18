@@ -24,7 +24,6 @@ kezuk\bawz\match\MatchStats.class
 kezuk\bawz\command\JoinCommand.class
 kezuk\bawz\match\manager\FfaMatchManager$2.class
 kezuk\bawz\utils\DiscordWebhook$EmbedObject$Footer.class
-kezuk\bawz\party\InviteRequest.class
 kezuk\bawz\host\HostManager.class
 kezuk\bawz\request\actions\Accepting.class
 kezuk\bawz\ladders\kit\NoDebuff.class

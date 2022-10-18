@@ -60,6 +60,10 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
 				return false;
 			}
+			if (PlayerManager.getPlayers().get(target.getUniqueId()).getPlayerStatus() != Status.SPAWN) {
+				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Sorry but this player state is not available for you.");
+				return false;
+			}
 			new Requesting(player.getUniqueId(), target.getUniqueId(), "Party");
 		}
 		else if (args[0].equalsIgnoreCase("accept") && args.length == 2) {
