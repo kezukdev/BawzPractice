@@ -16,8 +16,8 @@ public class Deny {
 				PlayerManager.getPlayers().get(requested).getRequest().remove(requester);
 				return;
 			}
-			Bukkit.getPlayer(requested).sendMessage(ChatColor.AQUA + "Duel request has been denied!");
-			Bukkit.getPlayer(requester).sendMessage(ChatColor.AQUA + "Duel request has not accepted!");
+			Bukkit.getPlayer(requested).sendMessage(ChatColor.AQUA + PlayerManager.getPlayers().get(requested).getRequest().get(requester).getLadder() + " request has been denied!");
+			Bukkit.getPlayer(requester).sendMessage(ChatColor.AQUA + PlayerManager.getPlayers().get(requested).getRequest().get(requester).getLadder() + " request denied.");
 			PlayerManager.getPlayers().get(requested).getRequest().remove(requester);
 			PlayerManager.getPlayers().get(requester).removeDuelCooldown();
 		}

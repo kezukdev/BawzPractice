@@ -10,6 +10,8 @@ import kezuk.bawz.party.PartyManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
 import kezuk.bawz.request.Requesting;
+import kezuk.bawz.request.actions.Accepting;
+import kezuk.bawz.request.actions.Deny;
 import kezuk.bawz.utils.MessageSerializer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -75,11 +77,24 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The target is not in party!");
 				return false;
 			}
-			if (PartyRequestManager.getRequestParty().containsKey(target.getUniqueId()) && PartyRequestManager.getRequestParty().get(target.getUniqueId()).getInvited().equals(player.getUniqueId())) {
-				PartyRequestManager.getRequestParty().get(target.getUniqueId()).acceptInvite();
+			new Accepting(player.getUniqueId(), target.getUniqueId());
+		}
+		else if (args[0].equalsIgnoreCase("deny") && args.length == 2) {
+			if (pm.getPlayerStatus() != Status.SPAWN) {
+				player.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
 				return false;
 			}
-			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You didn't have any invites from this player!");
+			final Player target = Bukkit.getPlayer(args[1]);
+			if (target == null) {
+				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
+				return false;
+			}
+			final PlayerManager pmTarget = PlayerManager.getPlayers().get(target.getUniqueId());
+			if (pmTarget.getPlayerStatus() != Status.PARTY) {
+				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The target is not in party!");
+				return false;
+			}
+			new Deny(player.getUniqueId(), target.getUniqueId());
 		}
 		else {
 			player.sendMessage(" ");
@@ -87,6 +102,7 @@ public class PartyCommand implements CommandExecutor {
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "/party leave");
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "/party invite <player>");
 			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "/party accept <player>");
+			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "/party deny <player>");
 			player.sendMessage(" ");
 		}
 		return false;

@@ -11,6 +11,7 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\com
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\InventoryCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\Requesting.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\Kit.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\party\PartyManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\actions\Deny.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Axe.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Debuff.java
@@ -45,7 +46,6 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarreale
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\SpectateCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\JoinCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\AcceptCommand.java
-C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\party\manager\PartyManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\PartyCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Boxing.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\MatchStatus.java
@@ -58,7 +58,6 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarreale
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarrealex\aether\scoreboard\cooldown\BoardFormat.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Bow.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\MatchStats.java
-C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\party\manager\PartyRequestManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\queue\task\EloRange.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\core\TagType.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\manager\MatchManager.java

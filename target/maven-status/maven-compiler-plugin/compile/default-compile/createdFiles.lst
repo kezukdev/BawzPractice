@@ -3,7 +3,6 @@ kezuk\bawz\listener\ServerListener.class
 kezuk\bawz\core\TagType.class
 kezuk\bawz\editor\EditorManager.class
 kezuk\bawz\ladders\kit\Combo.class
-kezuk\bawz\party\manager\PartyRequestManager.class
 kezuk\bawz\match\manager\FfaMatchManager$1.class
 kezuk\bawz\stockage\ConfigFile.class
 kezuk\bawz\command\BuildCommand.class
@@ -44,6 +43,7 @@ kezuk\bawz\match\MatchListener.class
 kezuk\bawz\leaderboard\LeaderboardInventory.class
 com\bizarrealex\aether\scoreboard\BoardAdapter.class
 kezuk\bawz\match\MatchSeeInventory.class
+kezuk\bawz\party\PartyManager.class
 kezuk\bawz\core\Tag.class
 kezuk\bawz\utils\DiscordWebhook$EmbedObject$Field.class
 kezuk\bawz\command\DenyCommand.class
@@ -53,7 +53,6 @@ kezuk\bawz\host\PlayerHostStatus.class
 kezuk\bawz\host\HostManager$2.class
 kezuk\bawz\command\PartyCommand.class
 kezuk\bawz\request\Requesting$Request.class
-kezuk\bawz\party\manager\PartyRequestManager$1.class
 com\bizarrealex\aether\scoreboard\BoardEntry.class
 com\bizarrealex\aether\scoreboard\cooldown\BoardFormat.class
 com\bizarrealex\aether\AetherOptions.class
@@ -92,7 +91,6 @@ kezuk\bawz\ladders\Kit.class
 kezuk\bawz\ladders\kit\Debuff.class
 kezuk\bawz\listener\InventoryListener.class
 kezuk\bawz\command\SpectateCommand.class
-kezuk\bawz\party\manager\PartyManager.class
 kezuk\bawz\utils\MultipageSerializer.class
 kezuk\bawz\ladders\kit\Axe.class
 kezuk\bawz\match\manager\MatchManager.class

@@ -29,7 +29,7 @@ public class Requesting {
         deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Deny the duel request!").create()));
         requestMessage.addExtra((BaseComponent)deny);
         Bukkit.getPlayer(requested).spigot().sendMessage(requestMessage);
-        Bukkit.getPlayer(requester).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been sent your duel request to " + ChatColor.WHITE + Bukkit.getPlayer(requested).getName());
+        Bukkit.getPlayer(requester).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been sent your " + (ladder == "Party" ? "party" : "duel") + " request to " + ChatColor.WHITE + Bukkit.getPlayer(requested).getName());
 		PlayerManager.getPlayers().get(requester).applyDuelCooldown();
 	}
 	
