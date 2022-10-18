@@ -58,11 +58,11 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(MessageSerializer.PLAYER_NOT_FOUND);
 				return false;
 			}
-			if (PartyRequestManager.getRequestParty().get(player.getUniqueId()) != null) {
-				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait, you have already sended a invitations");
+			if (PartyRequestManager.getRequestParty().get(player.getUniqueId()) == null) {
+				new PartyRequestManager(target.getUniqueId(), player.getUniqueId());
 				return false;
 			}
-			new PartyRequestManager(target.getUniqueId(), player.getUniqueId());
+			player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait, you have already sended a invitations");
 		}
 		else if (args[0].equalsIgnoreCase("accept") && args.length == 2) {
 			if (pm.getPlayerStatus() != Status.SPAWN) {

@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import kezuk.bawz.arena.ArenaType;
 import kezuk.bawz.ladders.Kit;
 import kezuk.bawz.ladders.Ladders;
-import kezuk.knockback.KnockbackModule;
-import kezuk.knockback.KnockbackProfile;
+import kezuk.bspigot.knockback.KnockbackModule;
+import kezuk.bspigot.knockback.KnockbackProfile;
 import net.md_5.bungee.api.ChatColor;
 
 public class NoDebuff extends Ladders implements Kit {

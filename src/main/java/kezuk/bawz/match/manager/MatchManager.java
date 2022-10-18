@@ -5,6 +5,7 @@ import co.aikar.idb.DB;
 import kezuk.bawz.*;
 import kezuk.bawz.arena.*;
 import kezuk.bawz.ladders.*;
+import kezuk.bawz.match.MatchListener;
 import kezuk.bawz.match.MatchSeeInventory;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.player.*;
@@ -24,8 +25,9 @@ import org.bukkit.plugin.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.entity.*;
+import org.bukkit.event.Listener;
 
-public class MatchManager {
+public class MatchManager implements Listener {
 
     private Ladders ladder;
     private UUID matchUUID;
@@ -36,6 +38,10 @@ public class MatchManager {
     private MatchStatus status;
     private Set<UUID> dropped;
     private List<UUID> spectator;
+    
+    public MatchManager() {
+    	Bukkit.getPluginManager().registerEvents(new MatchListener(), Practice.getInstance());
+    }
     
     public void startMath(final List<UUID> firstList, final List<UUID> secondList, final Ladders ladder, boolean ranked) {
     	this.matchUUID = UUID.randomUUID();
@@ -202,15 +208,10 @@ public class MatchManager {
         Practice.getMatchs().get(matchUUID).getFirstList().clear();
         Practice.getMatchs().get(matchUUID).getSecondList().clear();
         Practice.getMatchs().remove(matchUUID);
+        Bukkit.getPluginManager().registerListeners(Practice.getInstance(), new MatchListener());
         firstList.clear();
         secondList.clear();
         allPlayers.clear();
-        try {
-			this.finalize();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
     
     public UUID getOpponent(final UUID uuid) {

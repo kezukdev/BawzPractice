@@ -9,6 +9,7 @@ import kezuk.bawz.*;
 import kezuk.bawz.core.Tag;
 import kezuk.bawz.host.HostManager;
 import kezuk.bawz.host.HostType;
+import kezuk.bawz.host.PlayerHostStatus;
 import kezuk.bawz.ladders.Ladders;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.match.manager.FfaMatchManager;
@@ -16,8 +17,7 @@ import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
 import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.player.*;
-import kezuk.bawz.request.DuelRequestStatus;
-import kezuk.bawz.request.RequestManager;
+import kezuk.bawz.request.Requesting;
 import kezuk.bawz.utils.ItemSerializer;
 
 import java.sql.SQLException;
@@ -169,15 +169,16 @@ public class InventoryListener implements Listener
             }
             if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getDuelInventory().getName())) {
                 final Player target = pm.getTargetDuel();
-                new RequestManager(event.getWhoClicked().getUniqueId(), target.getUniqueId(), event.getCurrentItem().getItemMeta().getDisplayName());
+                new Requesting(event.getWhoClicked().getUniqueId(), target.getUniqueId(), event.getCurrentItem().getItemMeta().getDisplayName());
                 event.getWhoClicked().closeInventory();
-                pm.setDuelRequest(DuelRequestStatus.CANNOT);
             }
         }
         if (event.getClickedInventory().getName().equals(Practice.getInstance().getInventoryManager().getFfaHostInventory().getName())) {
         	final Ladders ladder = Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName());
         	HostManager host = new HostManager();
+        	event.getWhoClicked().closeInventory();
         	host.startHost(event.getWhoClicked().getUniqueId(), 20, HostType.FFA, ladder);
+        	return;
         }
         if (Practice.getMatchs().get(pm.getMatchUUID()) != null && Practice.getMatchs().get(pm.getMatchUUID()).getStatus() != MatchStatus.FINISHED) {
         	return;
@@ -218,7 +219,7 @@ public class InventoryListener implements Listener
         if (pm.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(event.getWhoClicked().getUniqueId()).getStatus().equals(PartyState.FIGHT)) {
         	return;
         }
-        if (event.getClickedInventory().getName().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
+        if (event.getClickedInventory().getTitle().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of")) {
         	event.setCancelled(true);
         	if (event.getCurrentItem().getType().equals(Material.PISTON_STICKY_BASE)) {
         		final Player player = (Player) event.getWhoClicked();
@@ -231,6 +232,9 @@ public class InventoryListener implements Listener
         	else {
         		return;
         	}
+        }
+        if (pm.getHostStatus() != null && pm.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
+        	return;
         }
         if (pm.getPlayerStatus().equals(Status.BUILD)) {
         	return;

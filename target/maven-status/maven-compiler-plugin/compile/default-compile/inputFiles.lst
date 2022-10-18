@@ -1,15 +1,17 @@
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\host\HostStatus.java
-C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\RequestManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\MatchListener.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\listener\InventoryListener.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\manager\InventoryManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarrealex\aether\Aether.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\player\Status.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\tournament\TournamentManager.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\actions\Accepting.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\player\PlayerManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\BuildCommand.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\command\InventoryCommand.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\Requesting.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\Kit.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\actions\Deny.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Axe.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Debuff.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarrealex\aether\scoreboard\cooldown\BoardCooldown.java
@@ -57,6 +59,7 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\com\bizarreale
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\ladders\kit\Bow.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\MatchStats.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\party\manager\PartyRequestManager.java
+C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\queue\task\EloRange.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\core\TagType.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\manager\MatchManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\utils\MessageSerializer.java
@@ -66,7 +69,6 @@ C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\par
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\listener\PlayerListener.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\match\manager\FfaMatchManager.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\host\HostStats.java
-C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\request\DuelRequestStatus.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\host\HostType.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\utils\LocationSerializer.java
 C:\Users\dupre\Documents\Developement\Bawz\Practice\src\main\java\kezuk\bawz\database\DataSQL.java

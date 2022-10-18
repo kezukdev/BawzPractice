@@ -10,7 +10,7 @@ import kezuk.bawz.host.HostStats;
 import kezuk.bawz.host.PlayerHostStatus;
 import kezuk.bawz.ladders.Ladders;
 import kezuk.bawz.match.*;
-import kezuk.bawz.request.DuelRequestStatus;
+import kezuk.bawz.request.Requesting.Request;
 import kezuk.bawz.utils.*;
 
 import java.sql.SQLException;
@@ -23,13 +23,14 @@ public class PlayerManager {
     private UUID matchUUID;
     private UUID hostUUID;
     private Long nextHitTick;
-    private DuelRequestStatus duelRequest;
     private PlayerHostStatus hostStatus;
     private HostStats hostStats;
     private MatchStats matchStats;
     private Player targetDuel;
     private Tag tag;
     private int[] elos;
+    private Long duelCooldown = 0L;
+    public WeakHashMap<UUID, Request> request;
     public static HashMap<UUID, PlayerManager> players;
     
     public PlayerManager(final UUID uuid) {
@@ -40,7 +41,6 @@ public class PlayerManager {
         this.matchStats = new MatchStats();
         this.hostStats = new HostStats();
         this.tag = Tag.NORMAL;
-        this.duelRequest = DuelRequestStatus.CAN;
         PlayerManager.players.putIfAbsent(uuid, this);
 		this.update();
         Bukkit.getPlayer(uuid).sendMessage(MessageSerializer.DATA_LOADED);
@@ -53,7 +53,6 @@ public class PlayerManager {
         Bukkit.getServer().getPlayer(this.uuid).setFoodLevel(20);
         Bukkit.getServer().getPlayer(this.uuid).setSaturation(20);
         Bukkit.getServer().getPlayer(this.uuid).extinguish();
-        Bukkit.getServer().getPlayer(this.uuid).setArrowsStuck(0);
         Bukkit.getServer().getPlayer(this.uuid).setMaximumNoDamageTicks(10);
         Bukkit.getServer().getPlayer(this.uuid).setLevel(0);
         Bukkit.getServer().getPlayer(this.uuid).setExp(0.0f);
@@ -64,6 +63,26 @@ public class PlayerManager {
             Bukkit.getServer().getPlayer(this.uuid).removePotionEffect(effect.getType());
         }
     }
+    
+    public WeakHashMap<UUID, Request> getRequest() {
+		return request;
+	}
+    
+	public boolean haveDuelCooldownActive() {
+		return this.duelCooldown > System.currentTimeMillis();
+	}
+
+	public long getDuelCooldown() {
+		return Math.max(0L, this.duelCooldown - System.currentTimeMillis());
+	}
+
+	public void applyDuelCooldown() {
+		this.duelCooldown = Long.valueOf(System.currentTimeMillis() + 14 * 1000);
+	}
+
+	public void removeDuelCooldown() {
+		this.duelCooldown = 0L;
+	}
     
     public HostStats getHostStats() {
 		return hostStats;
@@ -87,14 +106,6 @@ public class PlayerManager {
     
     public Player getTargetDuel() {
 		return targetDuel;
-	}
-    
-    public void setDuelRequest(DuelRequestStatus duelRequest) {
-		this.duelRequest = duelRequest;
-	}
-    
-    public DuelRequestStatus getDuelRequest() {
-		return duelRequest;
 	}
     
     public UUID getHostUUID() {

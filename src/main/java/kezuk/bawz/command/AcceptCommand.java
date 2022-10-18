@@ -1,8 +1,5 @@
 package kezuk.bawz.command;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,14 +7,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.Lists;
-
-import kezuk.bawz.ladders.Ladders;
-import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.PlayerManager;
 import kezuk.bawz.player.Status;
-import kezuk.bawz.request.DuelRequestStatus;
-import kezuk.bawz.request.RequestManager;
+import kezuk.bawz.request.actions.Accepting;
 import kezuk.bawz.utils.MessageSerializer;
 
 public class AcceptCommand implements CommandExecutor {
@@ -36,30 +28,11 @@ public class AcceptCommand implements CommandExecutor {
 		}
 		final Player player = (Player) sender;
 		final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
-		final PlayerManager pmTarget = PlayerManager.getPlayers().get(target.getUniqueId());
 		if (pm.getPlayerStatus() != Status.SPAWN) {
 			sender.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
 			return false;
 		}
-		if (pmTarget.getTargetDuel() != player) {
-			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You didn't have request from this player");
-			return false;
-		}
-		if (pmTarget.getDuelRequest() != DuelRequestStatus.CANNOT) {
-			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You didn't have request from this player");
-			return false;
-		}
-		target.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + player.getName() + ChatColor.DARK_AQUA + " have accept the duel request!");
-		player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have accept the duel request from " + ChatColor.AQUA + target.getName());
-		MatchManager match = new MatchManager();
-		final Ladders ladder = 	RequestManager.request.get(player.getUniqueId()).getLadder();
-		List<UUID> firstList = Lists.newArrayList(player.getUniqueId());
-		List<UUID> secondList = Lists.newArrayList(target.getUniqueId());
-		match.startMath(firstList, secondList, ladder, false);
-		firstList.clear();
-		secondList.clear();
-		pmTarget.setDuelRequest(DuelRequestStatus.CAN);
-		pmTarget.setTargetDuel(null);
+		new Accepting(player.getUniqueId(), target.getUniqueId());
 		return false;
 	}
 

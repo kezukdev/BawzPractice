@@ -26,6 +26,7 @@ import kezuk.bawz.arena.ArenaManager;
 import kezuk.bawz.host.HostStatus;
 import kezuk.bawz.ladders.Kit;
 import kezuk.bawz.ladders.Ladders;
+import kezuk.bawz.match.MatchListener;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.party.PartyState;
 import kezuk.bawz.party.manager.PartyManager;
@@ -45,6 +46,10 @@ public class FfaMatchManager {
 	private MatchStatus status;
 	private ArenaManager arena;
 	
+	public FfaMatchManager() {
+		Bukkit.getPluginManager().registerEvents(new MatchListener(), Practice.getInstance());
+	}
+	
 	public void startMatch(final List<UUID> players, final Ladders ladder) {
 		this.matchUUID = UUID.randomUUID();
 		this.ladder = ladder;
@@ -53,7 +58,6 @@ public class FfaMatchManager {
 		this.alive = Lists.newArrayList(players);
 		this.status = MatchStatus.STARTING;
 		this.spectator = Lists.newArrayList();
-		Practice.getFfaMatchs().put(matchUUID, this);
 		this.arena = ArenaManager.getRandomArena(ladder.arenaType());
 		for (UUID uuid : players) {
         	if (Practice.getInstance().getOfflineInventories().containsKey(uuid)) {
@@ -112,6 +116,7 @@ public class FfaMatchManager {
 	                }
 	            }
 	        }.runTaskTimer(Practice.getInstance(), 20L, 20L);
+			Practice.getFfaMatchs().put(matchUUID, this);
 		}
 	}
 	
@@ -132,7 +137,6 @@ public class FfaMatchManager {
 		for (UUID spectator : match.getSpectator()) {
 			Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(spectator));
 		}
-		Bukkit.getPlayer(uuid).setArrowsStuck(0);
 		for (PotionEffect effect : Bukkit.getPlayer(uuid).getActivePotionEffects()) {
 			Bukkit.getPlayer(uuid).removePotionEffect(effect.getType());
 		}
@@ -176,7 +180,7 @@ public class FfaMatchManager {
 		FfaMatchManager match = Practice.getFfaMatchs().get(PlayerManager.getPlayers().get(winnerUUID).getMatchUUID());
 		match.setStatus(MatchStatus.FINISHED);
 		if (PlayerManager.getPlayers().get(winnerUUID).getPlayerStatus().equals(Status.HOST)) {
-			Practice.getHosts().get(PlayerManager.getPlayers().get(winnerUUID).getHostUUID()).setStatus(HostStatus.FINSIHED);
+			Practice.getHosts().get(PlayerManager.getPlayers().get(winnerUUID).getHostUUID()).setStatus(null);
 		}
         this.clearDrops();
         for (UUID spectatorUUID : match.getSpectator()) {
@@ -196,7 +200,6 @@ public class FfaMatchManager {
         		        Bukkit.getServer().getPlayer(uuid).setFoodLevel(20);
         		        Bukkit.getServer().getPlayer(uuid).setSaturation(20);
         		        Bukkit.getServer().getPlayer(uuid).extinguish();
-        		        Bukkit.getServer().getPlayer(uuid).setArrowsStuck(0);
         		        Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(10);
         		        Bukkit.getServer().getPlayer(uuid).setLevel(0);
         		        Bukkit.getServer().getPlayer(uuid).setExp(0.0f);
@@ -212,22 +215,10 @@ public class FfaMatchManager {
         			        Practice.getInstance().getItemsManager().givePartyItems(Bukkit.getPlayer(partyUUID));	
         				}
         				Practice.getFfaMatchs().remove(matchUUID);
-        		        try {
-        					this.finalize();
-        				} catch (Throwable e) {
-        					// TODO Auto-generated catch block
-        					e.printStackTrace();
-        				}
         				return;
         			}
         			pm.sendToSpawn();
         			Practice.getFfaMatchs().remove(matchUUID);
-        	        try {
-        				this.finalize();
-        			} catch (Throwable e) {
-        				// TODO Auto-generated catch block
-        				e.printStackTrace();
-        			}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
 		}

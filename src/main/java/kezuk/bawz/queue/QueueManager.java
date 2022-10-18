@@ -8,6 +8,7 @@ import kezuk.bawz.*;
 import kezuk.bawz.ladders.*;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.player.*;
+import kezuk.bawz.queue.task.EloRange;
 import kezuk.bawz.utils.*;
 
 import java.util.*;
@@ -28,8 +29,11 @@ public class QueueManager
             pm.setPlayerStatus(Status.QUEUE);
             pm.sendToQueue();
             Practice.getInstance().getInventoryManager().updateQueueInventory(ranked);
+            if (ranked) {
+                new EloRange(uuid, ladder);	
+            }
         }
-        if (this.queue.size() >= 2) {
+        if(!this.queue.isEmpty()) {
             UUID secondUUID = uuid;
             for (final Map.Entry<UUID, Queue> map : this.queue.entrySet()) {
                 final UUID key = map.getKey();
@@ -41,6 +45,9 @@ public class QueueManager
                     secondUUID = key;
                     if (secondUUID == uuid) {
                         return;
+                    }
+                    if (value.isRanked()) {
+                    	return;
                     }
                     final List<UUID> firstList = Lists.newArrayList();
                     firstList.add(uuid);
@@ -60,6 +67,10 @@ public class QueueManager
     
     public void leaveQueue(final UUID uuid) {
     	final boolean ranked = this.queue.get(uuid).ranked;
+    	if (ranked) {
+    		Practice.getEloRangeMap().get(uuid).setOpponentFounded(true);
+    		Practice.getEloRangeMap().remove(uuid);
+    	}
         this.queue.remove(uuid);
         Practice.getInstance().getInventoryManager().updateQueueInventory(ranked);
         if (Bukkit.getServer().getPlayer(uuid) != null) {

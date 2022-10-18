@@ -4,7 +4,7 @@ import org.bukkit.*;
 
 import kezuk.bawz.Practice;
 import kezuk.bawz.arena.ArenaType;
-import kezuk.knockback.KnockbackProfile;
+import kezuk.bspigot.knockback.KnockbackProfile;
 
 public abstract class Ladders {
 

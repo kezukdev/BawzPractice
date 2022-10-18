@@ -18,6 +18,8 @@ import com.google.common.collect.Lists;
 import kezuk.bawz.Practice;
 import kezuk.bawz.host.HostManager;
 import kezuk.bawz.host.HostStatus;
+import kezuk.bawz.player.PlayerManager;
+import kezuk.bawz.player.Status;
 import kezuk.bawz.utils.ItemSerializer;
 import kezuk.bawz.utils.MessageSerializer;
 
@@ -27,6 +29,10 @@ public class JoinCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) return false;
 		final Player player = (Player) sender;
+		if (PlayerManager.getPlayers().get(player.getUniqueId()).getPlayerStatus() != Status.SPAWN) {
+			player.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
+			return false;
+		}
 		if (args.length == 0) {
             List<ItemStack> event = Lists.newArrayList();
             for (HostManager hostManager : Practice.getHosts().values()) {

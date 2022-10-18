@@ -55,7 +55,7 @@ public class HostManager {
 		DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/1031183031022657557/iUL3mbkNXzzEV0bdOPpclu-u6wL4YtxoTvZl5gxNw8RK90hG5EbZUCqAbRWse2MnVIHo");
 		EmbedObject embed = new EmbedObject();
 		embed.setTitle(type.toString());
-		embed.setDescription(Bukkit.getPlayer(creatorUUID).getName() + " have launch a event in game connect for join this!");
+		embed.setDescription(Bukkit.getPlayer(creatorUUID).getName() + " has created/launched an event, join at bawz.eu!");
 		embed.setColor(Color.CYAN);
 		webhook.addEmbed(embed);
 		PlayerManager.getPlayers().get(creatorUUID).setHostStatus(PlayerHostStatus.WAITTING);
@@ -181,6 +181,7 @@ public class HostManager {
         					Bukkit.getPlayer(uuid).sendMessage(" ");
         					Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + " The host ffa as been started!");
         					Bukkit.getPlayer(uuid).sendMessage(" ");
+        					PlayerManager.getPlayers().get(uuid).setHostStatus(PlayerHostStatus.FIGHTING);
         				}
         				FfaMatchManager match = new FfaMatchManager();
         				match.startMatch(host.getMembers(), host.getLadder());
@@ -188,6 +189,7 @@ public class HostManager {
         			if (host.getType().equals(HostType.SUMO)) {
         				startSumo();
         			}
+    				this.cancel();
         		}
         	}
 		}.runTaskTimer(Practice.getInstance(), 20L, 20L);

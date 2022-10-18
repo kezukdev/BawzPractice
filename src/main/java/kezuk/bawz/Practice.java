@@ -32,6 +32,7 @@ import kezuk.bawz.match.manager.FfaMatchManager;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.manager.PartyManager;
 import kezuk.bawz.queue.*;
+import kezuk.bawz.queue.task.EloRange;
 import kezuk.bawz.register.*;
 import net.luckperms.api.LuckPerms;
 import net.minecraft.util.com.google.common.collect.Maps;
@@ -64,6 +65,7 @@ public class Practice extends JavaPlugin {
     public static HashMap<UUID, MatchManager> matchs;
     public static HashMap<UUID, FfaMatchManager> ffaMatchs;
 	public static HashMap<UUID, HostManager> hosts;
+	public static HashMap<UUID, EloRange> eloRangeMap;
     
     public Practice() {
     	this.ladder = Arrays.asList(new NoDebuff(), new Debuff(), new Axe(), new Bow(), new Combo(), new Soup(), new Sumo(), new Boxing());
@@ -72,6 +74,7 @@ public class Practice extends JavaPlugin {
         partys = Maps.newHashMap();
         ffaMatchs = Maps.newHashMap();
         hosts = Maps.newHashMap();
+        eloRangeMap = Maps.newHashMap();
     }
     
     public void onEnable() {
@@ -179,6 +182,10 @@ public class Practice extends JavaPlugin {
     public Map<UUID, MatchSeeInventory> getOfflineInventories() {
         return this.offlineInventories;
     }
+    
+    public static HashMap<UUID, EloRange> getEloRangeMap() {
+		return eloRangeMap;
+	}
     
     public static Practice getInstance() {
         return Practice.instance;

@@ -9,7 +9,6 @@ import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;
 
 import kezuk.bawz.*;
-import kezuk.bawz.host.HostManager;
 import kezuk.bawz.match.MatchStatus;
 import kezuk.bawz.match.manager.MatchManager;
 import kezuk.bawz.party.PartyState;
@@ -129,7 +128,7 @@ public class PlayerListener implements Listener
             if (item == null) {
                 return;
             }
-            if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
+            if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) || item.getType().equals((Object)Material.BLAZE_POWDER) && action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
                 event.setCancelled(true);
                 Practice.getInstance().getQueueManager().leaveQueue(event.getPlayer().getUniqueId());
             }
@@ -138,7 +137,7 @@ public class PlayerListener implements Listener
             if (item == null) {
                 return;
             }
-            if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) ^ action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
+            if (item.getType().equals((Object)Material.BLAZE_POWDER) && (action.equals((Object)Action.RIGHT_CLICK_AIR) || item.getType().equals((Object)Material.BLAZE_POWDER) && action.equals((Object)Action.RIGHT_CLICK_BLOCK))) {
                 event.setCancelled(true);
                 MatchManager match = Practice.getMatchs().get(pm.getMatchUUID());
                 match.getSpectator().remove(event.getPlayer().getUniqueId());

@@ -154,7 +154,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onDrop(final PlayerDropItemEvent e) {
         final PlayerManager playerManager = PlayerManager.getPlayers().get(e.getPlayer().getUniqueId());
-        if (playerManager.getPlayerStatus() == Status.FIGHT || playerManager.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(e.getPlayer().getUniqueId()).getStatus().equals(PartyState.FIGHT)) {
+        if (playerManager.getPlayerStatus() == Status.FIGHT || playerManager.getPlayerStatus().equals(Status.PARTY) && PartyManager.getPartyMap().get(e.getPlayer().getUniqueId()).getStatus().equals(PartyState.FIGHT) || playerManager.getHostStatus() != null && playerManager.getHostStatus().equals(PlayerHostStatus.FIGHTING)) {
             if (e.getItemDrop().getItemStack().getType() == Material.DIAMOND_SWORD || e.getItemDrop().getItemStack().getType() == Material.IRON_AXE || e.getItemDrop().getItemStack().getType() == Material.DIAMOND_SWORD || e.getItemDrop().getItemStack().getType() == Material.STONE_SWORD) {
                 e.setCancelled(true);
                 return;

@@ -21,7 +21,7 @@ public class DataSQL {
                 + "name VARCHAR(16) NOT NULL,"
                 + "uuid VARCHAR(64) NOT NULL,"
                 + "tag VARCHAR(16) DEFAULT 'Normal',"
-                + "elos VARCHAR(255) DEFAULT '1200:1200:1200:1200:1200:1200:1200:1200:1200:1200',"
+                + "elos VARCHAR(255) DEFAULT '1200:1200:1200:1200:1200:1200:1200:1200',"
                 + "PRIMARY KEY (`ID`))";
         try {
             DatabaseMetaData dbm = Practice.getInstance().getConnection().getMetaData();

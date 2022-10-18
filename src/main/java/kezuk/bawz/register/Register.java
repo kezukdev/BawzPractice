@@ -36,7 +36,6 @@ public class Register
         final PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents((Listener)new EnderDelayListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new InventoryListener(), (Plugin)Practice.getInstance());
-        pm.registerEvents((Listener)new MatchListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new PlayerListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new ServerListener(), (Plugin)Practice.getInstance());
         pm.registerEvents((Listener)new ChatListener(), (Plugin)Practice.getInstance());
