@@ -49,6 +49,8 @@ public class Practice extends JavaPlugin {
     private String configPath;
     public File arenaFile;
     public YamlConfiguration arenaConfig;
+    public File kitFile;
+    public YamlConfiguration kitConfig;
     public DataSQL databaseSQL = new DataSQL();
     private ArenaManager arenaManager;
     private ItemsManager itemsManager;
@@ -83,7 +85,10 @@ public class Practice extends JavaPlugin {
         this.configPath = this.getDataFolder() + "/hikari.properties";
         this.saveResource("hikari.properties", false);
         this.saveResource("arenas.yml", false);
+        this.saveResource("kits.yml", false);
         this.arenaFile = new File(this.getDataFolder() + "/arenas.yml");
+        this.kitConfig = YamlConfiguration.loadConfiguration(this.kitFile);
+        this.kitFile = new File(this.getDataFolder() + "/kits.yml");
         this.arenaConfig = YamlConfiguration.loadConfiguration(this.arenaFile);
 		this.setupHikariCP();
 		this.setupDatabase();

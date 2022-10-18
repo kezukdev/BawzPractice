@@ -1,5 +1,6 @@
 package kezuk.bawz.player;
 
+import kezuk.bawz.editor.EditorManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.*;
@@ -18,6 +19,7 @@ import java.util.*;
 import net.minecraft.util.com.google.common.collect.*;
 
 public class PlayerManager {
+
     private UUID uuid;
     private Status playerStatus;
     private UUID matchUUID;
@@ -32,6 +34,7 @@ public class PlayerManager {
     private Long duelCooldown = 0L;
     public WeakHashMap<UUID, Request> request;
     public static HashMap<UUID, PlayerManager> players;
+    private final EditorManager editor;
     
     public PlayerManager(final UUID uuid) {
         this.uuid = uuid;
@@ -44,6 +47,8 @@ public class PlayerManager {
         PlayerManager.players.putIfAbsent(uuid, this);
 		this.update();
         Bukkit.getPlayer(uuid).sendMessage(MessageSerializer.DATA_LOADED);
+        editor = new EditorManager(uuid);
+        editor.load();
     }
     
     public void sendToSpawn() {
@@ -219,5 +224,9 @@ public class PlayerManager {
     
     static {
         PlayerManager.players = Maps.newHashMap();
+    }
+
+    public EditorManager getEditor() {
+        return editor;
     }
 }
