@@ -27,13 +27,13 @@ public class DuelCommand implements CommandExecutor {
 			return false;
 		}
 		final Player player = (Player) sender;
-		final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
-		if (pm.getPlayerStatus() != Status.SPAWN) {
-			sender.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
-			return false;
-		}
 		if (args[0] == player.getName()) {
 			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Sorry but you cannot duel yourself!");
+			return false;
+		}
+		final PlayerManager pm = PlayerManager.getPlayers().get(player.getUniqueId());
+		if (pm.getPlayerStatus() != Status.SPAWN || PlayerManager.getPlayers().get(target.getUniqueId()).getPlayerStatus() != Status.SPAWN) {
+			sender.sendMessage(MessageSerializer.STATUS_NOT_ALLOWED);
 			return false;
 		}
 		if (PlayerManager.getPlayers().get(target.getUniqueId()).getRequest() != null && PlayerManager.getPlayers().get(target.getUniqueId()).getRequest().get(player.getUniqueId()) != null){

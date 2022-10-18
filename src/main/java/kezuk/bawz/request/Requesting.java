@@ -24,7 +24,12 @@ public class Requesting {
         accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accept " + Bukkit.getPlayer(requester).getName()));
         accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Accept the duel request!").create()));
         requestMessage.addExtra((BaseComponent)accept);
+        final TextComponent deny = new TextComponent(ChatColor.GRAY + " (" + ChatColor.RED + "Deny" + ChatColor.GRAY + ")");
+        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/deny " + Bukkit.getPlayer(requester).getName()));
+        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Deny the duel request!").create()));
+        requestMessage.addExtra((BaseComponent)deny);
         Bukkit.getPlayer(requested).spigot().sendMessage(requestMessage);
+        Bukkit.getPlayer(requester).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been sent your duel request to " + ChatColor.WHITE + Bukkit.getPlayer(requested).getName());
 		PlayerManager.getPlayers().get(requester).applyDuelCooldown();
 	}
 	

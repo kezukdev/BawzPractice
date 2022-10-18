@@ -1,5 +1,5 @@
 name: BawzPractice
-version: 0.2-a
+version: 0.4-b
 author: kezukdev
 website: https://github.com/kezukdev
 description: BawzPractice developed by Kezuk.
@@ -17,10 +17,8 @@ commands:
   spectate:
     aliases: [spec, s, spectates]
     description: Spectate any player currently in fight.
-  rank:
-    aliases: [ranks]
-    description: Rank anyone on the server!
   build:
   accept:
   party:
   join:
+  deny:

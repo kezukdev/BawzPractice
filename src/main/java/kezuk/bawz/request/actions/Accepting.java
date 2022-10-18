@@ -16,6 +16,11 @@ public class Accepting {
 
 	public Accepting(final UUID requested, final UUID requester) {
 		if (PlayerManager.getPlayers().get(requested).getRequest() != null && PlayerManager.getPlayers().get(requested).getRequest().get(requester) != null) {
+			if (!PlayerManager.getPlayers().get(requested).haveDuelCooldownActive()) {
+				Bukkit.getPlayer(requested).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The duel request from " + ChatColor.WHITE + Bukkit.getPlayer(requester).getName() + ChatColor.AQUA + " have expired!");
+				PlayerManager.getPlayers().get(requested).getRequest().remove(requester);
+				return;
+			}
 			Bukkit.getPlayer(requested).sendMessage(ChatColor.AQUA + "Duel request accepted!");
 			Bukkit.getPlayer(requester).sendMessage(ChatColor.AQUA + "Duel request accepted!");
 			MatchManager match = new MatchManager();
