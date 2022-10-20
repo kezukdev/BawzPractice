@@ -1,24 +1,22 @@
-name: BawzPractice
-version: 0.4-b
-author: kezukdev
-website: https://github.com/kezukdev
-description: BawzPractice developed by Kezuk.
-main: kezuk.bawz.Practice
+name: Practice
+authors: [Kezuk, tetelie]
+version: 1.0
+description: Practice plugin developed for Bawz.
+main: kezuk.practice.Practice
 commands:
   arena:
-    aliases: [arenas]
-    description: The simple arena command.
+  duel:
+  accept:
+    aliases: [a]
+  deny:
+    aliases: [d]
+  party:
+    aliases: [p, group, groupe]
+  spectate:
+    aliases: [spec, s]
+  join:
+    aliases: [j]
   inventory:
     aliases: [inv]
-    description: After match this inventory was created.
-  duel:
-    aliases: [duels]
-    description: Duel anyone with this command.
-  spectate:
-    aliases: [spec, s, spectates]
-    description: Spectate any player currently in fight.
-  build:
-  accept:
-  party:
-  join:
-  deny:
+  rank:
+  tag:
