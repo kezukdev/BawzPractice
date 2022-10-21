@@ -140,6 +140,10 @@ public class StartMatch {
 		this.finalize();
 	}
 	
+	public UUID getMatchUUID() {
+		return matchUUID;
+	}
+	
 	public int getAliveFirst() {
 		return aliveFirst;
 	}

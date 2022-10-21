@@ -15,11 +15,11 @@ import com.google.common.collect.Lists;
 import kezuk.bspigot.utils.DiscordWebhook;
 import kezuk.bspigot.utils.DiscordWebhook.EmbedObject;
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.items.HostItems;
 import kezuk.practice.event.host.oitc.OitcEvent;
 import kezuk.practice.event.host.sumo.SumoEvent;
 import kezuk.practice.event.host.task.StartRunnable;
 import kezuk.practice.event.host.type.EventType;
-import kezuk.practice.event.inventory.listener.JoinInventoryListener;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
@@ -43,10 +43,6 @@ public class Event {
 	
 	public SumoEvent sumoEvent;
 	public OitcEvent oitcEvent;
-	
-	public Event() {
-		Bukkit.getPluginManager().registerEvents(new JoinInventoryListener(), Practice.getInstance());
-	}
 	
 	public void startHost(final UUID uuid, final EventType eventType, final Ladders ladder) {
 		if (launched) {
@@ -82,10 +78,8 @@ public class Event {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
 		profile.setGlobalState(GlobalState.EVENT);
 		this.members.add(uuid);
+		new HostItems(uuid);
 		for(UUID uuids : members) {
-			if (this.creatorUUID == uuids) {
-				return;
-			}
 			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuids).getName() + ChatColor.AQUA + " have joined the event! " + ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + this.members.size() + ChatColor.GRAY + ")");
 		}
 		if (members.size() == 5) {
@@ -98,6 +92,19 @@ public class Event {
 		profile.getGlobalState().setSubState(SubState.NOTHING);
 		profile.setGlobalState(GlobalState.SPAWN);
 		new SpawnItems(uuid);
+		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+		if (this.members.size() == 1) {
+			this.setLaunched(false);
+			this.members.remove(uuid);
+			try {
+				this.finalize();
+				new Event();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		this.members.remove(uuid);
 		for(UUID uuids : members) {
 			if (this.creatorUUID == uuids) {
@@ -113,7 +120,7 @@ public class Event {
 		try {
 			DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/1031183031022657557/iUL3mbkNXzzEV0bdOPpclu-u6wL4YtxoTvZl5gxNw8RK90hG5EbZUCqAbRWse2MnVIHo");
 			EmbedObject embed = new EmbedObject();
-			embed.setTitle("🪸 EVENT 🪸");
+			embed.setTitle("   🪸  EVENT  🪸  ");
 			embed.addField("Author: ", Bukkit.getPlayer(creatorUUID).getName(), false);
 			embed.addField("Type: ", eventType.toString(), false);
 			embed.addField("IP: ", "bawz.eu", false);

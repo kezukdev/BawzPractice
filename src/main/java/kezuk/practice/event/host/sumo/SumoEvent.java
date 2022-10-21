@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.items.HostItems;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.SubState;
@@ -33,6 +34,10 @@ public class SumoEvent {
 		Collections.shuffle(this.alives);
 		this.firstUUID = this.alives.get(0);
 		this.secondUUID = this.alives.get(1);
+		Bukkit.getPlayer(firstUUID).getInventory().clear();
+		Bukkit.getPlayer(firstUUID).updateInventory();
+		Bukkit.getPlayer(secondUUID).getInventory().clear();
+		Bukkit.getPlayer(secondUUID).updateInventory();
 		Bukkit.getPlayer(firstUUID).teleport(Practice.getInstance().getRegisterCommon().getFirstLocation());
 		Bukkit.getPlayer(secondUUID).teleport(Practice.getInstance().getRegisterCommon().getSecondLocation());
 		for (UUID uuids : Practice.getInstance().getRegisterObject().getEvent().getMembers()) {
@@ -45,8 +50,8 @@ public class SumoEvent {
 			@Override
         	public void run() {
 				i =- 1;
-				Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Match starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
-				Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Match starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
+				Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Fight starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
+				Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Fight starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
 				if (i <= 0) {
 					Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
 					Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
@@ -74,6 +79,8 @@ public class SumoEvent {
 			return;
 		}
 		this.alives.remove(looser);
+		new HostItems(winner);
+		new HostItems(looser);
 		Bukkit.getPlayer(winner).teleport(Practice.getInstance().getRegisterCommon().getSpectatorLocation());
 		Bukkit.getPlayer(looser).teleport(Practice.getInstance().getRegisterCommon().getSpectatorLocation());
 		this.startSumo();

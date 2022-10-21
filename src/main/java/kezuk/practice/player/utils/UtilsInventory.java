@@ -9,8 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import kezuk.practice.Practice;
-import kezuk.practice.player.utils.listener.UtilsListener;
 import kezuk.practice.utils.ItemSerializer;
 
 public class UtilsInventory {
@@ -22,7 +20,6 @@ public class UtilsInventory {
 		this.leaderboardInventory = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Leaderboard:");
 		this.utilsInventory = Bukkit.createInventory((InventoryHolder)null, 27, ChatColor.DARK_GRAY + "Utils:");
 		this.setUtilsInventory();
-		Bukkit.getPluginManager().registerEvents(new UtilsListener(), Practice.getInstance());
 	}
 	
 	private void setUtilsInventory() {

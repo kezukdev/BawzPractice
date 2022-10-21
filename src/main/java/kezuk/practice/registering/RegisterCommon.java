@@ -8,6 +8,8 @@ import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
 import kezuk.practice.core.rank.command.RankCommand;
 import kezuk.practice.event.command.JoinCommand;
+import kezuk.practice.event.host.items.listener.HostInteractItemListener;
+import kezuk.practice.event.inventory.listener.JoinInventoryListener;
 import kezuk.practice.ladders.inventory.listener.LadderInventoryListener;
 import kezuk.practice.match.inventory.command.InventoryCommand;
 import kezuk.practice.match.listener.MatchDeathListener;
@@ -18,6 +20,8 @@ import kezuk.practice.match.spectate.command.SpectateCommand;
 import kezuk.practice.party.command.PartyCommand;
 import kezuk.practice.party.listener.PartyListener;
 import kezuk.practice.player.listener.PlayerListener;
+import kezuk.practice.player.utils.UtilsInventory;
+import kezuk.practice.player.utils.listener.UtilsListener;
 import kezuk.practice.queue.listener.QueueListener;
 import kezuk.practice.request.command.AcceptCommand;
 import kezuk.practice.request.command.DenyCommand;
@@ -42,13 +46,16 @@ public class RegisterCommon {
 	private void registerListener() {
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new QueueListener(), Practice.getInstance());
-		pm.registerEvents(new PartyListener(), Practice.getInstance());
-		pm.registerEvents(new LadderInventoryListener(), Practice.getInstance());
-		pm.registerEvents(new PlayerListener(), Practice.getInstance());
 		pm.registerEvents(new MatchEntityListener(), Practice.getInstance());
 		pm.registerEvents(new MatchInteractListener(), Practice.getInstance());
 		pm.registerEvents(new MatchMoveEvent(), Practice.getInstance());
 		pm.registerEvents(new MatchDeathListener(), Practice.getInstance());
+		pm.registerEvents(new PartyListener(), Practice.getInstance());
+		pm.registerEvents(new LadderInventoryListener(), Practice.getInstance());
+		pm.registerEvents(new JoinInventoryListener(), Practice.getInstance());
+		pm.registerEvents(new UtilsListener(), Practice.getInstance());
+		pm.registerEvents(new HostInteractItemListener(), Practice.getInstance());
+		pm.registerEvents(new PlayerListener(), Practice.getInstance());
 	}
 
 	private void registerCommand() {

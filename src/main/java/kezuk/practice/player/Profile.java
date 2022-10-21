@@ -109,7 +109,7 @@ public class Profile {
 			attachment.setPermission(perm, true);	
 		}
 	}
-    
+	
 	public HashMap<UUID, PermissionAttachment> getPermissible() {
 		return permissible;
 	}

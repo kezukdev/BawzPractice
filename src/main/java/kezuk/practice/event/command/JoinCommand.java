@@ -24,7 +24,7 @@ public class JoinCommand implements CommandExecutor {
 			player.openInventory(Practice.getInstance().getRegisterObject().getJoinInventory().getJoinInventory());
 			return false;
 		}
-		if (args.length > 1 || args.length < 1) {
+		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("host")) {
 				if (Practice.getInstance().getRegisterObject().getEvent().isLaunched() && Practice.getInstance().getRegisterObject().getEvent().getEventType().getSubType().equals(EventSubType.WAITTING)) {
 					Practice.getInstance().getRegisterObject().getEvent().addMemberToEvent(player.getUniqueId());
