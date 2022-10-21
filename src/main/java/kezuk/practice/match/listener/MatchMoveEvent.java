@@ -12,7 +12,7 @@ import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 
 public class MatchMoveEvent implements Listener {
 
@@ -34,7 +34,7 @@ public class MatchMoveEvent implements Listener {
 							Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().newRound(winner, event.getPlayer().getUniqueId());
 							return;
 						}
-						MatchUtils.addKill(event.getPlayer().getUniqueId(), profile.getMatchStats().getLastAttacker());
+						GameUtils.addKill(event.getPlayer().getUniqueId(), profile.getMatchStats().getLastAttacker());
 					}
 				}
 			}	

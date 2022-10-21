@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
 import kezuk.practice.Practice;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.utils.ItemSerializer;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -43,8 +43,8 @@ public class MatchSeeInventory
         this.life = nf.format(remainLife);
         this.food = (float) player.getFoodLevel();
         this.ownerName = player.getName();
-        this.opponentName = Bukkit.getServer().getPlayer(MatchUtils.getOpponent(player.getUniqueId())).getName();
-        this.opponent = MatchUtils.getOpponent(player.getUniqueId());
+        this.opponentName = Bukkit.getServer().getPlayer(GameUtils.getOpponent(player.getUniqueId())).getName();
+        this.opponent = GameUtils.getOpponent(player.getUniqueId());
         this.amountPot = (player.getInventory().contains(new ItemStack(Material.POTION, 1, (short)16421)) ? player.getInventory().all(new ItemStack(Material.POTION, 1, (short)16421)).size() : 0);
         this.amountSoup = (player.getInventory().contains(new ItemStack(Material.MUSHROOM_SOUP)) ? player.getInventory().all(new ItemStack(Material.MUSHROOM_SOUP)).size() : 0);
         this.ladder = Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchUUID()).getLadder();

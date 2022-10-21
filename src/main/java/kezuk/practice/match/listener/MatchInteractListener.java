@@ -12,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -32,6 +33,8 @@ public class MatchInteractListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
 			event.setCancelled(false);
+		}
+		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
 			final ItemStack item = event.getItem();
 			if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && item.getType() == Material.ENDER_PEARL && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
 				if (profile.getGlobalState().getSubState() != SubState.PLAYING) {
@@ -50,7 +53,16 @@ public class MatchInteractListener implements Listener {
 				final DecimalFormat df = new DecimalFormat("#.#");
 				event.getPlayer().sendMessage(ChatColor.WHITE + "You can launch a pearl again in " + ChatColor.DARK_AQUA + df.format(time) + ChatColor.WHITE + " second" + (time > 1.0D ? "s" : ""));
 				event.getPlayer().updateInventory();
+				return;
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onInventorySelected(final InventoryClickEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
+		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+			event.setCancelled(false);
 		}
 	}
 	

@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import kezuk.practice.Practice;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 
 public class MatchDeathListener implements Listener {
 	
@@ -52,10 +52,10 @@ public class MatchDeathListener implements Listener {
                 }
             }.runTaskLater((Plugin)Practice.getInstance(), 2L);
             if (!(player.getKiller() instanceof Player)) {
-            	MatchUtils.addKill(player.getUniqueId(), (profile.getMatchStats().getLastAttacker() != null ? profile.getMatchStats().getLastAttacker() : null));
+            	GameUtils.addKill(player.getUniqueId(), (profile.getMatchStats().getLastAttacker() != null ? profile.getMatchStats().getLastAttacker() : null));
             	return;
             }
-            MatchUtils.addKill(player.getUniqueId(), player.getKiller().getUniqueId());
+            GameUtils.addKill(player.getUniqueId(), player.getKiller().getUniqueId());
         }
     }
     

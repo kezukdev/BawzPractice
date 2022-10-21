@@ -26,6 +26,8 @@ public class LadderInventory {
 	
 	private Inventory editorInventory;
 	
+	private Inventory tournamentInventory;
+	
 	public LadderInventory() {
 		this.unrankedInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Unranked Selection:");
 		this.rankedInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Ranked Selection:");
@@ -36,6 +38,7 @@ public class LadderInventory {
 		this.unrankedPartyInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "2v2 Selection:");
 		
 		this.editorInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Editor Selection:");
+		this.tournamentInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Tournament Gametype Selection:");
 		this.setPreviewInventory();
 	}
 
@@ -76,6 +79,11 @@ public class LadderInventory {
         		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), null);
         		this.editorInventory.addItem(item);
     		}
+    	}
+    	this.tournamentInventory.clear();
+    	for (Ladders ladder : Practice.getInstance().getLadder()) {
+    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+    		this.tournamentInventory.addItem(item);
     	}
 	}
 	
@@ -121,5 +129,8 @@ public class LadderInventory {
 	public Inventory getUnrankedPartyInventory() {
 		return unrankedPartyInventory;
 	}
-
+	
+	public Inventory getTournamentInventory() {
+		return tournamentInventory;
+	}
 }

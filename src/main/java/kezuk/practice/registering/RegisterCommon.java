@@ -7,10 +7,16 @@ import org.bukkit.plugin.PluginManager;
 import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
 import kezuk.practice.core.rank.command.RankCommand;
+import kezuk.practice.event.command.JoinCommand;
 import kezuk.practice.ladders.inventory.listener.LadderInventoryListener;
 import kezuk.practice.match.inventory.command.InventoryCommand;
+import kezuk.practice.match.listener.MatchDeathListener;
+import kezuk.practice.match.listener.MatchEntityListener;
+import kezuk.practice.match.listener.MatchInteractListener;
+import kezuk.practice.match.listener.MatchMoveEvent;
 import kezuk.practice.match.spectate.command.SpectateCommand;
 import kezuk.practice.party.command.PartyCommand;
+import kezuk.practice.party.listener.PartyListener;
 import kezuk.practice.player.listener.PlayerListener;
 import kezuk.practice.queue.listener.QueueListener;
 import kezuk.practice.request.command.AcceptCommand;
@@ -36,8 +42,13 @@ public class RegisterCommon {
 	private void registerListener() {
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new QueueListener(), Practice.getInstance());
+		pm.registerEvents(new PartyListener(), Practice.getInstance());
 		pm.registerEvents(new LadderInventoryListener(), Practice.getInstance());
 		pm.registerEvents(new PlayerListener(), Practice.getInstance());
+		pm.registerEvents(new MatchEntityListener(), Practice.getInstance());
+		pm.registerEvents(new MatchInteractListener(), Practice.getInstance());
+		pm.registerEvents(new MatchMoveEvent(), Practice.getInstance());
+		pm.registerEvents(new MatchDeathListener(), Practice.getInstance());
 	}
 
 	private void registerCommand() {
@@ -49,6 +60,7 @@ public class RegisterCommon {
 		Practice.getInstance().getCommand("spectate").setExecutor(new SpectateCommand());
 		Practice.getInstance().getCommand("inventory").setExecutor(new InventoryCommand());
 		Practice.getInstance().getCommand("rank").setExecutor(new RankCommand());
+		Practice.getInstance().getCommand("join").setExecutor(new JoinCommand());
 	}
 	
 	public Location getSpawnLocation() {

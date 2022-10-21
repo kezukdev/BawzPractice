@@ -12,7 +12,7 @@ import kezuk.practice.Practice;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 
 public class MatchEntityListener implements Listener {
 	
@@ -23,7 +23,7 @@ public class MatchEntityListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
-			if (match.getLadder().name().equals("sumo") || match.getLadder().name().equals("boxing")) {
+			if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
 				event.setDamage(0.0);
 			}
 			return;
@@ -38,9 +38,11 @@ public class MatchEntityListener implements Listener {
 		final Profile dmr = Practice.getInstance().getRegisterCollections().getProfile().get(event.getDamager().getUniqueId());
 		if (dmgd.getGlobalState().getSubState().equals(SubState.PLAYING)) {
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(dmr.getMatchUUID());
-			if (match.getFirstList().contains(event.getDamager().getUniqueId()) && match.getFirstList().contains(event.getEntity().getUniqueId()) || match.getSecondList().contains(event.getDamager().getUniqueId()) && match.getSecondList().contains(event.getEntity().getUniqueId())) {
-				event.setCancelled(true);
-				return;
+			if (match.getFirstList() != null) {
+				if (match.getFirstList().contains(event.getDamager().getUniqueId()) && match.getFirstList().contains(event.getEntity().getUniqueId()) || match.getSecondList().contains(event.getDamager().getUniqueId()) && match.getSecondList().contains(event.getEntity().getUniqueId())) {
+					event.setCancelled(true);
+					return;
+				}	
 			}
         	if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
                 if (dmgd.getMatchStats().getNextHitTick() != 0L && dmgd.getMatchStats().getNextHitTick() > System.currentTimeMillis()) {
@@ -59,7 +61,6 @@ public class MatchEntityListener implements Listener {
             }
         	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
                 event.setDamage(0.0D);
-                return;
             }
         	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
                 event.setDamage(0.0D);
@@ -73,7 +74,7 @@ public class MatchEntityListener implements Listener {
                     	match.endMatch(event.getEntity().getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);	
                     	return;
                 	}
-                	MatchUtils.addKill(event.getEntity().getUniqueId(), damager.getUniqueId());
+                	GameUtils.addKill(event.getEntity().getUniqueId(), damager.getUniqueId());
                 }
                 return;
             }

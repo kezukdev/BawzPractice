@@ -34,6 +34,7 @@ public class UtilsListener implements Listener {
 					event.getWhoClicked().closeInventory();
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getHostInventory().getHost());
 				}
+				event.setCancelled(true);
 			}
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getHostInventory().getHost().getName())) {
 				if (event.getCurrentItem().getType().equals(Material.FLINT)) {
@@ -48,8 +49,8 @@ public class UtilsListener implements Listener {
 					event.getWhoClicked().closeInventory();
 					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.OITC, null);
 				}
+				event.setCancelled(true);
 			}
-			event.setCancelled(true);
 		}
 	}
 

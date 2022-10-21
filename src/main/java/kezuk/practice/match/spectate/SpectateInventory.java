@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import kezuk.practice.Practice;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.utils.ItemSerializer;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 import kezuk.practice.utils.MultipageSerializer;
 
 public class SpectateInventory {
@@ -31,7 +31,7 @@ public class SpectateInventory {
         for (StartMatch matchManager : Practice.getInstance().getRegisterCollections().getMatchs().values()) {
         	for (UUID uuid : matchManager.getFirstList()) {
         		final String[] lore = new String[] {" ", ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Ladder" + ChatColor.RESET + ": " + ChatColor.AQUA + matchManager.getLadder().displayName(), ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Type" + ChatColor.RESET + ": " + ChatColor.AQUA + (matchManager.isRanked() ? "Ranked" : "Unranked"), ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Arena" + ChatColor.RESET + ": " + ChatColor.AQUA + matchManager.getArena().getName(), " "};
-                ItemStack item = ItemSerializer.serialize(new ItemStack(matchManager.getLadder().material()), matchManager.getLadder().data(), ChatColor.GREEN + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.AQUA + " vs " + ChatColor.RED + Bukkit.getServer().getPlayer(MatchUtils.getOpponent(uuid)).getName(), Arrays.asList(lore));
+                ItemStack item = ItemSerializer.serialize(new ItemStack(matchManager.getLadder().material()), matchManager.getLadder().data(), ChatColor.GREEN + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.AQUA + " vs " + ChatColor.RED + Bukkit.getServer().getPlayer(GameUtils.getOpponent(uuid)).getName(), Arrays.asList(lore));
                 matchs.add(item);
         	}
         }

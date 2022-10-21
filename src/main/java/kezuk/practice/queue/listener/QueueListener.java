@@ -22,6 +22,7 @@ public class QueueListener implements Listener {
 					Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(event.getPlayer().getUniqueId());
 				}
 			}
+			event.setCancelled(true);
 		}
 	}
 

@@ -20,16 +20,11 @@ import kezuk.practice.Practice;
 import kezuk.practice.arena.Arena;
 import kezuk.practice.ladders.Kit;
 import kezuk.practice.ladders.Ladders;
-import kezuk.practice.match.listener.MatchDeathListener;
-import kezuk.practice.match.listener.MatchEntityListener;
-import kezuk.practice.match.listener.MatchInteractListener;
-import kezuk.practice.match.listener.MatchMoveEvent;
-import kezuk.practice.match.listener.MatchProjectileListener;
 import kezuk.practice.match.stats.MatchStats;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 import net.minecraft.util.com.google.common.collect.Sets;
 
 public class StartMatch {
@@ -39,7 +34,9 @@ public class StartMatch {
     private boolean ranked;
     private boolean to2;
     private List<UUID> firstList;
+    private int aliveFirst;
     private List<UUID> secondList;
+    private int aliveSecond;
     private List<UUID> players;
     private List<UUID> alive;
     private Arena arena;
@@ -47,20 +44,15 @@ public class StartMatch {
     private List<UUID> spectator;
 	
 	public StartMatch(final List<UUID> firstList, final List<UUID> secondList,final List<UUID> players, final Ladders ladder, final boolean ranked, final boolean to2) {
-		Bukkit.getPluginManager().registerEvents(new MatchEntityListener(), Practice.getInstance());
-		Bukkit.getPluginManager().registerEvents(new MatchProjectileListener(), Practice.getInstance());
-		Bukkit.getPluginManager().registerEvents(new MatchDeathListener(), Practice.getInstance());
-		Bukkit.getPluginManager().registerEvents(new MatchInteractListener(), Practice.getInstance());
     	this.matchUUID = UUID.randomUUID();
         this.ladder = ladder;
-        if (ladder.name().equalsIgnoreCase("sumo")) {
-    		Bukkit.getPluginManager().registerEvents(new MatchMoveEvent(), Practice.getInstance());
-        }
         this.ranked = ranked;
         this.to2 = to2;
         if (firstList != null) {
             this.firstList = Lists.newArrayList(firstList);
             this.secondList = Lists.newArrayList(secondList);
+            this.aliveFirst = firstList.size();
+            this.aliveSecond = secondList.size();
             this.alive = Lists.newArrayList(firstList);
             this.alive.addAll(secondList);
         }
@@ -73,7 +65,7 @@ public class StartMatch {
         spectator = Lists.newArrayList();
         for (UUID uuid : alive) {
         	final Player player = Bukkit.getPlayer(uuid);
-        	MatchUtils.displayMatchPlayer(player);
+        	GameUtils.displayMatchPlayer(player);
         }
         Practice.getInstance().getRegisterCollections().getMatchs().put(this.matchUUID, this);
         for (final UUID uuid : alive) {
@@ -92,7 +84,7 @@ public class StartMatch {
             if (firstList != null && !to2) {
                 Bukkit.getServer().getPlayer(uuid).teleport(firstList.contains(uuid) ? this.arena.getLoc1() : this.arena.getLoc2());
                 if (firstList.size() == 1 && secondList.size() == 1) {
-                    Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "An opponent was found! It is about " + ChatColor.WHITE + Bukkit.getPlayer(MatchUtils.getOpponent(uuid)).getName());		
+                    Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "An opponent was found! It is about " + ChatColor.WHITE + Bukkit.getPlayer(GameUtils.getOpponent(uuid)).getName());		
                 }
                 if (firstList.size() > 1 || secondList.size() > 1) {
                     Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "A team fight has just been launched! This fight will be in " + ChatColor.WHITE + firstList.size() + ChatColor.DARK_AQUA + " vs " + ChatColor.WHITE + secondList.size());		
@@ -109,7 +101,7 @@ public class StartMatch {
             	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 9999999, 0)));
             }
             if (ranked) {
-            	Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(MatchUtils.getOpponent(uuid)).getName() + ChatColor.DARK_AQUA + " have " + ChatColor.AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(MatchUtils.getOpponent(uuid)).getElos()[ladder.id()] + ChatColor.DARK_AQUA + " elos!");
+            	Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(GameUtils.getOpponent(uuid)).getName() + ChatColor.DARK_AQUA + " have " + ChatColor.AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(GameUtils.getOpponent(uuid)).getElos()[ladder.id()] + ChatColor.DARK_AQUA + " elos!");
             }
             ((CraftPlayer)Bukkit.getServer().getPlayer(uuid)).getHandle().setKnockbackProfile(ladder.knockback());
             ((CraftLivingEntity)Bukkit.getServer().getPlayer(uuid)).getHandle().setKnockbackProfile(ladder.knockback());
@@ -146,6 +138,22 @@ public class StartMatch {
 	@SuppressWarnings("deprecation")
 	public void destroy() throws Throwable {
 		this.finalize();
+	}
+	
+	public int getAliveFirst() {
+		return aliveFirst;
+	}
+	
+	public int getAliveSecond() {
+		return aliveSecond;
+	}
+	
+	public void setAliveFirst(int aliveFirst) {
+		this.aliveFirst = aliveFirst;
+	}
+	
+	public void setAliveSecond(int aliveSecond) {
+		this.aliveSecond = aliveSecond;
 	}
 	
 	public Arena getArena() {

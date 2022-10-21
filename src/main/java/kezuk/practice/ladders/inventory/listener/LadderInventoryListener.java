@@ -53,6 +53,7 @@ public class LadderInventoryListener implements Listener {
 			event.setCancelled(true);
 		}
 		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
+			if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 			if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory().getName())) {
 				event.getWhoClicked().closeInventory();
@@ -95,7 +96,6 @@ public class LadderInventoryListener implements Listener {
 				List<UUID> uuid = Lists.newArrayList(Party.getPartyMap().get(event.getWhoClicked().getUniqueId()).getPartyList());
 				Practice.getInstance().getRegisterObject().getQueueSystem().addPlayerToQueue(uuid, Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()), false, true);
 			}
-			event.setCancelled(true);
 		}
 	}
 

@@ -24,7 +24,7 @@ import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 
 public class PlayerListener implements Listener {
 	
@@ -46,6 +46,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onQuitting(final PlayerQuitEvent event) {
 		event.setQuitMessage(null);
+		GameUtils.addDisconnected(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -57,11 +58,6 @@ public class PlayerListener implements Listener {
 	public void onDamage(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
-			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
-			if (match != null && match.getLadder().name().equalsIgnoreCase("sumo") ^ match.getLadder().name().equalsIgnoreCase("boxing") ^ match.getLadder().name().equalsIgnoreCase("soup")){
-				event.setCancelled(true);
-				return;
-			}
 			return;
 		}
 		event.setCancelled(true);
@@ -84,9 +80,8 @@ public class PlayerListener implements Listener {
 			if (event.getItem().getType().equals(Material.BOOK) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory());
 			}
-			return;
+			event.setCancelled(true);
 		}
-		event.setCancelled(true);
 	}
 	
 	@EventHandler
@@ -96,7 +91,7 @@ public class PlayerListener implements Listener {
 			if (event.getItemDrop().getItemStack().getType().equals(Material.GLASS_BOTTLE)) {
 				event.getItemDrop().remove();
 			}
-			MatchUtils.addDrops(event.getItemDrop(), event.getPlayer().getUniqueId());
+			GameUtils.addDrops(event.getItemDrop(), event.getPlayer().getUniqueId());
 			return;
 		}
 		event.setCancelled(true);

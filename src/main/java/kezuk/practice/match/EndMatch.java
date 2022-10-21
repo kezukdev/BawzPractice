@@ -22,7 +22,7 @@ import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
-import kezuk.practice.utils.MatchUtils;
+import kezuk.practice.utils.GameUtils;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -38,6 +38,11 @@ public class EndMatch {
 		List<UUID> secondList = null;
 		ArrayList<UUID> allPlayers = null;
 		TextComponent inventoriesMessage = null;
+		for (UUID specUUID : match.getSpectator()) {
+			if (Bukkit.getPlayer(specUUID) == null) {
+				match.getSpectator().remove(specUUID);
+			}
+		}
 		if (match.getFirstList() != null) {
 	        firstList = Lists.newArrayList(match.getFirstList().contains(killed) ? match.getFirstList() : match.getSecondList());
 	        secondList = Lists.newArrayList(match.getFirstList().contains(killer) ? match.getFirstList() : match.getSecondList());
@@ -84,7 +89,7 @@ public class EndMatch {
 		if (match.getPlayers() != null) {
 			allPlayers = Lists.newArrayList(match.getAlive());
 		}
-        MatchUtils.clearDrops(killed);
+        GameUtils.clearDrops(killed);
         if(!kill && firstList != null) {
         	allPlayers.removeAll(firstList);
         }
@@ -119,7 +124,9 @@ public class EndMatch {
             }
             if (!match.isRanked() && match.getPlayers() == null) {
                 player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + (firstList.size() > 1 ? " party's won!" : " won!"));
-                player.spigot().sendMessage((BaseComponent)inventoriesMessage);
+                if (firstList.size() == 1 && secondList.size() == 1) {
+                    player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
+                }
             }
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             new BukkitRunnable() {
@@ -151,7 +158,9 @@ public class EndMatch {
             }
             if (firstList != null) {
                 player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + (firstList.size() > 1 ? " party's won!" : " won!"));
-                player.spigot().sendMessage((BaseComponent)inventoriesMessage);
+                if (firstList.size() == 1 && secondList.size() == 1) {
+                    player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
+                }
             }
             new BukkitRunnable() {
                 public void run() {

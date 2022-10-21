@@ -16,13 +16,14 @@ import org.bukkit.potion.PotionEffect;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 
-public class MatchUtils {
+public class GameUtils {
 	
 	public static void displayMatchPlayer(final Player player) {
 		if (Practice.getInstance().getRegisterCollections().getMatchs().size() == 0) {
@@ -74,6 +75,14 @@ public class MatchUtils {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
 		StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 		match.getAlive().remove(uuid);
+		if(match.getFirstList() != null) {
+			if (match.getFirstList().contains(uuid)) {
+				match.setAliveFirst(match.getAliveFirst() - 1);
+			}
+			else {
+				match.setAliveSecond(match.getAliveSecond() - 1);
+			}
+		}
 		if (match.getPlayers() != null) {
 			match.getPlayers().remove(uuid);	
 		}
@@ -106,9 +115,18 @@ public class MatchUtils {
 				Bukkit.getPlayer(all).sendMessage(Bukkit.getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " has slain!");	
 			}
 		}
-		if (match.getAlive().size() == 1) {
-			for (UUID winner : match.getAlive()) {
-				match.endMatch(uuid, winner, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), true);
+		if (match.getPlayers() != null) {
+			if (match.getAlive().size() == 1) {
+				for (UUID winner : match.getAlive()) {
+					match.endMatch(uuid, winner, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), true);
+				}
+			}	
+		}
+		if (match.getFirstList() != null) {
+			if (match.getAliveFirst() == 0 || match.getAliveSecond() == 0) {
+				for (UUID winner : match.getAlive()) {
+					match.endMatch(uuid, winner, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), true);
+				}
 			}
 		}
 		allInMatch.clear();
@@ -116,21 +134,50 @@ public class MatchUtils {
 	
 	public static void addDisconnected(final UUID uuid) {
 		StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID());
-		match.getPlayers().remove(uuid);
-		if (match.getAlive().contains(uuid)) {
-			for (UUID uuidIG : match.getAlive()) {
-				Bukkit.getPlayer(uuidIG).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have disconnected.");
+		if (match != null) {
+			if (match.getPlayers() != null) {
+				match.getPlayers().remove(uuid);	
 			}
-			match.getAlive().remove(uuid);
-			if (match.getAlive().size() == 1) {
-				for (UUID alive : match.getAlive()) {
-					match.endMatch(uuid, alive, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), false);
+			if (match.getAlive().contains(uuid)) {
+				for (UUID uuidIG : match.getAlive()) {
+					Bukkit.getPlayer(uuidIG).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have disconnected.");
+				}
+				match.getAlive().remove(uuid);
+				if (match.getAlive().size() == 1) {
+					for (UUID alive : match.getAlive()) {
+						match.endMatch(uuid, alive, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), false);
+					}
 				}
 			}
+			if (match.getSpectator().contains(uuid)) {
+				match.getSpectator().remove(uuid);	
+			}	
 		}
-		if (match.getSpectator().contains(uuid)) {
-			match.getSpectator().remove(uuid);	
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+		if (profile.getGlobalState().equals(GlobalState.EVENT)) {
+			if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
+					final UUID winner = Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID() == uuid ? Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getSecondUUID() : Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID();
+					Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().newRound(winner, uuid);
+				}
+			}
+			else {
+				if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getAlives().contains(uuid)) {
+					Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getAlives().remove(uuid);	
+				}
+				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid);
+			}
 		}
+		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
+			Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(uuid);
+		}
+		if (profile.getGlobalState().equals(GlobalState.PARTY)) {
+			if (profile.getGlobalState().getSubState().equals(SubState.QUEUE)) {
+				Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(uuid);
+			}
+			Party.getPartyMap().get(uuid).removeToParty(uuid, true);
+		}
+		Practice.getInstance().getRegisterCollections().getProfile().remove(uuid);
 	}
 	
 	
