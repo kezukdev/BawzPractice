@@ -3,6 +3,7 @@ package kezuk.practice.match.listener;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -14,6 +15,8 @@ import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.MatchUtils;
 
 public class MatchEntityListener implements Listener {
+	
+	public static HandlerList handlerList = new HandlerList();
 	
 	@EventHandler
 	public void onReceiveDamageGlobal(final EntityDamageEvent event) {
@@ -77,6 +80,10 @@ public class MatchEntityListener implements Listener {
             return;
 		}
 		event.setCancelled(true);
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlerList;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
@@ -16,6 +17,8 @@ import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.MatchUtils;
 
 public class MatchDeathListener implements Listener {
+	
+	public static HandlerList handlerList = new HandlerList();
 	
     @EventHandler
     public void onDeath(final PlayerDeathEvent event) {
@@ -55,5 +58,9 @@ public class MatchDeathListener implements Listener {
             MatchUtils.addKill(player.getUniqueId(), player.getKiller().getUniqueId());
         }
     }
+    
+    public static HandlerList getHandlerList() {
+		return handlerList;
+	}
 
 }

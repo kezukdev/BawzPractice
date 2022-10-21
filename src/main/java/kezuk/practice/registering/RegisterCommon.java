@@ -6,7 +6,7 @@ import org.bukkit.plugin.PluginManager;
 
 import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
-import kezuk.practice.core.command.RankCommand;
+import kezuk.practice.core.rank.command.RankCommand;
 import kezuk.practice.ladders.inventory.listener.LadderInventoryListener;
 import kezuk.practice.match.inventory.command.InventoryCommand;
 import kezuk.practice.match.spectate.command.SpectateCommand;
@@ -20,9 +20,15 @@ import kezuk.practice.request.command.DuelCommand;
 public class RegisterCommon {
 	
 	private Location spawnLocation;
+	private Location firstLocation;
+	private Location secondLocation;
+	private Location spectatorLocation;
 	
 	public RegisterCommon() {
 		this.spawnLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.firstLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.secondLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.spectatorLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
 		this.registerCommand();
 		this.registerListener();
 	}
@@ -47,5 +53,17 @@ public class RegisterCommon {
 	
 	public Location getSpawnLocation() {
 		return spawnLocation;
+	}
+	
+	public Location getFirstLocation() {
+		return firstLocation;
+	}
+	
+	public Location getSecondLocation() {
+		return secondLocation;
+	}
+	
+	public Location getSpectatorLocation() {
+		return spectatorLocation;
 	}
 }

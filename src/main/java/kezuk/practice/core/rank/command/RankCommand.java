@@ -1,4 +1,4 @@
-package kezuk.practice.core.command;
+package kezuk.practice.core.rank.command;
 
 import java.sql.SQLException;
 

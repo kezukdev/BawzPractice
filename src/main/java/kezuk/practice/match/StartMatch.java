@@ -23,6 +23,7 @@ import kezuk.practice.ladders.Ladders;
 import kezuk.practice.match.listener.MatchDeathListener;
 import kezuk.practice.match.listener.MatchEntityListener;
 import kezuk.practice.match.listener.MatchInteractListener;
+import kezuk.practice.match.listener.MatchMoveEvent;
 import kezuk.practice.match.listener.MatchProjectileListener;
 import kezuk.practice.match.stats.MatchStats;
 import kezuk.practice.player.Profile;
@@ -52,6 +53,9 @@ public class StartMatch {
 		Bukkit.getPluginManager().registerEvents(new MatchInteractListener(), Practice.getInstance());
     	this.matchUUID = UUID.randomUUID();
         this.ladder = ladder;
+        if (ladder.name().equalsIgnoreCase("sumo")) {
+    		Bukkit.getPluginManager().registerEvents(new MatchMoveEvent(), Practice.getInstance());
+        }
         this.ranked = ranked;
         this.to2 = to2;
         if (firstList != null) {

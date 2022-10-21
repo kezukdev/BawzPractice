@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
@@ -22,6 +23,8 @@ import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.SubState;
 
 public class MatchInteractListener implements Listener {
+	
+	public static HandlerList handlerList = new HandlerList();
 	
 	@EventHandler
 	public void onMatchInteractItems(final PlayerInteractEvent event) {
@@ -58,5 +61,9 @@ public class MatchInteractListener implements Listener {
 			final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
 			if (pm.getGlobalState().getSubState() != SubState.PLAYING) event.setCancelled(true);
 		}
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlerList;
 	}
 }

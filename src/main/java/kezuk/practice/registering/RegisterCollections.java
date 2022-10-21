@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
+import org.bukkit.event.Event;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.arena.Arena;
@@ -22,6 +23,7 @@ public class RegisterCollections {
 	public ConcurrentMap<UUID, QueueEntry> queue;
 	public ConcurrentMap<UUID, EloRange> eloRange;
 	private HashMap<UUID, StartMatch> matchs;
+	private HashMap<UUID, Event> event;
 	private HashMap<UUID, Profile> profile;
 	private HashMap<UUID, Party> partys;
 	private ArrayList<Arena> arena;
@@ -31,10 +33,12 @@ public class RegisterCollections {
 		this.queue = Maps.newConcurrentMap();
 		this.eloRange = Maps.newConcurrentMap();
 		this.matchs = Maps.newHashMap();
+		this.event = Maps.newHashMap();
 		this.profile = Maps.newHashMap();
 		this.partys = Maps.newHashMap();
 		this.arena = Lists.newArrayList();
 		this.offlineInventories = Maps.newHashMap();
+		
 	}
 	
 	public ConcurrentMap<UUID, QueueEntry> getQueue() {
@@ -63,5 +67,9 @@ public class RegisterCollections {
 	
 	public Map<UUID, MatchSeeInventory> getOfflineInventories() {
 		return offlineInventories;
+	}
+	
+	public HashMap<UUID, Event> getEvent() {
+		return event;
 	}
 }
