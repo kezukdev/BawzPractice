@@ -1,5 +1,6 @@
-package kezuk.practice.event;
+package kezuk.practice.event.host;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,10 +11,10 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
-import kezuk.practice.event.oitc.OitcEvent;
-import kezuk.practice.event.sumo.SumoEvent;
-import kezuk.practice.event.task.StartRunnable;
-import kezuk.practice.event.type.EventType;
+import kezuk.practice.event.host.oitc.OitcEvent;
+import kezuk.practice.event.host.sumo.SumoEvent;
+import kezuk.practice.event.host.task.StartRunnable;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
@@ -31,12 +32,24 @@ public class Event {
 	private UUID creatorUUID;
 	private EventType eventType;
 	private Ladders ladder;
+	private boolean launched = false;
+	private Long cooldown = 0L;
 	private String prefix = ChatColor.GRAY.toString() + "[" + ChatColor.AQUA + "!" + ChatColor.GRAY + "]";
 	
 	public SumoEvent sumoEvent;
 	public OitcEvent oitcEvent;
 	
 	public void startHost(final UUID uuid, final EventType eventType, final Ladders ladder) {
+		if (launched) {
+			Bukkit.getPlayer(uuid).sendMessage(ChatColor.AQUA + "An event is already in progress, please wait for it to end or join it if it hasn't started yet!");
+			return;
+		}
+		if (cooldown != 0L) {
+			final double time = this.getCooldown() / 1000.0D;
+			final DecimalFormat df = new DecimalFormat("##.##");
+			Bukkit.getPlayer(uuid).sendMessage(ChatColor.AQUA + "The cooldown to launch an event is currently underway please be patient" + ChatColor.WHITE + ": " + df.format(time) + "seconds.");
+			return;
+		}
 		this.creatorUUID = uuid;
 		this.members = Lists.newArrayList();
 		this.eventType = eventType;
@@ -52,6 +65,7 @@ public class Event {
         for(Player players : Bukkit.getOnlinePlayers()) {
         	players.spigot().sendMessage(startMessage);
         }
+        this.launched = true;
 	}
 	
 	public void addMemberToEvent(final UUID uuid) {
@@ -83,6 +97,18 @@ public class Event {
 			}
 			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuids).getName() + ChatColor.AQUA + " have left the event! " + ChatColor.GRAY + "(" + ChatColor.RED + this.members.size() + ChatColor.GRAY + ")");
 		}
+	}
+	
+	public void setLaunched(boolean launched) {
+		this.launched = launched;
+	}
+	
+	public long getCooldown() {
+		return Math.max(0L, this.cooldown - System.currentTimeMillis());
+	}
+
+	public void applyCooldown() {
+		this.cooldown = Long.valueOf(System.currentTimeMillis() + 300 * 1000);
 	}
 	
 	public Ladders getLadder() {

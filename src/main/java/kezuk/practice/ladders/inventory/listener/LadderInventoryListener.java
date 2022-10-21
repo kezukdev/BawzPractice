@@ -14,12 +14,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
+import kezuk.practice.request.Requesting;
 
 public class LadderInventoryListener implements Listener {
 	
@@ -37,6 +39,16 @@ public class LadderInventoryListener implements Listener {
 				event.getWhoClicked().closeInventory();
 				List<UUID> uuid = Lists.newArrayList(event.getWhoClicked().getUniqueId());
 				Practice.getInstance().getRegisterObject().getQueueSystem().addPlayerToQueue(uuid, Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()), true, false);
+			}
+			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory().getName())) {
+				if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
+				event.getWhoClicked().closeInventory();
+				Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.FFA, Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()));
+			}
+			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getDuelInventory().getName())) {
+				if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
+				event.getWhoClicked().closeInventory();
+				new Requesting(event.getWhoClicked().getUniqueId(), profile.getTargetDuel().getUniqueId(), event.getCurrentItem().getItemMeta().getDisplayName());
 			}
 			event.setCancelled(true);
 		}

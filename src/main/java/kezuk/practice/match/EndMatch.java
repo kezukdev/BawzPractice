@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,10 +17,6 @@ import com.google.common.collect.Lists;
 import co.aikar.idb.DB;
 import kezuk.practice.Practice;
 import kezuk.practice.match.inventory.MatchSeeInventory;
-import kezuk.practice.match.listener.MatchDeathListener;
-import kezuk.practice.match.listener.MatchEntityListener;
-import kezuk.practice.match.listener.MatchInteractListener;
-import kezuk.practice.match.listener.MatchProjectileListener;
 import kezuk.practice.party.items.PartyItems;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
@@ -93,6 +88,11 @@ public class EndMatch {
         if(!kill && firstList != null) {
         	allPlayers.removeAll(firstList);
         }
+        if (Practice.getInstance().getRegisterCollections().getProfile().get(killer).getGlobalState().equals(GlobalState.EVENT)) {
+			Practice.getInstance().getRegisterObject().getEvent().applyCooldown();
+			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
+			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(killer).getName() + ChatColor.DARK_AQUA + " won the sumo event!");
+        }
         for (final UUID uuid2 : allPlayers) {
         	if (match.getSpectator().contains(uuid2)) {
         		match.getSpectator().remove(uuid2);
@@ -114,7 +114,7 @@ public class EndMatch {
             if(!kill) {
             	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "The fight is finished with a disconnection of the opponent!");
             }
-            if (match.getPlayers() != null) {
+            if (match.getPlayers() != null && Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState() != GlobalState.EVENT) {
                 player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + " won the ffa match!");
             }
             if (!match.isRanked() && match.getPlayers() == null) {

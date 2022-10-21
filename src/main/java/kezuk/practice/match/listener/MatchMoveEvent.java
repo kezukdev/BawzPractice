@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import kezuk.practice.Practice;
-import kezuk.practice.event.type.EventType;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;

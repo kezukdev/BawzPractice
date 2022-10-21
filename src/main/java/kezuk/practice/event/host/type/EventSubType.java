@@ -1,4 +1,4 @@
-package kezuk.practice.event.type;
+package kezuk.practice.event.host.type;
 
 public enum EventSubType {
 	

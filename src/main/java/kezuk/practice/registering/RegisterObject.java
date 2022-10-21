@@ -1,12 +1,13 @@
 package kezuk.practice.registering;
 
-import kezuk.practice.event.Event;
+import kezuk.practice.event.host.Event;
 import kezuk.practice.ladders.inventory.LadderInventory;
 import kezuk.practice.match.spectate.SpectateInventory;
 import kezuk.practice.party.inventory.ManageInventory;
 import kezuk.practice.party.inventory.MatchInventory;
 import kezuk.practice.player.utils.UtilsInventory;
 import kezuk.practice.player.utils.leaderboard.Leaderboard;
+import kezuk.practice.player.utils.subinventory.HostInventory;
 import kezuk.practice.queue.QueueSystem;
 
 public class RegisterObject {
@@ -19,6 +20,7 @@ public class RegisterObject {
 	private MatchInventory partyMatchInventory;
 	private ManageInventory partyManageInventory;
 	private Event event;
+	private HostInventory hostInventory;
 	
 	public RegisterObject() {
 		this.queueSystem = new QueueSystem();
@@ -29,6 +31,7 @@ public class RegisterObject {
 		this.partyMatchInventory = new MatchInventory();
 		this.partyManageInventory = new ManageInventory();
 		this.event = new Event();
+		this.hostInventory = new HostInventory();
 	}
 	
 	public QueueSystem getQueueSystem() {
@@ -61,5 +64,9 @@ public class RegisterObject {
 	
 	public Event getEvent() {
 		return event;
+	}
+	
+	public HostInventory getHostInventory() {
+		return hostInventory;
 	}
 }

@@ -1,4 +1,4 @@
-package kezuk.practice.event.task;
+package kezuk.practice.event.host.task;
 
 import java.util.UUID;
 
@@ -8,15 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import kezuk.practice.Practice;
-import kezuk.practice.event.Event;
-import kezuk.practice.event.sumo.SumoEvent;
-import kezuk.practice.event.type.EventSubType;
-import kezuk.practice.event.type.EventType;
+import kezuk.practice.event.host.Event;
+import kezuk.practice.event.host.sumo.SumoEvent;
+import kezuk.practice.event.host.type.EventSubType;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
-import kezuk.practice.player.state.SubState;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;

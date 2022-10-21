@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
@@ -29,8 +30,26 @@ public class UtilsListener implements Listener {
 					event.getWhoClicked().closeInventory();
 					Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open((Player) event.getWhoClicked(), 1);
 				}
-				event.setCancelled(true);
+				if (event.getCurrentItem().getType().equals(Material.PAPER)) {
+					event.getWhoClicked().closeInventory();
+					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getHostInventory().getHost());
+				}
 			}
+			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getHostInventory().getHost().getName())) {
+				if (event.getCurrentItem().getType().equals(Material.FLINT)) {
+					event.getWhoClicked().closeInventory();
+					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory());
+				}
+				if (event.getCurrentItem().getType().equals(Material.ANVIL)) {
+					event.getWhoClicked().closeInventory();
+					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.SUMO, null);
+				}
+				if (event.getCurrentItem().getType().equals(Material.GOLD_SWORD)) {
+					event.getWhoClicked().closeInventory();
+					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.OITC, null);
+				}
+			}
+			event.setCancelled(true);
 		}
 	}
 
