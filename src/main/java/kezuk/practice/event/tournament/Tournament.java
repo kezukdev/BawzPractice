@@ -1,11 +1,16 @@
 package kezuk.practice.event.tournament;
 
 import org.bukkit.plugin.*;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.*;
 
 import kezuk.practice.Practice;
 import kezuk.practice.event.tournament.tasks.TournamentTask;
 import kezuk.practice.ladders.Ladders;
+import kezuk.practice.player.Profile;
+import kezuk.practice.player.items.SpawnItems;
+import kezuk.practice.player.state.GlobalState;
+import kezuk.practice.player.state.SubState;
 
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -50,7 +55,7 @@ public class Tournament
     public void stopTournament() {
         this.plugin.getServer().broadcastMessage(" ");
         this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + (this.playerTournament ? "PLAYER " : "") + "TOURNAMENT (" + this.maximumPerTeam + "v" + this.maximumPerTeam + ")");
-        this.plugin.getServer().broadcastMessage(ChatColor.YELLOW + "Ended by an administrator (Force-Stopped)");
+        this.plugin.getServer().broadcastMessage(ChatColor.AQUA + "Ended by an administrator (Force-Stopped)");
         this.plugin.getServer().broadcastMessage(" ");
         if (this.currentMatches.size() > 0) {
             for (final TournamentMatch tournamentMatch : this.currentMatches) {
@@ -63,6 +68,7 @@ public class Tournament
             }
         }
         this.plugin.getServer().getScheduler().cancelTask(this.taskId);
+        Practice.getInstance().getRegisterCollections().getRunningTournaments().remove(this);
         Tournament.tournaments.remove(this);
     }
     
@@ -75,8 +81,8 @@ public class Tournament
             this.stopTournament();
             return;
         }
-        if (this.getTotalPlayersInTournament() < this.playersLimit && !this.forceStarted && !this.started) {
-            return;
+        if (this.getTotalPlayersInTournament() < this.playersLimit / 4) {
+        	return;
         }
         if (this.currentMatches.size() > 0 && this.teams.size() > 1) {
             return;
@@ -148,6 +154,16 @@ public class Tournament
             final StringJoiner members = new StringJoiner(", ");
             for (final UUID uuid : this.teams.get(0).getPlayers()) {
                 if (Bukkit.getOfflinePlayer(uuid) != null) {
+                	final Player player = Bukkit.getPlayer(uuid);
+                	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+                    profile.getGlobalState().setSubState(SubState.NOTHING);
+                    profile.setGlobalState(GlobalState.SPAWN);
+                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+                    player.sendMessage(ChatColor.AQUA + "You won the tournaments!");
+                    new SpawnItems(player.getUniqueId());
+                    for (PotionEffect effect : player.getActivePotionEffects()) {
+                    	player.removePotionEffect(effect.getType());
+                    }
                     members.add(Bukkit.getOfflinePlayer(uuid).getName());
                 }
             }
@@ -157,6 +173,7 @@ public class Tournament
             this.plugin.getServer().broadcastMessage(" ");
             this.plugin.getServer().getScheduler().cancelTask(this.taskId);
             Tournament.tournaments.remove(this);
+            Practice.getInstance().getRegisterCollections().getRunningTournaments().remove(this);
             return;
         }
         this.currentQueue.clear();
@@ -258,6 +275,7 @@ public class Tournament
             }
             Bukkit.getServer().getScheduler().cancelTask(tournament.taskId);
             iterator.remove();
+            Practice.getInstance().getRegisterCollections().getRunningTournaments().remove(tournament);
         }
     }
     

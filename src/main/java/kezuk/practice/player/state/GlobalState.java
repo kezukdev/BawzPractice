@@ -9,7 +9,8 @@ public enum GlobalState {
 	EVENT(SubState.NOTHING),
 	EDITOR(SubState.NOTHING),
 	MOD(SubState.NOTHING),
-	PARTY(SubState.NOTHING);
+	PARTY(SubState.NOTHING),
+	TOURNAMENT(SubState.NOTHING);
 	
 	private SubState subState;
 	

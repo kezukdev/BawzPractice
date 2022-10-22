@@ -10,6 +10,8 @@ import kezuk.practice.core.rank.command.RankCommand;
 import kezuk.practice.event.command.JoinCommand;
 import kezuk.practice.event.host.items.listener.HostInteractItemListener;
 import kezuk.practice.event.inventory.listener.JoinInventoryListener;
+import kezuk.practice.event.tournament.TournamentListener;
+import kezuk.practice.event.tournament.items.listener.TournamentInteractItemListener;
 import kezuk.practice.ladders.inventory.listener.LadderInventoryListener;
 import kezuk.practice.match.inventory.command.InventoryCommand;
 import kezuk.practice.match.listener.MatchDeathListener;
@@ -55,6 +57,8 @@ public class RegisterCommon {
 		pm.registerEvents(new JoinInventoryListener(), Practice.getInstance());
 		pm.registerEvents(new UtilsListener(), Practice.getInstance());
 		pm.registerEvents(new HostInteractItemListener(), Practice.getInstance());
+		pm.registerEvents(new TournamentListener(), Practice.getInstance());
+		pm.registerEvents(new TournamentInteractItemListener(), Practice.getInstance());
 		pm.registerEvents(new PlayerListener(), Practice.getInstance());
 	}
 

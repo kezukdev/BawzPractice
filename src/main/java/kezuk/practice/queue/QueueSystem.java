@@ -65,7 +65,7 @@ public class QueueSystem {
 	                    final List<UUID> secondList = Lists.newArrayList();
                     	firstList.add(uuid);
                         secondList.add(possibleUUID);
-                        new StartMatch(firstList, secondList, null, ladder, ranked, to2);
+                        new StartMatch(firstList, secondList, null, ladder, ranked, to2, false);
 	                    firstList.clear();
 	                    secondList.clear();
 	                    Practice.getInstance().getRegisterCollections().getQueue().remove(uuid);

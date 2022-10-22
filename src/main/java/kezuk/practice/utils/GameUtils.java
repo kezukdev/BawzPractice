@@ -232,4 +232,15 @@ public class GameUtils {
         Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Match Spectating."));
         Bukkit.getPlayer(uuid).updateInventory();
     }
+    
+    public static StartMatch getMatchManagerBySpectator(UUID uuid) {
+        for (StartMatch matchManager : Practice.getInstance().getRegisterCollections().getMatchs().values()) {
+            for (UUID uid : matchManager.getSpectator()) {
+                if (uid.equals(uuid)) {
+                    return matchManager;
+                }
+            }
+        }
+        return null;
+    }
 }

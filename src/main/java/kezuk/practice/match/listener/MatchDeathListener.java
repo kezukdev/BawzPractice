@@ -2,6 +2,10 @@ package kezuk.practice.match.listener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,10 +13,16 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.tournament.Tournament;
+import kezuk.practice.event.tournament.TournamentMatch;
+import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
+import kezuk.practice.player.items.SpawnItems;
+import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.GameUtils;
 
@@ -51,10 +61,79 @@ public class MatchDeathListener implements Listener {
                     }
                 }
             }.runTaskLater((Plugin)Practice.getInstance(), 2L);
+            final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
             if (!(player.getKiller() instanceof Player)) {
+            	if (match != null && match.isTournament()) {
+                    for (final Tournament tournament : Tournament.getTournaments()) {
+                        if (tournament != null) {
+                            final Iterator<TournamentMatch> iterator = tournament.getCurrentMatches().iterator();
+                            while (iterator.hasNext()) {
+                                final TournamentMatch tmatch = iterator.next();
+                                if (tmatch.getFirstTeam().getPlayers().equals(match.getFirstList()) && tmatch.getSecondTeam().getPlayers().equals(match.getSecondList())) {
+                                    final String winningTeamOne = ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + "Tournament" + ChatColor.GRAY + ") " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getKiller().getUniqueId()).getName() + ChatColor.AQUA + " have eliminated " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getUniqueId()).getName();
+                                    Bukkit.broadcastMessage(winningTeamOne);
+                                    tmatch.setWinndingId(match.getFirstList().contains(player.getUniqueId()) ? 2 : 1);
+                                    profile.getGlobalState().setSubState(SubState.FINISHED);
+                                    tournament.getTeams().remove(tmatch.getFirstTeam().getPlayers().contains(player.getUniqueId()) ? tmatch.getSecondTeam() : tmatch.getFirstTeam());
+                                    tournament.getCurrentQueue().remove(match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList());
+                                    iterator.remove();
+                                    new BukkitRunnable() {
+										
+										@Override
+										public void run() {
+		                                    profile.getGlobalState().setSubState(SubState.NOTHING);
+		                                    profile.setGlobalState(GlobalState.SPAWN);
+		                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+		                                    new SpawnItems(player.getUniqueId());
+		                                    for (PotionEffect effect : player.getActivePotionEffects()) {
+		                                    	player.removePotionEffect(effect.getType());
+		                                    }
+										}
+									}.runTaskLaterAsynchronously(Practice.getInstance(), 40L);
+                                    player.sendMessage(ChatColor.AQUA + "You are now eliminated from the tournament, maybe one more time. Who knows.");
+                                }
+                            }
+                        }
+                    }
+                    return;
+            	}
             	GameUtils.addKill(player.getUniqueId(), (profile.getMatchStats().getLastAttacker() != null ? profile.getMatchStats().getLastAttacker() : null));
             	return;
             }
+        	if (match != null && match.isTournament()) {
+                for (final Tournament tournament : Tournament.getTournaments()) {
+                    if (tournament != null) {
+                        final Iterator<TournamentMatch> iterator = tournament.getCurrentMatches().iterator();
+                        while (iterator.hasNext()) {
+                            final TournamentMatch tmatch = iterator.next();
+                            if (tmatch.getFirstTeam().getPlayers().equals(match.getFirstList()) && tmatch.getSecondTeam().getPlayers().equals(match.getSecondList())) {
+                                final String winningTeamOne = ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + "Tournament" + ChatColor.GRAY + ") " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getKiller().getUniqueId()).getName() + ChatColor.AQUA + " have eliminated " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getUniqueId()).getName();
+                                Bukkit.broadcastMessage(winningTeamOne);
+                                tmatch.setWinndingId(match.getFirstList().contains(player.getUniqueId()) ? 2 : 1);
+                                profile.getGlobalState().setSubState(SubState.FINISHED);
+                                tournament.getTeams().remove(tmatch.getFirstTeam().getPlayers().contains(player.getUniqueId()) ? tmatch.getSecondTeam() : tmatch.getSecondTeam());
+                                tournament.getCurrentQueue().remove(match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList());
+                                iterator.remove();
+                                new BukkitRunnable() {
+									
+									@Override
+									public void run() {
+	                                    profile.getGlobalState().setSubState(SubState.NOTHING);
+	                                    profile.setGlobalState(GlobalState.SPAWN);
+	                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+	                                    new SpawnItems(player.getUniqueId());
+	                                    for (PotionEffect effect : player.getActivePotionEffects()) {
+	                                    	player.removePotionEffect(effect.getType());
+	                                    }
+									}
+								}.runTaskLaterAsynchronously(Practice.getInstance(), 40L);
+                                player.sendMessage(ChatColor.AQUA + "You are now eliminated from the tournament, maybe one more time. Who knows.");
+                            }
+                        }
+                    }
+                }
+                return;
+        	}
             GameUtils.addKill(player.getUniqueId(), player.getKiller().getUniqueId());
         }
     }

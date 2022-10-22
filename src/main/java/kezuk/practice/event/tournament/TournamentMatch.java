@@ -23,7 +23,7 @@ public class TournamentMatch
         Bukkit.getScheduler().runTaskLater((Plugin)plugin, (Runnable)new Runnable() {
             @Override
             public void run() {
-                match = new StartMatch(TournamentMatch.this.firstTeam.getPlayers(), TournamentMatch.this.secondTeam.getPlayers(), matchPlayers, null, false, false);
+                match = new StartMatch(TournamentMatch.this.firstTeam.getPlayers(), TournamentMatch.this.secondTeam.getPlayers(), null, Tournament.getTournaments().get(0).getDefaultKit(), false, false, true);
             }
         }, 40L);
         this.matchState = MatchState.FIGHTING;

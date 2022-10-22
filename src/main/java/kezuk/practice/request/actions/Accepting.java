@@ -26,7 +26,7 @@ public class Accepting {
 			if (Practice.getInstance().getRegisterCollections().getProfile().get(requested).getRequest().get(requester).getLadder() != "Party") {
 				List<UUID> firstList = Lists.newArrayList(requested);
 				List<UUID> secondList = Lists.newArrayList(requester);
-				new StartMatch(firstList, secondList, null, Ladders.getLadder(Practice.getInstance().getRegisterCollections().getProfile().get(requested).getRequest().get(requester).getLadder()), false, false);
+				new StartMatch(firstList, secondList, null, Ladders.getLadder(Practice.getInstance().getRegisterCollections().getProfile().get(requested).getRequest().get(requester).getLadder()), false, false, false);
 				Practice.getInstance().getRegisterCollections().getProfile().get(requested).getRequest().get(requester).removeRequestCooldown();
 				Practice.getInstance().getRegisterCollections().getProfile().get(requester).setTargetDuel(null);
 				Practice.getInstance().getRegisterCollections().getProfile().get(requested).getRequest().clear();

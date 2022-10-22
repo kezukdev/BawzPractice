@@ -42,12 +42,14 @@ public class StartMatch {
     private Arena arena;
     private Set<UUID> dropped;
     private List<UUID> spectator;
+    private boolean tournament;
 	
-	public StartMatch(final List<UUID> firstList, final List<UUID> secondList,final List<UUID> players, final Ladders ladder, final boolean ranked, final boolean to2) {
+	public StartMatch(final List<UUID> firstList, final List<UUID> secondList,final List<UUID> players, final Ladders ladder, final boolean ranked, final boolean to2, final boolean tournament) {
     	this.matchUUID = UUID.randomUUID();
         this.ladder = ladder;
         this.ranked = ranked;
         this.to2 = to2;
+        this.tournament = tournament;
         if (firstList != null) {
             this.firstList = Lists.newArrayList(firstList);
             this.secondList = Lists.newArrayList(secondList);
@@ -138,6 +140,10 @@ public class StartMatch {
 	@SuppressWarnings("deprecation")
 	public void destroy() throws Throwable {
 		this.finalize();
+	}
+	
+	public boolean isTournament() {
+		return tournament;
 	}
 	
 	public UUID getMatchUUID() {

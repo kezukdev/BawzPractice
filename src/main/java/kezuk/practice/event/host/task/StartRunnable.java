@@ -86,7 +86,7 @@ public class StartRunnable {
         					Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + " The host ffa as been started!");
         					Bukkit.getPlayer(uuid).sendMessage(" ");
         				}
-        				new StartMatch(null, null, host.getMembers(), host.getLadder(), false, false);
+        				new StartMatch(null, null, host.getMembers(), host.getLadder(), false, false, false);
         			}
         			if (host.getEventType().equals(EventType.SUMO)) {
         				host.sumoEvent = new SumoEvent(host.getMembers());

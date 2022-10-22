@@ -2,6 +2,7 @@ package kezuk.practice.registering;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
@@ -10,6 +11,7 @@ import org.bukkit.event.Event;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.arena.Arena;
+import kezuk.practice.event.tournament.Tournament;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.match.inventory.MatchSeeInventory;
 import kezuk.practice.party.Party;
@@ -28,6 +30,7 @@ public class RegisterCollections {
 	private HashMap<UUID, Party> partys;
 	private ArrayList<Arena> arena;
     private Map<UUID, MatchSeeInventory> offlineInventories;
+    private List<Tournament> runningTournaments;
 	
 	public RegisterCollections() {
 		this.queue = Maps.newConcurrentMap();
@@ -38,7 +41,7 @@ public class RegisterCollections {
 		this.partys = Maps.newHashMap();
 		this.arena = Lists.newArrayList();
 		this.offlineInventories = Maps.newHashMap();
-		
+		this.runningTournaments = Lists.newArrayList();
 	}
 	
 	public ConcurrentMap<UUID, QueueEntry> getQueue() {
@@ -71,5 +74,9 @@ public class RegisterCollections {
 	
 	public HashMap<UUID, Event> getEvent() {
 		return event;
+	}
+	
+	public List<Tournament> getRunningTournaments() {
+		return runningTournaments;
 	}
 }

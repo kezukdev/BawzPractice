@@ -64,7 +64,7 @@ public class EloRange {
     				Practice.getInstance().getRegisterObject().getQueueSystem().getEloRange().get(possibleUUID).setOpponentFounded(true);
     				List<UUID> firstPlayer = Lists.newArrayList(uuid);
     				List<UUID> secondPlayer = Lists.newArrayList(possibleUUID);
-    				new StartMatch(firstPlayer, secondPlayer,null, ladder, true, false);
+    				new StartMatch(firstPlayer, secondPlayer,null, ladder, true, false, false);
     				Practice.getInstance().getRegisterObject().getQueueSystem().getEloRange().remove(uuid);
     				Practice.getInstance().getRegisterObject().getQueueSystem().getEloRange().remove(possibleUUID);
     				Practice.getInstance().getRegisterObject().getQueueSystem().getQueue().remove(uuid);
