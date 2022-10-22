@@ -1,8 +1,14 @@
 package kezuk.practice.registering;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
+
+import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
@@ -22,7 +28,6 @@ import kezuk.practice.match.spectate.command.SpectateCommand;
 import kezuk.practice.party.command.PartyCommand;
 import kezuk.practice.party.listener.PartyListener;
 import kezuk.practice.player.listener.PlayerListener;
-import kezuk.practice.player.utils.UtilsInventory;
 import kezuk.practice.player.utils.listener.UtilsListener;
 import kezuk.practice.queue.listener.QueueListener;
 import kezuk.practice.request.command.AcceptCommand;
@@ -34,13 +39,29 @@ public class RegisterCommon {
 	private Location spawnLocation;
 	private Location firstLocation;
 	private Location secondLocation;
+	private Location oitcFirstLocation;
+	private Location oitcSecondLocation;
+	private Location oitcThirdLocation;
+	private Location oitcFourthLocation;
+	private Location oitcFifthLocation;
+	private Location oitcSixthLocation;
+	private Location oitcSeventhLocation;
 	private Location spectatorLocation;
+	private List<Location> oitcLocations;
 	
 	public RegisterCommon() {
 		this.spawnLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
 		this.firstLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
 		this.secondLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
 		this.spectatorLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcFirstLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcSecondLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcThirdLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcFourthLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcFifthLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcSixthLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcSeventhLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.oitcLocations = Arrays.asList(this.oitcFirstLocation, this.oitcSecondLocation, this.oitcThirdLocation, this.oitcFourthLocation, this.oitcFifthLocation, this.oitcSixthLocation, this.oitcSeventhLocation);
 		this.registerCommand();
 		this.registerListener();
 	}
@@ -88,5 +109,9 @@ public class RegisterCommon {
 	
 	public Location getSpectatorLocation() {
 		return spectatorLocation;
+	}
+	
+	public List<Location> getOitcLocations() {
+		return oitcLocations;
 	}
 }

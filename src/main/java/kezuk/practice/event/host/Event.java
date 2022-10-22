@@ -82,9 +82,10 @@ public class Event {
 		for(UUID uuids : members) {
 			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuids).getName() + ChatColor.AQUA + " have joined the event! " + ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + this.members.size() + ChatColor.GRAY + ")");
 		}
-		if (members.size() == 5) {
-			new StartRunnable(120);
-		}
+		//if (members.size() == 5) {
+			//new StartRunnable(120);
+		//}
+		new StartRunnable(12);
 	}
 	
 	public void removeMemberToEvent(final UUID uuid) {

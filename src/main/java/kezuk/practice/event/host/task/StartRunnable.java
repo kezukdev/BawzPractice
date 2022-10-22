@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import kezuk.practice.Practice;
 import kezuk.practice.event.host.Event;
+import kezuk.practice.event.host.oitc.OitcEvent;
 import kezuk.practice.event.host.sumo.SumoEvent;
 import kezuk.practice.event.host.type.EventSubType;
 import kezuk.practice.event.host.type.EventType;
@@ -34,10 +35,10 @@ public class StartRunnable {
         			this.cancel();
         			return;
         		}
-        		if (host.getMembers().size() < 5) {
-        			this.cancel();
-        			return;
-        		}
+        		//if (host.getMembers().size() < 5) {
+        			//this.cancel();
+        			//return;
+        		//}
         		if (cooldown == 60) {
         	        final TextComponent hostMessage = new TextComponent(host.getPrefix() + ChatColor.DARK_AQUA + "The host " + ChatColor.WHITE + host.getEventType().toString() + ChatColor.DARK_AQUA + " of " + ChatColor.WHITE + Bukkit.getPlayer(host.getCreatorUUID()).getName() + ChatColor.DARK_AQUA + " starts in 1minutes" + (host.getLadder() != null ? ChatColor.DARK_AQUA + " in " + ChatColor.WHITE + ChatColor.stripColor(host.getLadder().displayName()) + ChatColor.DARK_AQUA + "." : "."));
         	        hostMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/join " + host.getCreatorUUID()));
@@ -90,6 +91,9 @@ public class StartRunnable {
         			}
         			if (host.getEventType().equals(EventType.SUMO)) {
         				host.sumoEvent = new SumoEvent(host.getMembers());
+        			}
+        			if (host.getEventType().equals(EventType.OITC)) {
+        				host.oitcEvent = new OitcEvent(host.getMembers());
         			}
     				this.cancel();
         		}

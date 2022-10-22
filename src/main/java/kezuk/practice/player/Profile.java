@@ -1,9 +1,7 @@
 package kezuk.practice.player;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
@@ -12,13 +10,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
-import com.google.common.collect.Lists;
-
 import co.aikar.idb.DB;
 import kezuk.practice.Practice;
 import kezuk.practice.core.rank.Rank;
 import kezuk.practice.core.tag.Tag;
 import kezuk.practice.editor.Editor;
+import kezuk.practice.event.host.oitc.stats.OitcStats;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.match.stats.MatchStats;
 import kezuk.practice.player.state.GlobalState;
@@ -35,6 +32,7 @@ public class Profile {
 	private Rank rank;
 	private Tag tag;
 	public MatchStats matchStats;
+	public OitcStats oitcStats;
 	public WeakHashMap<UUID, Request> request;
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
@@ -112,6 +110,10 @@ public class Profile {
 	
 	public HashMap<UUID, PermissionAttachment> getPermissible() {
 		return permissible;
+	}
+	
+	public OitcStats getOitcStats() {
+		return oitcStats;
 	}
 	
     public Rank getRank() {

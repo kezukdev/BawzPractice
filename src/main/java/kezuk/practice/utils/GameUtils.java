@@ -73,6 +73,10 @@ public class GameUtils {
     
 	public static void addKill(final UUID uuid, final UUID killer) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+		if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
+			Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().addKill(killer, uuid);
+			return;
+		}
 		StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 		match.getAlive().remove(uuid);
 		if(match.getFirstList() != null) {
