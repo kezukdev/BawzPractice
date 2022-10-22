@@ -6,10 +6,10 @@ main: kezuk.practice.Practice
 commands:
   arena:
   duel:
+    aliases: [d]
   accept:
     aliases: [a]
   deny:
-    aliases: [d]
   party:
     aliases: [p, group, groupe]
   spectate:
