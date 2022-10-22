@@ -1,6 +1,7 @@
 package kezuk.practice;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.bizarrealex.aether.Aether;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -17,6 +19,7 @@ import co.aikar.idb.BukkitDB;
 import co.aikar.idb.DB;
 import co.aikar.idb.Database;
 import kezuk.practice.arena.Arena;
+import kezuk.practice.board.PracticeBoard;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.ladders.gamemode.Axe;
 import kezuk.practice.ladders.gamemode.Bow;
@@ -63,8 +66,18 @@ public class Practice extends JavaPlugin {
 		this.setupDatabase();
 		this.registerThread = new RegisterThread();
         this.registerArena();
+        new Aether(this, new PracticeBoard());
 	}
 	
+	public void onDisable() {
+        getRegisterCollections().getArena().forEach(arenaManager -> arenaManager.save());
+        try {
+            this.arenaConfig.save(this.arenaFile);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
 
 	private void registerFile() {
         this.configPath = Practice.getInstance().getDataFolder() + "/hikari.properties";

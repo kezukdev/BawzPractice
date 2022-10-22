@@ -26,9 +26,6 @@ import kezuk.practice.player.state.SubState;
 public class GameUtils {
 	
 	public static void displayMatchPlayer(final Player player) {
-		if (Practice.getInstance().getRegisterCollections().getMatchs().size() == 0) {
-			return;
-		}
 		for (StartMatch match : Practice.getInstance().getRegisterCollections().getMatchs().values()) {
 			final List<UUID> allPlayers = Lists.newArrayList();
 			if (match.getFirstList() != null) {
@@ -73,9 +70,11 @@ public class GameUtils {
     
 	public static void addKill(final UUID uuid, final UUID killer) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
-		if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
-			Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().addKill(killer, uuid);
-			return;
+		if(Practice.getInstance().getRegisterObject().getEvent().isLaunched()) {
+			if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
+				Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().addKill(killer, uuid);
+				return;
+			}	
 		}
 		StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 		match.getAlive().remove(uuid);
@@ -137,8 +136,8 @@ public class GameUtils {
 	}
 	
 	public static void addDisconnected(final UUID uuid) {
-		StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID());
-		if (match != null) {
+		if (Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID()) != null) {
+			StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID());
 			if (match.getPlayers() != null) {
 				match.getPlayers().remove(uuid);	
 			}
@@ -159,24 +158,40 @@ public class GameUtils {
 		}
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
 		if (profile.getGlobalState().equals(GlobalState.EVENT)) {
-			if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+			if (profile.getSubState().equals(SubState.PLAYING)) {
 				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
 					final UUID winner = Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID() == uuid ? Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getSecondUUID() : Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID();
 					Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().newRound(winner, uuid);
+				}
+				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC)) {
+					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);
 				}
 			}
 			else {
 				if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getAlives().contains(uuid)) {
 					Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getAlives().remove(uuid);	
 				}
-				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid);
+				if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().contains(uuid)) {
+					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);	
+				}
+				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid, true);
+			}
+		}
+		if (profile.getGlobalState().equals(GlobalState.EVENT) && Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.FFA)) {
+			if (profile.getSubState().equals(SubState.PLAYING)) {
+				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.FFA)) {
+					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);
+				}
+			}
+			else {
+				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid, true);
 			}
 		}
 		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
 			Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(uuid);
 		}
 		if (profile.getGlobalState().equals(GlobalState.PARTY)) {
-			if (profile.getGlobalState().getSubState().equals(SubState.QUEUE)) {
+			if (profile.getSubState().equals(SubState.QUEUE)) {
 				Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(uuid);
 			}
 			Party.getPartyMap().get(uuid).removeToParty(uuid, true);
@@ -212,7 +227,7 @@ public class GameUtils {
     	Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
     	Profile pmTarget = Practice.getInstance().getRegisterCollections().getProfile().get(targetUUID);
     	StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(pmTarget.getMatchUUID());
-    	if (match == null || pm.getGlobalState().getSubState().equals(SubState.FINISHED) || pmTarget == null) {
+    	if (match == null || pm.getSubState().equals(SubState.FINISHED) || pmTarget == null) {
     		Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "This match is not available!");
     		return;
     	}
@@ -235,6 +250,7 @@ public class GameUtils {
         Bukkit.getPlayer(uuid).getInventory().clear();
         Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Match Spectating."));
         Bukkit.getPlayer(uuid).updateInventory();
+        Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You are now in spectator mode!");
     }
     
     public static StartMatch getMatchManagerBySpectator(UUID uuid) {

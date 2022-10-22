@@ -31,13 +31,13 @@ public class MatchInteractListener implements Listener {
 	public void onMatchInteractItems(final PlayerInteractEvent event) {
 		if (!event.hasItem()) return;
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.STARTING) || profile.getSubState().equals(SubState.PLAYING)) {
 			event.setCancelled(false);
 		}
-		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.STARTING) || profile.getSubState().equals(SubState.PLAYING)) {
 			final ItemStack item = event.getItem();
 			if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && item.getType() == Material.ENDER_PEARL && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-				if (profile.getGlobalState().getSubState() != SubState.PLAYING) {
+				if (profile.getSubState() != SubState.PLAYING) {
 					event.setUseItemInHand(Result.DENY);
 					event.getPlayer().sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please wait until the fight is fully launched!");
 					event.getPlayer().updateInventory();
@@ -61,7 +61,7 @@ public class MatchInteractListener implements Listener {
 	@EventHandler
 	public void onInventorySelected(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.STARTING) || profile.getSubState().equals(SubState.PLAYING)) {
 			event.setCancelled(false);
 		}
 	}
@@ -71,7 +71,21 @@ public class MatchInteractListener implements Listener {
 		if (event.getCause() == TeleportCause.ENDER_PEARL) {
 			final Player player = event.getPlayer();
 			final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
-			if (pm.getGlobalState().getSubState() != SubState.PLAYING) event.setCancelled(true);
+			if (pm.getSubState() != SubState.PLAYING) event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteractSoup(PlayerInteractEvent event) {
+		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			final Player player = event.getPlayer();
+			if (!player.isDead() && player.getItemInHand().getType() == Material.MUSHROOM_SOUP && player.getHealth() < player.getMaxHealth()) {
+				final double newHealth = Math.min(player.getHealth() + 7.0D, player.getMaxHealth());
+				player.setHealth(newHealth);
+				player.updateInventory();
+				player.getItemInHand().setType(Material.BOWL);
+				player.updateInventory();
+			}
 		}
 	}
 	

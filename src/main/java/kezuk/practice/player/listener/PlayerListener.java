@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -19,7 +21,6 @@ import org.bukkit.potion.PotionEffect;
 import kezuk.practice.Practice;
 import kezuk.practice.core.rank.Rank;
 import kezuk.practice.core.tag.Tag;
-import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
@@ -45,21 +46,30 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler
 	public void onQuitting(final PlayerQuitEvent event) {
-		event.setQuitMessage(null);
 		GameUtils.addDisconnected(event.getPlayer().getUniqueId());
-	}
-	
-	@EventHandler
-	public void onGotKicked(final PlayerKickEvent event) {
-		onQuitting(new PlayerQuitEvent(event.getPlayer(), null));
+		event.setQuitMessage(null);
 	}
 	
 	@EventHandler
 	public void onDamage(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.PLAYING)) {
 			return;
 		}
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onBreakBlock(final BlockBreakEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
+		if (profile.getSubState().equals(SubState.BUILD)) return;
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onBreakPlace(final BlockPlaceEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
+		if (profile.getSubState().equals(SubState.BUILD)) return;
 		event.setCancelled(true);
 	}
 	
@@ -68,6 +78,7 @@ public class PlayerListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
 			if (!event.hasItem()) return;
+			if (profile.getSubState().equals(SubState.BUILD)) return;
 			if (event.getItem().getType().equals(Material.STONE_SWORD) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory());
 			}
@@ -75,7 +86,7 @@ public class PlayerListener implements Listener {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getRankedInventory());
 			}
 			if (event.getItem().getType().equals(Material.NETHER_STAR) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory());
+				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getPersonnalInventory().getPersonnalInventory());
 			}
 			if (event.getItem().getType().equals(Material.BOOK) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory());
@@ -87,7 +98,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onItemDropped(final PlayerDropItemEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING) || profile.getGlobalState().getSubState().equals(SubState.STARTING)) {
+		if (profile.getSubState().equals(SubState.PLAYING) || profile.getSubState().equals(SubState.STARTING)) {
 			if (event.getItemDrop().getItemStack().getType().equals(Material.GLASS_BOTTLE)) {
 				event.getItemDrop().remove();
 			}
@@ -100,9 +111,9 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onHunger(final FoodLevelChangeEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.PLAYING)) {
 			if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()) != null) {
-				if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().name() != "sumo" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().name() != "boxing" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().name() != "soup") {
+				if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Sumo" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Boxing" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Soup") {
 					return;
 				}
 			}
@@ -113,7 +124,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onConsume(final PlayerItemConsumeEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.STARTING) || profile.getSubState().equals(SubState.PLAYING)) {
 			return;
 		}
 		event.setCancelled(true);

@@ -34,7 +34,7 @@ public class QueueSystem {
 		            pm.setGlobalState(GlobalState.QUEUE);	
 				}
 				else {
-					pm.getGlobalState().setSubState(SubState.QUEUE);
+					pm.setSubState(SubState.QUEUE);
 				}
 	            Bukkit.getPlayer(uuid).getInventory().clear();
 	            Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Queue."));
@@ -89,7 +89,7 @@ public class QueueSystem {
                 Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have left the queue.");	
         	}
         	else {
-                Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().setSubState(SubState.NOTHING);
+                Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
                 new PartyItems(Bukkit.getPlayer(uuid));
                 Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have left 2v2 the queue.");
         	}

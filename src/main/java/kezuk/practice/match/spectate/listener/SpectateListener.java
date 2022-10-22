@@ -37,25 +37,29 @@ public class SpectateListener implements Listener {
 	@EventHandler
 	public void onInventoryClickOfSpectate(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
-        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.COMPASS || event.getCurrentItem().getType() == Material.PAPER) return;
-        	final Player player = (Player) event.getWhoClicked();
-            if (event.getCurrentItem().getType() == Material.ARROW) {
-                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
-                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
-                return;
-            }
-            else if (event.getCurrentItem().getType() == Material.LEVER) {
-                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
-                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
-                return;
-            }
-        	player.closeInventory();
-            String title = event.getCurrentItem().getItemMeta().getDisplayName();
-            String arr[] = title.split(" ", 2);
-            String first = arr[0];
-            GameUtils.addSpectatorToMatch(event.getWhoClicked().getUniqueId(), Bukkit.getPlayer(ChatColor.stripColor(first)).getUniqueId());
-            event.setCancelled(true);
+		if (profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.NOTHING)) {
+			if (profile.getSubState().equals(SubState.BUILD)) return;
+			if (event.getClickedInventory().getName().equalsIgnoreCase(ChatColor.DARK_GRAY + "Spectate")) {
+	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.COMPASS || event.getCurrentItem().getType() == Material.PAPER) return;
+	        	final Player player = (Player) event.getWhoClicked();
+	            if (event.getCurrentItem().getType() == Material.ARROW) {
+	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+	                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
+	                return;
+	            }
+	            else if (event.getCurrentItem().getType() == Material.LEVER) {
+	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+	                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
+	                return;
+	            }
+	        	player.closeInventory();
+	            String title = event.getCurrentItem().getItemMeta().getDisplayName();
+	            String arr[] = title.split(" ", 2);
+	            String first = arr[0];
+	            GameUtils.addSpectatorToMatch(event.getWhoClicked().getUniqueId(), Bukkit.getPlayer(ChatColor.stripColor(first)).getUniqueId());
+	            event.setCancelled(true);
+	            return;
+			}
 		}
 	}
 

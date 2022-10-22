@@ -20,3 +20,4 @@ commands:
     aliases: [inv]
   rank:
   tag:
+  build:

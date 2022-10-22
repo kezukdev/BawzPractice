@@ -17,7 +17,7 @@ public class SpawnItems {
 	
 	public SpawnItems(final UUID uuid) {
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
-		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().setSubState(SubState.NOTHING);
+		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
 		final Player player = Bukkit.getPlayer(uuid);
         final ItemStack unranked = ItemSerializer.serialize(new ItemStack(Material.STONE_SWORD),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Unranked Queue", null, true);
         final ItemStack ranked = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_SWORD),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Ranked Queue", null, true);
@@ -30,6 +30,8 @@ public class SpawnItems {
         player.getInventory().setItem(4, personnal);
         player.getInventory().setArmorContents((ItemStack[])null);
         player.updateInventory();
+		player.setAllowFlight(false);
+		player.setFlying(false);
 	}
 
 }

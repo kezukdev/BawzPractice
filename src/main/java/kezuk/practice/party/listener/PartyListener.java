@@ -21,7 +21,7 @@ public class PartyListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (!event.hasItem()) return;
 		if (profile.getGlobalState().equals(GlobalState.PARTY)) {
-			if (profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
+			if (profile.getSubState().equals(SubState.NOTHING)) {
 				if (event.getItem().getType().equals(Material.GOLD_AXE) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getPartyMatchInventory().getMatchInventory());
 				}
@@ -37,7 +37,7 @@ public class PartyListener implements Listener {
 					Party.getPartyMap().get(event.getPlayer().getUniqueId()).removeToParty(event.getPlayer().getUniqueId(), false);
 				}
 			}
-			if (profile.getGlobalState().getSubState().equals(SubState.QUEUE)) {
+			if (profile.getSubState().equals(SubState.QUEUE)) {
 				if (event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					if (Practice.getInstance().getRegisterCollections().getPartys().get(event.getPlayer().getUniqueId()) != null) {
 						Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(event.getPlayer().getUniqueId());	
@@ -47,7 +47,7 @@ public class PartyListener implements Listener {
 					}
 				}
 			}
-			if (profile.getGlobalState().getSubState().equals(SubState.STARTING) || profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+			if (profile.getSubState().equals(SubState.STARTING) || profile.getSubState().equals(SubState.PLAYING)) {
 				return;
 			}
 			event.setCancelled(true);
@@ -57,7 +57,7 @@ public class PartyListener implements Listener {
 	@EventHandler
 	public void onInteractWithPartyInventory(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
+		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getSubState().equals(SubState.NOTHING)) {
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getPartyMatchInventory().getMatchInventory().getName())) {
 				if (event.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)) {
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory());

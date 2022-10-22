@@ -35,13 +35,9 @@ public class StartRunnable {
         			this.cancel();
         			return;
         		}
-        		//if (host.getMembers().size() < 5) {
-        			//this.cancel();
-        			//return;
-        		//}
         		if (cooldown == 60) {
         	        final TextComponent hostMessage = new TextComponent(host.getPrefix() + ChatColor.DARK_AQUA + "The host " + ChatColor.WHITE + host.getEventType().toString() + ChatColor.DARK_AQUA + " of " + ChatColor.WHITE + Bukkit.getPlayer(host.getCreatorUUID()).getName() + ChatColor.DARK_AQUA + " starts in 1minutes" + (host.getLadder() != null ? ChatColor.DARK_AQUA + " in " + ChatColor.WHITE + ChatColor.stripColor(host.getLadder().displayName()) + ChatColor.DARK_AQUA + "." : "."));
-        	        hostMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/join " + host.getCreatorUUID()));
+        	        hostMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/join host"));
         	        hostMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click here for join the " + host.getEventType().toString() + " event!").create()));
         	        for (Player players : Bukkit.getOnlinePlayers()) {
         	        	players.sendMessage(" ");
@@ -51,7 +47,7 @@ public class StartRunnable {
         		}
         		if (cooldown == 30) {
         	        final TextComponent hostMessage = new TextComponent(ChatColor.GRAY + " [" + ChatColor.AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.DARK_AQUA + "The host " + ChatColor.WHITE + host.getEventType().toString() + ChatColor.DARK_AQUA + " of " + ChatColor.WHITE + Bukkit.getPlayer(host.getCreatorUUID()).getName() + ChatColor.DARK_AQUA + " starts in 30seconds" + (host.getLadder() != null ? ChatColor.DARK_AQUA + " in " + ChatColor.WHITE + ChatColor.stripColor(host.getLadder().displayName()) + ChatColor.DARK_AQUA + "." : "."));
-        	        hostMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/join " + host.getCreatorUUID()));
+        	        hostMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/join host"));
         	        hostMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click here for join the " + host.getEventType().toString() + " event!").create()));
         	        for (Player players : Bukkit.getOnlinePlayers()) {
         	        	players.sendMessage(" ");

@@ -8,6 +8,7 @@ public enum SubState {
 	PLAYING,
 	FINISHED,
 	
-	QUEUE;
+	QUEUE,
+	BUILD;
 
 }

@@ -36,7 +36,7 @@ public class MatchDeathListener implements Listener {
         event.getDrops().clear();
         final Player player = event.getEntity();
         final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
-        if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+        if (profile.getSubState().equals(SubState.PLAYING)) {
             final Location deathLocation = player.getLocation();
             new BukkitRunnable() {
                 public void run() {
@@ -73,7 +73,7 @@ public class MatchDeathListener implements Listener {
                                     final String winningTeamOne = ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + "Tournament" + ChatColor.GRAY + ") " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getKiller().getUniqueId()).getName() + ChatColor.AQUA + " have eliminated " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getUniqueId()).getName();
                                     Bukkit.broadcastMessage(winningTeamOne);
                                     tmatch.setWinndingId(match.getFirstList().contains(player.getUniqueId()) ? 2 : 1);
-                                    profile.getGlobalState().setSubState(SubState.FINISHED);
+                                    profile.setSubState(SubState.FINISHED);
                                     tournament.getTeams().remove(tmatch.getFirstTeam().getPlayers().contains(player.getUniqueId()) ? tmatch.getSecondTeam() : tmatch.getFirstTeam());
                                     tournament.getCurrentQueue().remove(match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList());
                                     iterator.remove();
@@ -81,7 +81,7 @@ public class MatchDeathListener implements Listener {
 										
 										@Override
 										public void run() {
-		                                    profile.getGlobalState().setSubState(SubState.NOTHING);
+		                                    profile.setSubState(SubState.NOTHING);
 		                                    profile.setGlobalState(GlobalState.SPAWN);
 		                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 		                                    new SpawnItems(player.getUniqueId());
@@ -110,7 +110,7 @@ public class MatchDeathListener implements Listener {
                                 final String winningTeamOne = ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + "Tournament" + ChatColor.GRAY + ") " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getKiller().getUniqueId()).getName() + ChatColor.AQUA + " have eliminated " + ChatColor.WHITE + Bukkit.getOfflinePlayer(player.getUniqueId()).getName();
                                 Bukkit.broadcastMessage(winningTeamOne);
                                 tmatch.setWinndingId(match.getFirstList().contains(player.getUniqueId()) ? 2 : 1);
-                                profile.getGlobalState().setSubState(SubState.FINISHED);
+                                profile.setSubState(SubState.FINISHED);
                                 tournament.getTeams().remove(tmatch.getFirstTeam().getPlayers().contains(player.getUniqueId()) ? tmatch.getSecondTeam() : tmatch.getSecondTeam());
                                 tournament.getCurrentQueue().remove(match.getFirstList().contains(player.getUniqueId()) ? match.getSecondList() : match.getFirstList());
                                 iterator.remove();
@@ -118,7 +118,7 @@ public class MatchDeathListener implements Listener {
 									
 									@Override
 									public void run() {
-	                                    profile.getGlobalState().setSubState(SubState.NOTHING);
+	                                    profile.setSubState(SubState.NOTHING);
 	                                    profile.setGlobalState(GlobalState.SPAWN);
 	                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 	                                    new SpawnItems(player.getUniqueId());

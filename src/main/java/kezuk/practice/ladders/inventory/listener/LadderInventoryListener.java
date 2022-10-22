@@ -30,6 +30,7 @@ public class LadderInventoryListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
 		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
 			if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+			if (profile.getSubState().equals(SubState.BUILD)) return;
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory().getName())) {
 				event.getWhoClicked().closeInventory();
 				List<UUID> uuid = Lists.newArrayList(event.getWhoClicked().getUniqueId());
@@ -52,7 +53,7 @@ public class LadderInventoryListener implements Listener {
 			}
 			event.setCancelled(true);
 		}
-		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
+		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getSubState().equals(SubState.NOTHING)) {
 			if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 			if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory().getName())) {

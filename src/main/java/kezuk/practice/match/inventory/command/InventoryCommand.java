@@ -17,7 +17,7 @@ public class InventoryCommand implements CommandExecutor {
             return true;
         }
         final Player player = (Player) sender;
-        if (Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchUUID()) != null && Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getGlobalState().getSubState() != SubState.FINISHED) {
+        if (Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchUUID()) != null && Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getSubState() != SubState.FINISHED) {
 			sender.sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "You can't do this right now.");
         	return false;
         }

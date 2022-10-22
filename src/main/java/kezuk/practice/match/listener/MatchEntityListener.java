@@ -1,24 +1,23 @@
 package kezuk.practice.match.listener;
 
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import kezuk.practice.Practice;
-import kezuk.practice.event.host.type.EventSubType;
 import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
+import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.GameUtils;
 
@@ -29,7 +28,7 @@ public class MatchEntityListener implements Listener {
 	@EventHandler
 	public void onReceiveDamageGlobal(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
-		if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (profile.getSubState().equals(SubState.PLAYING)) {
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 			if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
 				event.setDamage(0.0);
@@ -39,6 +38,7 @@ public class MatchEntityListener implements Listener {
 				return;
 			}
 			if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
+				if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE && event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
 				return;
 			}
 			return;
@@ -51,7 +51,38 @@ public class MatchEntityListener implements Listener {
 		if (!(event.getDamager() instanceof Player)) return;
 		final Profile dmgd = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		final Profile dmr = Practice.getInstance().getRegisterCollections().getProfile().get(event.getDamager().getUniqueId());
-		if (dmgd.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+		if (dmgd.getSubState().equals(SubState.PLAYING)) {
+			if (dmgd.getGlobalState().equals(GlobalState.EVENT)) {
+				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
+					event.setDamage(0.0);
+					return;
+				}
+				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC)) {
+					Player damager;
+					final Player damaged = (Player) event.getEntity();
+			        if (event.getDamager() instanceof Player) {
+			            damager = (Player)event.getDamager();
+		                if (damager.getItemInHand().getType().equals(Material.GOLD_SWORD)) {
+		                	event.setDamage(6.5D);
+		                }
+			        }
+			        else {
+
+			            damager = (Player)((Projectile)event.getDamager()).getShooter();
+			            if (event.getDamager() instanceof Arrow) {
+			                final Arrow arrow2 = (Arrow)event.getDamager();
+			                if (arrow2.getShooter() instanceof Player) {
+			                    final Player shooter = (Player)arrow2.getShooter();
+			                    if (!damaged.getName().equals(shooter.getName())) {
+			                        final double health = 0.0d;
+		                        	damaged.setHealth(health);
+			                    }
+			                }
+			            }
+			        }
+					return;
+				}	
+			}
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(dmr.getMatchUUID());
 			if (match != null) {
 				if (match.getFirstList() != null) {
@@ -96,26 +127,16 @@ public class MatchEntityListener implements Listener {
 	            }
 	            return;
 			}
-			if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent() != null) {
-				event.setDamage(0.0);
-				return;
-			}
-			if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
-				Player damager = (Player) event.getDamager();
-				Player entity = (Player) event.getEntity();
-                if (event.getDamager() instanceof Arrow) {
-                    final Arrow arrow = (Arrow)event.getDamager();
-                    if (arrow.getShooter() instanceof Player) {
-                    	entity.setHealth(0.0D);
-                    	final Player player = (Player)arrow.getShooter();
-                    	System.out.println(player);
-                    }
-                }
-                if (damager.getItemInHand().getType().equals(Material.GOLD_SWORD)) {
-                	event.setDamage(3.5D);
-                }
-				return;
-			}
+		}
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onReceiveDroppedItems(PlayerPickupItemEvent event) {
+		final Player player = event.getPlayer();
+		final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
+		if (pm.getSubState().equals(SubState.PLAYING)) {
+			return;
 		}
 		event.setCancelled(true);
 	}

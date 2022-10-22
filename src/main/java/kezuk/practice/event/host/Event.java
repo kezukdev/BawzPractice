@@ -72,6 +72,7 @@ public class Event {
         }
         this.launched = true;
         this.sendEmbed();
+		new StartRunnable(120);
 	}
 	
 	public void addMemberToEvent(final UUID uuid) {
@@ -80,20 +81,18 @@ public class Event {
 		this.members.add(uuid);
 		new HostItems(uuid);
 		for(UUID uuids : members) {
-			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuids).getName() + ChatColor.AQUA + " have joined the event! " + ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + this.members.size() + ChatColor.GRAY + ")");
+			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have joined the event! " + ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + this.members.size() + ChatColor.GRAY + ")");
 		}
-		//if (members.size() == 5) {
-			//new StartRunnable(120);
-		//}
-		new StartRunnable(12);
 	}
 	
-	public void removeMemberToEvent(final UUID uuid) {
+	public void removeMemberToEvent(final UUID uuid, final boolean disconnected) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
-		profile.getGlobalState().setSubState(SubState.NOTHING);
-		profile.setGlobalState(GlobalState.SPAWN);
-		new SpawnItems(uuid);
-		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+		if(!disconnected) {
+			profile.setSubState(SubState.NOTHING);
+			profile.setGlobalState(GlobalState.SPAWN);
+			new SpawnItems(uuid);
+			Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());			
+		}
 		if (this.members.size() == 1) {
 			this.setLaunched(false);
 			this.members.remove(uuid);
@@ -113,7 +112,7 @@ public class Event {
 				this.creatorUUID = newLeader;
 				return;
 			}
-			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuids).getName() + ChatColor.AQUA + " have left the event! " + ChatColor.GRAY + "(" + ChatColor.RED + this.members.size() + ChatColor.GRAY + ")");
+			Bukkit.getPlayer(uuids).sendMessage(this.prefix + ChatColor.WHITE + " " + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have left the event! " + ChatColor.GRAY + "(" + ChatColor.RED + this.members.size() + ChatColor.GRAY + ")");
 		}
 	}
 	

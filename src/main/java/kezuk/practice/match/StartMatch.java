@@ -65,22 +65,22 @@ public class StartMatch {
         this.dropped = Sets.newHashSet();
         this.arena = Arena.getRandomArena(ladder.arenaType());
         spectator = Lists.newArrayList();
-        for (UUID uuid : alive) {
-        	final Player player = Bukkit.getPlayer(uuid);
-        	GameUtils.displayMatchPlayer(player);
-        }
         Practice.getInstance().getRegisterCollections().getMatchs().put(this.matchUUID, this);
         for (final UUID uuid : alive) {
+            for (Player playersO : Bukkit.getOnlinePlayers()) {
+            	playersO.hidePlayer(Bukkit.getPlayer(uuid));
+            	Bukkit.getPlayer(uuid).hidePlayer(playersO);
+            }
         	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
         	if (Practice.getInstance().getRegisterCollections().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getRegisterCollections().getOfflineInventories().remove(uuid);
         		Bukkit.getPlayer(uuid).closeInventory();
         	}
             profile.setMatchUUID(matchUUID);
-            if (profile.getGlobalState() == GlobalState.QUEUE) {
+            if (profile.getGlobalState() == GlobalState.QUEUE || profile.getGlobalState() == GlobalState.SPAWN) {
             	profile.setGlobalState(GlobalState.FIGHT);
             }
-        	profile.getGlobalState().setSubState(SubState.STARTING);
+        	profile.setSubState(SubState.STARTING);
             profile.matchStats = new MatchStats();
             Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(ladder.damageTicks());
             if (firstList != null && !to2) {
@@ -112,18 +112,20 @@ public class StartMatch {
             Bukkit.getServer().getPlayer(uuid).getInventory().setContents(kit.content());
             Bukkit.getServer().getPlayer(uuid).getInventory().setArmorContents(kit.armor());
             Bukkit.getServer().getPlayer(uuid).updateInventory();
+            Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(GameUtils.getOpponent(uuid)).getPlayer());
+            Bukkit.getPlayer(GameUtils.getOpponent(uuid)).getPlayer().showPlayer(Bukkit.getPlayer(uuid));
             new BukkitRunnable() {
 	            int i = 5;
 
 	            @Override
 	            public void run() {
-	                if (profile.getGlobalState().getSubState().equals(SubState.FINISHED)) {
+	                if (profile.getSubState().equals(SubState.FINISHED)) {
 	                    this.cancel();
 	                } else {
 	                	Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.WHITE + "The fight begins in " + ChatColor.AQUA + i + ChatColor.WHITE + " seconds.");
 	                    i -= 1;
 	                    if (i <= 0) {
-	                    	profile.getGlobalState().setSubState(SubState.PLAYING);
+	                    	profile.setSubState(SubState.PLAYING);
 	                        Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "The fight has begun!");
 	                        this.cancel();
 	                    }

@@ -19,6 +19,7 @@ import kezuk.practice.event.host.oitc.stats.OitcStats;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.match.stats.MatchStats;
 import kezuk.practice.player.state.GlobalState;
+import kezuk.practice.player.state.SubState;
 import kezuk.practice.request.Requesting.Request;
 import net.minecraft.util.com.google.common.collect.Maps;
 
@@ -31,6 +32,7 @@ public class Profile {
 	private Player targetDuel;
 	private Rank rank;
 	private Tag tag;
+	private SubState subState;
 	public MatchStats matchStats;
 	public OitcStats oitcStats;
 	public WeakHashMap<UUID, Request> request;
@@ -42,6 +44,7 @@ public class Profile {
 		this.globalState = GlobalState.SPAWN;
 		this.rank = Rank.PLAYER;
 		this.tag = Tag.NORMAL;
+		this.subState = SubState.NOTHING;
 		for (Ladders ladder : Practice.getInstance().getLadder()) this.elos = new int[ladder.id()];
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
         this.permissible = Maps.newHashMap();
@@ -106,6 +109,14 @@ public class Profile {
 		for (String perm : profile.getRank().getPermissions()) {
 			attachment.setPermission(perm, true);	
 		}
+	}
+	
+	public SubState getSubState() {
+		return subState;
+	}
+	
+	public void setSubState(SubState subState) {
+		this.subState = subState;
 	}
 	
 	public HashMap<UUID, PermissionAttachment> getPermissible() {

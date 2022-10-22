@@ -30,7 +30,7 @@ public class Editor {
     }
 
     public void load() {
-
+    	
     }
 
     public void save() {

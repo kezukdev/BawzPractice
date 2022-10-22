@@ -156,7 +156,7 @@ public class Tournament
                 if (Bukkit.getOfflinePlayer(uuid) != null) {
                 	final Player player = Bukkit.getPlayer(uuid);
                 	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
-                    profile.getGlobalState().setSubState(SubState.NOTHING);
+                    profile.setSubState(SubState.NOTHING);
                     profile.setGlobalState(GlobalState.SPAWN);
                     player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
                     player.sendMessage(ChatColor.AQUA + "You won the tournaments!");

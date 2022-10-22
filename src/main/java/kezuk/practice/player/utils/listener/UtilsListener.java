@@ -29,6 +29,7 @@ import kezuk.practice.match.StartMatch;
 import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
+import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.GameUtils;
 import kezuk.practice.utils.ItemSerializer;
 import net.md_5.bungee.api.ChatColor;
@@ -44,6 +45,7 @@ public class UtilsListener implements Listener {
 	public void onInventoryClickOfUtils(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
 		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
+			if (profile.getSubState().equals(SubState.BUILD)) return;
 			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) return;
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory().getName())) {
 				if (event.getCurrentItem().getType().equals(Material.DIAMOND)) {
@@ -77,6 +79,12 @@ public class UtilsListener implements Listener {
 				event.setCancelled(true);
 			}
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getHostInventory().getHost().getName())) {
+				final Player player = (Player) event.getWhoClicked();
+				if (!player.hasPermission("bawz.host")) {
+					player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You doesnt have required permissions!");
+					event.getWhoClicked().closeInventory();
+					return;
+				}
 				if (event.getCurrentItem().getType().equals(Material.FLINT)) {
 					event.getWhoClicked().closeInventory();
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory());
@@ -94,8 +102,13 @@ public class UtilsListener implements Listener {
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getTournamentInventory().getName())) {
 				if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
 				event.getWhoClicked().closeInventory();
+				final Player player = (Player) event.getWhoClicked();
+				if (!player.hasPermission("bawz.tourney")) {
+					player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You doesnt have required permissions!");
+					event.getWhoClicked().closeInventory();
+					return;
+				}
 				if (Practice.getInstance().getRegisterCollections().getRunningTournaments().size() != 0) {
-					final Player player = (Player) event.getWhoClicked();
 					player.sendMessage(ChatColor.AQUA + "You can't start a tournament because a tournament is already started!");
 					return;
 				}
@@ -112,7 +125,6 @@ public class UtilsListener implements Listener {
 		        	players.spigot().sendMessage(startMessage);
 		        }
                 final TournamentTeam tournamentTeam = new TournamentTeam();
-                final Player player = Bukkit.getPlayer(event.getWhoClicked().getUniqueId());
                 tournamentTeam.setPlayers(Collections.singletonList(player.getUniqueId()));
                 tournament.getTeams().add(tournamentTeam);
                 tournament.sendMessage(ChatColor.AQUA + player.getName() + " has joined the tournament. (" + tournament.getTotalPlayersInTournament() + "/" + tournament.getPlayersLimit() + ")");

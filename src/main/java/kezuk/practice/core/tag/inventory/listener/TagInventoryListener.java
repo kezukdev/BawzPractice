@@ -1,7 +1,65 @@
 package kezuk.practice.core.tag.inventory.listener;
 
+import java.sql.SQLException;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import co.aikar.idb.DB;
+import kezuk.practice.Practice;
+import kezuk.practice.core.tag.Tag;
+import kezuk.practice.player.Profile;
+import kezuk.practice.player.state.GlobalState;
 
 public class TagInventoryListener implements Listener {
+	
+	@EventHandler
+	public void onTagInventory(final InventoryClickEvent event) {
+		final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
+		if (pm.getGlobalState().equals(GlobalState.SPAWN)) {
+	        if (event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagTypeInventory().getName())) {
+	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) return;
+	        	if (event.getCurrentItem().getType().equals(Material.NAME_TAG)) {
+	        		event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getTagInventory().getTagClassicInventory());
+	        	}
+	        	if (event.getCurrentItem().getType().equals(Material.BOOK)) {
+	        		event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getTagInventory().getTagJapanInventory());
+	        	}
+	        	if (event.getCurrentItem().getType().equals(Material.COMPASS)) {
+	        		event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getTagInventory().getTagRegionInventory());
+	        	}
+	        	if (event.getCurrentItem().getType().equals(Material.BUCKET)) {
+	        		pm.setTag(Tag.getTagByName("Normal"));
+	        		event.getWhoClicked().closeInventory();
+	        		final Player player = (Player) event.getWhoClicked();
+	        		player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have been reset your tags!");
+	            	try {
+						DB.executeUpdate("UPDATE playersdata SET tag=? WHERE name=?", "Normal", player.getName());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	        	}
+	        }
+	        if (event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagClassicInventory().getName()) || event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagJapanInventory().getName()) || event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagRegionInventory().getName())) {
+	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+	        	final Tag tag = Tag.getTagByName(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+	        	pm.setTag(tag);
+	        	event.getWhoClicked().closeInventory();
+	        	final Player player = (Player) event.getWhoClicked();
+	        	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You've been set the " + ChatColor.AQUA + tag.getDisplay() + ChatColor.DARK_AQUA + " tag!");
+	        	try {
+					DB.executeUpdate("UPDATE playersdata SET tag=? WHERE name=?", ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()), player.getName());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }	
+		}
+	}
 
 }

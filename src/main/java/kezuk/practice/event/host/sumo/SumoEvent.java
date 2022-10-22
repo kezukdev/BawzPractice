@@ -43,20 +43,20 @@ public class SumoEvent {
 		for (UUID uuids : Practice.getInstance().getRegisterObject().getEvent().getMembers()) {
 			Bukkit.getPlayer(uuids).sendMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + Bukkit.getPlayer(firstUUID).getName() + ChatColor.DARK_AQUA + " vs " + ChatColor.WHITE + Bukkit.getPlayer(secondUUID).getName());
 		}
-		Practice.getInstance().getRegisterCollections().getProfile().get(firstUUID).getGlobalState().setSubState(SubState.STARTING);
-		Practice.getInstance().getRegisterCollections().getProfile().get(secondUUID).getGlobalState().setSubState(SubState.STARTING);
+		Practice.getInstance().getRegisterCollections().getProfile().get(firstUUID).setSubState(SubState.STARTING);
+		Practice.getInstance().getRegisterCollections().getProfile().get(secondUUID).setSubState(SubState.STARTING);
 		new BukkitRunnable() {
 			int i = 5;
 			@Override
         	public void run() {
-				i =- 1;
 				Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Fight starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
 				Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Fight starts in " + ChatColor.WHITE + i + ChatColor.DARK_AQUA + "seconds!" );
+				i--;
 				if (i <= 0) {
 					Bukkit.getPlayer(firstUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
 					Bukkit.getPlayer(secondUUID).sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Good luck!");
-					Practice.getInstance().getRegisterCollections().getProfile().get(firstUUID).getGlobalState().setSubState(SubState.PLAYING);
-					Practice.getInstance().getRegisterCollections().getProfile().get(secondUUID).getGlobalState().setSubState(SubState.PLAYING);
+					Practice.getInstance().getRegisterCollections().getProfile().get(firstUUID).setSubState(SubState.PLAYING);
+					Practice.getInstance().getRegisterCollections().getProfile().get(secondUUID).setSubState(SubState.PLAYING);
 					this.cancel();
 				}
 			}
@@ -66,8 +66,9 @@ public class SumoEvent {
 	public void newRound(final UUID winner, final UUID looser) {
 		final Profile winnerProfile = Practice.getInstance().getRegisterCollections().getProfile().get(winner);
 		final Profile looserProfile = Practice.getInstance().getRegisterCollections().getProfile().get(looser);
-		winnerProfile.getGlobalState().setSubState(SubState.NOTHING);
-		looserProfile.getGlobalState().setSubState(SubState.NOTHING);
+		winnerProfile.setSubState(SubState.NOTHING);
+		looserProfile.setSubState(SubState.NOTHING);
+		this.alives.remove(looser);
 		if (this.alives.size() == 1) {
 			Practice.getInstance().getRegisterObject().getEvent().applyCooldown();
 			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
@@ -78,7 +79,6 @@ public class SumoEvent {
 			}
 			return;
 		}
-		this.alives.remove(looser);
 		new HostItems(winner);
 		new HostItems(looser);
 		Bukkit.getPlayer(winner).teleport(Practice.getInstance().getRegisterCommon().getSpectatorLocation());

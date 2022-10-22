@@ -21,13 +21,13 @@ public class MatchMoveEvent implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 		if (match != null && match.getLadder().name().equalsIgnoreCase("sumo") || profile.getGlobalState().equals(GlobalState.EVENT) && Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
-			if (profile.getGlobalState().getSubState().equals(SubState.PLAYING) || profile.getGlobalState().getSubState().equals(SubState.STARTING)) {
-				if (profile.getGlobalState().getSubState().equals(SubState.STARTING)) {
+			if (profile.getSubState().equals(SubState.PLAYING) || profile.getSubState().equals(SubState.STARTING)) {
+				if (profile.getSubState().equals(SubState.STARTING)) {
 		    		if (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getZ() != event.getTo().getZ()) {
 		    			event.setTo(event.getFrom().setDirection(event.getTo().getDirection())); 
 		    		}
 				}
-				if (profile.getGlobalState().getSubState().equals(SubState.PLAYING)) {
+				if (profile.getSubState().equals(SubState.PLAYING)) {
 					if (event.getPlayer().isInFluid() || event.getPlayer().isInWater() || event.getPlayer().isInLava()) {
 						if (profile.getGlobalState().equals(GlobalState.EVENT)) {
 							final UUID winner = Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID() == event.getPlayer().getUniqueId() ? Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getSecondUUID() : Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID();

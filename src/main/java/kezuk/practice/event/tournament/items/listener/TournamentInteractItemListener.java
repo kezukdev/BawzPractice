@@ -22,7 +22,7 @@ public class TournamentInteractItemListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (profile.getGlobalState().equals(GlobalState.TOURNAMENT)) {
 			if (!event.hasItem()) return;
-			if (profile.getGlobalState().getSubState().equals(SubState.NOTHING)) {
+			if (profile.getSubState().equals(SubState.NOTHING)) {
 				if (event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					new SpawnItems(event.getPlayer().getUniqueId());
 					profile.setGlobalState(GlobalState.SPAWN);

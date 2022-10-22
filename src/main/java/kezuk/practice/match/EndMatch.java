@@ -38,11 +38,6 @@ public class EndMatch {
 		List<UUID> secondList = null;
 		ArrayList<UUID> allPlayers = null;
 		TextComponent inventoriesMessage = null;
-		for (UUID specUUID : match.getSpectator()) {
-			if (Bukkit.getPlayer(specUUID) == null) {
-				match.getSpectator().remove(specUUID);
-			}
-		}
 		if (match.getFirstList() != null) {
 	        firstList = Lists.newArrayList(match.getFirstList().contains(killed) ? match.getFirstList() : match.getSecondList());
 	        secondList = Lists.newArrayList(match.getFirstList().contains(killer) ? match.getFirstList() : match.getSecondList());
@@ -50,7 +45,6 @@ public class EndMatch {
 	        allPlayers.addAll(secondList);
 	        inventoriesMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + "Inventories" + ChatColor.RESET + ": ");
 	        for (final UUID winnerUUID : secondList) {
-	            new MatchSeeInventory(winnerUUID);
 	            final TextComponent name1 = new TextComponent(ChatColor.GREEN + Bukkit.getServer().getPlayer(winnerUUID).getName());
 	            name1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/inventory " + winnerUUID));
 	            name1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click to view this inventory.").create()));
@@ -58,7 +52,6 @@ public class EndMatch {
 	        }
 	        inventoriesMessage.addExtra(ChatColor.GRAY + ", ");
 	        for (final UUID looserUUID : firstList) {
-	            new MatchSeeInventory(looserUUID);
 	            final TextComponent name2 = new TextComponent(ChatColor.RED + Bukkit.getServer().getPlayer(looserUUID).getName());
 	            name2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/inventory " + looserUUID));
 	            name2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click to view this inventory.").create()));
@@ -102,8 +95,9 @@ public class EndMatch {
         	if (match.getSpectator().contains(uuid2)) {
         		match.getSpectator().remove(uuid2);
         	}
-        	Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().setSubState(SubState.FINISHED);
+        	Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.FINISHED);
             final Player player = Bukkit.getServer().getPlayer(uuid2);
+            new MatchSeeInventory(uuid2);
             player.setAllowFlight(true);
             player.setFlying(true);
             player.extinguish();
@@ -136,11 +130,11 @@ public class EndMatch {
             		Bukkit.getPlayer(uuid2).setAllowFlight(false);
             		Bukkit.getPlayer(uuid2).setFlying(false);
             		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().equals(GlobalState.PARTY)) {
-            			Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().setSubState(SubState.NOTHING);
+            			Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.NOTHING);
             			new PartyItems(Bukkit.getPlayer(uuid2));
             		}
             		else {
-                        Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().setSubState(SubState.NOTHING);
+                        Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.NOTHING);
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setGlobalState(GlobalState.SPAWN);
                 		new SpawnItems(uuid2);
             		}
@@ -165,14 +159,12 @@ public class EndMatch {
             new BukkitRunnable() {
                 public void run() {
             		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-            		Bukkit.getPlayer(uuid).setAllowFlight(false);
-            		Bukkit.getPlayer(uuid).setFlying(false);
             		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.PARTY)) {
-            			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().setSubState(SubState.NOTHING);
+            			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
             			new PartyItems(Bukkit.getPlayer(uuid));
             		}
-            		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.FIGHT)) {
-                        Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().setSubState(SubState.NOTHING);
+            		else {
+                        Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
                 		new SpawnItems(uuid);
             		}

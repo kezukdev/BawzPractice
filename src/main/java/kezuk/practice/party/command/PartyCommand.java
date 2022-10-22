@@ -88,7 +88,7 @@ public class PartyCommand implements CommandExecutor {
 				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "The target is not in party!");
 				return false;
 			}
-			if (pmTarget.getGlobalState().getSubState().equals(SubState.QUEUE)) {
+			if (pmTarget.getSubState().equals(SubState.QUEUE)) {
 				player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You cannot join this party at this time");
 				return false;
 			}
