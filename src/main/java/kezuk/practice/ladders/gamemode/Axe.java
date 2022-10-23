@@ -107,4 +107,9 @@ public class Axe extends Ladders implements Kit {
 	public ArenaType arenaType() {
 		return ArenaType.NORMAL;
 	}
+
+	@Override
+	public boolean isRanked() {
+		return false;
+	}
 }

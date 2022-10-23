@@ -9,13 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import kezuk.practice.Practice;
+import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.ItemSerializer;
 
 public class SpawnItems {
 	
-	public SpawnItems(final UUID uuid) {
+	public SpawnItems(final UUID uuid, boolean afterMatch) {
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
 		final Player player = Bukkit.getPlayer(uuid);
@@ -29,9 +30,16 @@ public class SpawnItems {
         player.getInventory().setItem(8, utils);
         player.getInventory().setItem(4, personnal);
         player.getInventory().setArmorContents((ItemStack[])null);
-        player.updateInventory();
 		player.setAllowFlight(false);
 		player.setFlying(false);
+		player.setLevel(0);
+		player.setExp(0.0f);
+		player.setSaturation(20.0f);
+		player.setHealth(player.getMaxHealth());
+		player.extinguish();
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+		player.setPlayerListName(profile.getRank().getColor() + Bukkit.getPlayer(uuid).getName());
+        player.updateInventory();
 	}
 
 }

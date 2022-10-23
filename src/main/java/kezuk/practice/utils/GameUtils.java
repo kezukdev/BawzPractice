@@ -54,18 +54,19 @@ public class GameUtils {
 	}
 	
     public static UUID getOpponent(final UUID uuid) {
+    	UUID opponentUUID = null;
     	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
     	if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getFirstList().contains(uuid)) {
     		for (UUID uuid1 : Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getSecondList()) {
-    			return uuid1;
+    			opponentUUID = uuid1;
     		}
     	}
     	if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getSecondList().contains(uuid)) {
     		for (UUID uuid1 : Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getFirstList()) {
-    			return uuid1;
+    			opponentUUID = uuid1;
     		}
     	}
-    	return null;
+    	return opponentUUID;
     }
     
 	public static void addKill(final UUID uuid, final UUID killer) {
@@ -93,8 +94,10 @@ public class GameUtils {
 		for (UUID ig : match.getAlive()) {
 			Bukkit.getPlayer(ig).hidePlayer(Bukkit.getPlayer(uuid));
 		}
-		for (UUID spectator : match.getSpectator()) {
-			Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(spectator));
+		if (match.getSpectator().size() != 0) {
+			for (UUID spectator : match.getSpectator()) {
+				Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(spectator));
+			}	
 		}
 		for (PotionEffect effect : Bukkit.getPlayer(uuid).getActivePotionEffects()) {
 			Bukkit.getPlayer(uuid).removePotionEffect(effect.getType());

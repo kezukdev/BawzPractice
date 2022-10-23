@@ -10,7 +10,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import kezuk.practice.Practice;
@@ -30,7 +29,7 @@ public class MatchEntityListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING)) {
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
-			if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+			if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
 				event.setDamage(0.0);
 			}
 			if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent() != null) {
@@ -52,7 +51,7 @@ public class MatchEntityListener implements Listener {
 		final Profile dmgd = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		final Profile dmr = Practice.getInstance().getRegisterCollections().getProfile().get(event.getDamager().getUniqueId());
 		if (dmgd.getSubState().equals(SubState.PLAYING)) {
-			if (dmgd.getGlobalState().equals(GlobalState.EVENT)) {
+			if (dmgd.getGlobalState().equals(GlobalState.EVENT) && (Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getEntity().getUniqueId()) && Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getDamager().getUniqueId()))) {
 				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
 					event.setDamage(0.0);
 					return;
@@ -91,12 +90,12 @@ public class MatchEntityListener implements Listener {
 						return;
 					}	
 				}
-	        	if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Combo") {
+				if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Comboxing") {
 	                if (dmgd.getMatchStats().getNextHitTick() != 0L && dmgd.getMatchStats().getNextHitTick() > System.currentTimeMillis()) {
 	                    return;
 	                }
-	                dmgd.getMatchStats().updateNextHitTick();
-	            }
+	                dmgd.getMatchStats().updateNextHitTick();	
+				}
 	        	dmgd.getMatchStats().setLastAttacker(event.getDamager().getUniqueId());
 	            dmr.getMatchStats().setHits(dmr.getMatchStats().getHits() + 1);
 	            if (dmgd.getMatchStats().getCombo() > 0) {
@@ -109,14 +108,20 @@ public class MatchEntityListener implements Listener {
 	        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
 	                event.setDamage(0.0D);
 	            }
-	        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+	        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing") ) {
 	                event.setDamage(0.0D);
-	                final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
 	                final Player damager = (Player) event.getDamager();
-	                damager.setExp(hitExp);
+	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
+	                	final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
+	                	damager.setExp(hitExp);
+	                }
+	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
+	                	final float hitExp = dmr.getMatchStats().getHits() / 300.0f;
+		                damager.setExp(hitExp);
+	                }
 	                damager.setLevel(dmr.getMatchStats().getCombo());
 	                dmgd.getMatchStats().setCombo(0);
-	                if (dmr.getMatchStats().getHits() == 100) {
+	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") && dmr.getMatchStats().getHits() == 100 || match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing") && (dmr.getMatchStats().getCombo() == 40 || dmr.getMatchStats().getHits() == 300)) {
 	                	if (match.getFirstList().size() == 1) {
 	                    	match.endMatch(event.getEntity().getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);	
 	                    	return;

@@ -22,44 +22,44 @@ public class SpectateListener implements Listener {
 	@EventHandler
 	public void onInteractWithSpectateItems(final PlayerInteractEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.SPECTATE)) {
-			if(!event.hasItem()) return;
-			if (event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				GameUtils.getMatchManagerBySpectator(event.getPlayer().getUniqueId()).getSpectator().remove(event.getPlayer().getUniqueId());
-        		new SpawnItems(event.getPlayer().getUniqueId());
-        		Bukkit.getPlayer(event.getPlayer().getUniqueId()).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-                Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId()).setGlobalState(GlobalState.SPAWN);
-			}
-			event.setCancelled(true);
+		if(!event.hasItem()) return;
+		if (profile.getGlobalState().equals(GlobalState.SPECTATE) && event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			GameUtils.getMatchManagerBySpectator(event.getPlayer().getUniqueId()).getSpectator().remove(event.getPlayer().getUniqueId());
+    		new SpawnItems(event.getPlayer().getUniqueId(), true);
+    		Bukkit.getPlayer(event.getPlayer().getUniqueId()).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+            Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId()).setGlobalState(GlobalState.SPAWN);
+    		event.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
 	public void onInventoryClickOfSpectate(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.NOTHING)) {
-			if (profile.getSubState().equals(SubState.BUILD)) return;
-			if (event.getClickedInventory().getName().equalsIgnoreCase(ChatColor.DARK_GRAY + "Spectate")) {
-	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.COMPASS || event.getCurrentItem().getType() == Material.PAPER) return;
-	        	final Player player = (Player) event.getWhoClicked();
-	            if (event.getCurrentItem().getType() == Material.ARROW) {
-	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
-	                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
-	                return;
-	            }
-	            else if (event.getCurrentItem().getType() == Material.LEVER) {
-	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
-	                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
-	                return;
-	            }
-	        	player.closeInventory();
-	            String title = event.getCurrentItem().getItemMeta().getDisplayName();
-	            String arr[] = title.split(" ", 2);
-	            String first = arr[0];
-	            GameUtils.addSpectatorToMatch(event.getWhoClicked().getUniqueId(), Bukkit.getPlayer(ChatColor.stripColor(first)).getUniqueId());
-	            event.setCancelled(true);
-	            return;
-			}
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+		if (profile.getSubState().equals(SubState.BUILD)) { 
+			event.setCancelled(false);
+			return;
+		}
+		if (event.getClickedInventory().getName().equalsIgnoreCase(ChatColor.DARK_GRAY + "Spectate") && profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.NOTHING)) {
+        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.COMPASS || event.getCurrentItem().getType() == Material.PAPER) return;
+        	final Player player = (Player) event.getWhoClicked();
+            if (event.getCurrentItem().getType() == Material.ARROW) {
+                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
+                return;
+            }
+            else if (event.getCurrentItem().getType() == Material.LEVER) {
+                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
+                Practice.getInstance().getRegisterObject().getSpectateInventory().getSpectateInventory().open(player, Integer.parseInt(str));
+                return;
+            }
+        	player.closeInventory();
+            String title = event.getCurrentItem().getItemMeta().getDisplayName();
+            String arr[] = title.split(" ", 2);
+            String first = arr[0];
+            GameUtils.addSpectatorToMatch(event.getWhoClicked().getUniqueId(), Bukkit.getPlayer(ChatColor.stripColor(first)).getUniqueId());
+            event.setCancelled(true);
+            return;
 		}
 	}
 

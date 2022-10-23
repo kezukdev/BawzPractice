@@ -61,7 +61,7 @@ public class StartRunnable {
         					final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
         					profile.setGlobalState(GlobalState.SPAWN);
                     		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-                    		new SpawnItems(uuid);
+                    		new SpawnItems(uuid, false);
         					Bukkit.getPlayer(uuid).sendMessage(" ");
         					Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " [" + ChatColor.AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.AQUA + "The host as cancelled because the host contains one player!");
         					Bukkit.getPlayer(uuid).sendMessage(" ");

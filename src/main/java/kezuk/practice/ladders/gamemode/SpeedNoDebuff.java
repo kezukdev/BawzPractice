@@ -11,21 +11,21 @@ import kezuk.practice.ladders.Kit;
 import kezuk.practice.ladders.Ladders;
 import net.md_5.bungee.api.ChatColor;
 
-public class Combo extends Ladders implements Kit {
+public class SpeedNoDebuff extends Ladders implements Kit {
 
     @Override
     public String name() {
-        return "combo";
+        return "speedndb";
     }
 
     @Override
     public String displayName() {
-        return ChatColor.DARK_AQUA + "Combo";
+        return ChatColor.DARK_AQUA + "Speed NoDebuff";
     }
 
     @Override
     public Material material() {
-        return Material.RAW_FISH;
+        return Material.BLAZE_POWDER;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Combo extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 6;
+        return 9;
     }
 
     @Override
@@ -54,63 +54,92 @@ public class Combo extends Ladders implements Kit {
     	ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
     	ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
     	ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
-        helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
-        chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
-        leggings.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        leggings.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         leggings.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
-        boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 4);
         boots.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         ItemStack[] Armor = {boots, leggings, chestplate, helmet};
         return Armor;
     }
+    
+    public ItemStack potionNdb = new ItemStack(Material.POTION, 1, (short)16421);
 
     @Override
     public ItemStack[] content() {
-    	final ItemStack attackItem = new ItemStack(Material.DIAMOND_SWORD);
-    	attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
-    	attackItem.addUnsafeEnchantment(Enchantment.DURABILITY, 5);
-    	attackItem.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
-        ItemStack[] Contents = {attackItem,
-                new ItemStack(Material.GOLDEN_APPLE, 64, (short)1),
+        ItemStack attackItem = new ItemStack(Material.DIAMOND_SWORD);
+        attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
+        attackItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 0);
+        attackItem.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
+        attackItem.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+        ItemStack[] Contents = {
+        		attackItem,
+        		new ItemStack(Material.ENDER_PEARL, 16, (short)0),
+        		potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+
                 air,
                 air,
                 air,
                 air,
-                new ItemStack(Material.POTION, 1, (short)8226),
-                new ItemStack(Material.POTION, 1, (short)8233),
-                new ItemStack(Material.COOKED_BEEF, 64, (short)0),
+                air,
+                air,
+                air,
+                air,
+                air,
 
-                new ItemStack(Material.POTION, 1, (short)8226),
-                new ItemStack(Material.POTION, 1, (short)8233),
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
 
-                
-                new ItemStack(Material.POTION, 1, (short)8226),
-                new ItemStack(Material.POTION, 1, (short)8233),
-
-
-                new ItemStack(Material.POTION, 1, (short)8226),
-                new ItemStack(Material.POTION, 1, (short)8233),
+                air,
+                air,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
 
         };
         return Contents;
     }
+    
 
 	@Override
 	public int damageTicks() {
-		return 4;
+		return 20;
 	}
 
 	@Override
 	public KnockbackProfile knockback() {
-		return KnockbackModule.INSTANCE.profiles.get("combo");
+		return KnockbackModule.INSTANCE.profiles.get("default");
 	}
 	
 	@Override
 	public ArenaType arenaType() {
 		return ArenaType.NORMAL;
+	}
+
+	@Override
+	public boolean isRanked() {
+		return true;
 	}
 
 }

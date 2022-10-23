@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import kezuk.practice.Practice;
-import kezuk.practice.party.Party;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.ItemSerializer;
 

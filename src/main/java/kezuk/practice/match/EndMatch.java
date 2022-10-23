@@ -36,7 +36,7 @@ public class EndMatch {
 		final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(matchUUID);
 		List<UUID> firstList = null;
 		List<UUID> secondList = null;
-		ArrayList<UUID> allPlayers = null;
+		List<UUID> allPlayers = null;
 		TextComponent inventoriesMessage = null;
 		if (match.getFirstList() != null) {
 	        firstList = Lists.newArrayList(match.getFirstList().contains(killed) ? match.getFirstList() : match.getSecondList());
@@ -136,14 +136,20 @@ public class EndMatch {
             		else {
                         Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.NOTHING);
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setGlobalState(GlobalState.SPAWN);
-                		new SpawnItems(uuid2);
+                		new SpawnItems(uuid2, true);
             		}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 120L);
-        	for (Player players : Bukkit.getOnlinePlayers()) {
-        		players.showPlayer(Bukkit.getPlayer(uuid2));
-        		Bukkit.getPlayer(uuid2).showPlayer(players);
-        	}
+            new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+		        	for (Player players : Bukkit.getOnlinePlayers()) {
+		        		players.showPlayer(Bukkit.getPlayer(uuid2));
+		        		Bukkit.getPlayer(uuid2).showPlayer(players);
+		        	}	
+				}
+			}.runTaskLater(Practice.getInstance(), 120L);
         }
         for (UUID uuid : match.getSpectator()) {
         	final Player player = Bukkit.getServer().getPlayer(uuid);
@@ -166,14 +172,20 @@ public class EndMatch {
             		else {
                         Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
-                		new SpawnItems(uuid);
+                		new SpawnItems(uuid, true);
             		}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
-        	for (Player players : Bukkit.getOnlinePlayers()) {
-        		players.showPlayer(Bukkit.getPlayer(uuid));
-        		Bukkit.getPlayer(uuid).showPlayer(players);
-        	}
+            new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+		        	for (Player players : Bukkit.getOnlinePlayers()) {
+		        		players.showPlayer(Bukkit.getPlayer(uuid));
+		        		Bukkit.getPlayer(uuid).showPlayer(players);
+		        	}	
+				}
+			}.runTaskLater(Practice.getInstance(), 60L);
         }
         if (firstList != null) {
             match.getFirstList().clear();

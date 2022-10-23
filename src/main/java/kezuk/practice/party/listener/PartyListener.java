@@ -57,6 +57,10 @@ public class PartyListener implements Listener {
 	@EventHandler
 	public void onInteractWithPartyInventory(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
+		if (profile.getSubState().equals(SubState.BUILD)) { 
+			event.setCancelled(false);
+			return;
+		}
 		if (profile.getGlobalState().equals(GlobalState.PARTY) && profile.getSubState().equals(SubState.NOTHING)) {
 			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getPartyMatchInventory().getMatchInventory().getName())) {
 				if (event.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)) {

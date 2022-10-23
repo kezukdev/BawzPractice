@@ -84,7 +84,7 @@ public class MatchDeathListener implements Listener {
 		                                    profile.setSubState(SubState.NOTHING);
 		                                    profile.setGlobalState(GlobalState.SPAWN);
 		                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-		                                    new SpawnItems(player.getUniqueId());
+		                                    new SpawnItems(player.getUniqueId(), true);
 		                                    for (PotionEffect effect : player.getActivePotionEffects()) {
 		                                    	player.removePotionEffect(effect.getType());
 		                                    }
@@ -121,7 +121,7 @@ public class MatchDeathListener implements Listener {
 	                                    profile.setSubState(SubState.NOTHING);
 	                                    profile.setGlobalState(GlobalState.SPAWN);
 	                                    player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-	                                    new SpawnItems(player.getUniqueId());
+	                                    new SpawnItems(player.getUniqueId(), true);
 	                                    for (PotionEffect effect : player.getActivePotionEffects()) {
 	                                    	player.removePotionEffect(effect.getType());
 	                                    }

@@ -90,7 +90,7 @@ public class Event {
 		if(!disconnected) {
 			profile.setSubState(SubState.NOTHING);
 			profile.setGlobalState(GlobalState.SPAWN);
-			new SpawnItems(uuid);
+			new SpawnItems(uuid, false);
 			Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());			
 		}
 		if (this.members.size() == 1) {

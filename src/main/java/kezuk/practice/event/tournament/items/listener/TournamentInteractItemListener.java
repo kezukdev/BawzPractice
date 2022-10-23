@@ -24,7 +24,7 @@ public class TournamentInteractItemListener implements Listener {
 			if (!event.hasItem()) return;
 			if (profile.getSubState().equals(SubState.NOTHING)) {
 				if (event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-					new SpawnItems(event.getPlayer().getUniqueId());
+					new SpawnItems(event.getPlayer().getUniqueId(), false);
 					profile.setGlobalState(GlobalState.SPAWN);
 		            final Tournament tournament = Tournament.getTournaments().get(0);
 		            final TournamentTeam tournamentTeam = tournament.getTournamentTeam(event.getPlayer());

@@ -29,16 +29,16 @@ public class LadderInventory {
 	private Inventory tournamentInventory;
 	
 	public LadderInventory() {
-		this.unrankedInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Unranked Selection:");
-		this.rankedInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Ranked Selection:");
-		this.duelInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Duel Gametype?");
+		this.unrankedInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Unranked Selection:");
+		this.rankedInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Ranked Selection:");
+		this.duelInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Duel Gametype?");
 		
-		this.ffaInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "FFA Selection:");
-		this.splitInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Split Selection:");
-		this.unrankedPartyInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "2v2 Selection:");
+		this.ffaInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "FFA Selection:");
+		this.splitInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Split Selection:");
+		this.unrankedPartyInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "2v2 Selection:");
 		
-		this.editorInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Editor Selection:");
-		this.tournamentInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Tournament Gametype Selection:");
+		this.editorInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Editor Selection:");
+		this.tournamentInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Tournament Gametype Selection:");
 		this.setPreviewInventory();
 	}
 
@@ -50,8 +50,10 @@ public class LadderInventory {
     	}
     	this.rankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
-    		this.rankedInventory.addItem(item);
+    		if (ladder.isRanked()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
+        		this.rankedInventory.addItem(item);	
+    		}
     	}
     	this.duelInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {

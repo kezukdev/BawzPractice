@@ -74,7 +74,7 @@ public class Party {
 			}
 		}
 		if (!disconnect) {
-			new SpawnItems(uuid);
+			new SpawnItems(uuid, false);
 		}
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
 	}

@@ -16,6 +16,7 @@ public abstract class Ladders {
     public abstract KnockbackProfile knockback();
     public abstract short data();
     public abstract int id();
+    public abstract boolean isRanked();
 
     // Kit editor
     public abstract boolean isAlterable();

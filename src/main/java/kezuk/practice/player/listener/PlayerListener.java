@@ -14,13 +14,13 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
 import kezuk.practice.Practice;
 import kezuk.practice.core.rank.Rank;
 import kezuk.practice.core.tag.Tag;
+import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
 	public void onJoining(final PlayerJoinEvent event) {
 		event.setJoinMessage(null);
 		new Profile(event.getPlayer().getUniqueId());
-		new SpawnItems(event.getPlayer().getUniqueId());
+		new SpawnItems(event.getPlayer().getUniqueId(), false);
 		event.getPlayer().teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 		event.getPlayer().setFoodLevel(20);
 		event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
@@ -99,6 +99,9 @@ public class PlayerListener implements Listener {
 	public void onItemDropped(final PlayerDropItemEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING) || profile.getSubState().equals(SubState.STARTING)) {
+			if (event.getItemDrop().getItemStack().getType().equals(Material.DIAMOND_SWORD)) {
+				event.setCancelled(true);
+			}
 			if (event.getItemDrop().getItemStack().getType().equals(Material.GLASS_BOTTLE)) {
 				event.getItemDrop().remove();
 			}
@@ -113,7 +116,10 @@ public class PlayerListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING)) {
 			if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()) != null) {
-				if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Sumo" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Boxing" || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName() != ChatColor.DARK_AQUA + "Soup") {
+				if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Soup") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing") || Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getEntity().getUniqueId()) && (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO) || Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC))) {
+					event.setCancelled(true);
+				}
+				else {
 					return;
 				}
 			}

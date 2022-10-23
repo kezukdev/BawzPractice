@@ -74,7 +74,7 @@ public class SumoEvent {
 			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
 			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(winner).getName() + ChatColor.DARK_AQUA + " won the sumo event!");
 			for (UUID uuid : Practice.getInstance().getRegisterObject().getEvent().getMembers()) {
-				new SpawnItems(uuid);
+				new SpawnItems(uuid, false);
 				Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 			}
 			return;

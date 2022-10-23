@@ -11,21 +11,21 @@ import kezuk.practice.ladders.Kit;
 import kezuk.practice.ladders.Ladders;
 import net.md_5.bungee.api.ChatColor;
 
-public class Boxing extends Ladders implements Kit {
+public class Comboxing extends Ladders implements Kit {
 
     @Override
     public String name() {
-        return "boxing";
+        return "combo";
     }
 
     @Override
     public String displayName() {
-        return ChatColor.DARK_AQUA + "Boxing";
+        return ChatColor.DARK_AQUA + "Comboxing";
     }
 
     @Override
     public Material material() {
-        return Material.IRON_CHESTPLATE;
+        return Material.RAW_FISH;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Boxing extends Ladders implements Kit {
 
     @Override
     public boolean isAlterable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -45,36 +45,53 @@ public class Boxing extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 5;
+        return 6;
     }
 
     @Override
     public ItemStack[] armor() {
-        ItemStack[] Armor = {
-        };
+        ItemStack[] Armor = {air, air, air, air};
         return Armor;
     }
 
     @Override
     public ItemStack[] content() {
     	final ItemStack attackItem = new ItemStack(Material.DIAMOND_SWORD);
-    	attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
-    	attackItem.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+    	attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
         ItemStack[] Contents = {
-        		attackItem
+        		attackItem,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+
+                air,
+                air,
+
+                
+                air,
+                air,
+
+
+                air,
+                air,
+
         };
         return Contents;
     }
-    
 
 	@Override
 	public int damageTicks() {
-		return 20;
+		return 5;
 	}
 
 	@Override
 	public KnockbackProfile knockback() {
-		return KnockbackModule.INSTANCE.profiles.get("boxing");
+		return KnockbackModule.INSTANCE.profiles.get("combo");
 	}
 	
 	@Override
@@ -84,6 +101,6 @@ public class Boxing extends Ladders implements Kit {
 
 	@Override
 	public boolean isRanked() {
-		return false;
+		return true;
 	}
 }

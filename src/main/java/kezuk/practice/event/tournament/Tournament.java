@@ -160,7 +160,7 @@ public class Tournament
                     profile.setGlobalState(GlobalState.SPAWN);
                     player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
                     player.sendMessage(ChatColor.AQUA + "You won the tournaments!");
-                    new SpawnItems(player.getUniqueId());
+                    new SpawnItems(player.getUniqueId(), false);
                     for (PotionEffect effect : player.getActivePotionEffects()) {
                     	player.removePotionEffect(effect.getType());
                     }

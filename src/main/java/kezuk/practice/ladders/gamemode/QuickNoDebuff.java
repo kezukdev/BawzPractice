@@ -11,21 +11,21 @@ import kezuk.practice.ladders.Kit;
 import kezuk.practice.ladders.Ladders;
 import net.md_5.bungee.api.ChatColor;
 
-public class Soup extends Ladders implements Kit {
+public class QuickNoDebuff extends Ladders implements Kit {
 
     @Override
     public String name() {
-        return "soup";
+        return "quickndb";
     }
 
     @Override
     public String displayName() {
-        return ChatColor.DARK_AQUA + "Soup";
+        return ChatColor.DARK_AQUA + "Quick NoDebuff";
     }
 
     @Override
     public Material material() {
-        return Material.MUSHROOM_SOUP;
+        return Material.BLAZE_POWDER;
     }
 
     @Override
@@ -45,15 +45,15 @@ public class Soup extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 7;
+        return 1;
     }
 
     @Override
     public ItemStack[] armor() {
-    	ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-    	ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
-    	ItemStack leggings = new ItemStack(Material.IRON_LEGGINGS);
-    	ItemStack boots = new ItemStack(Material.IRON_BOOTS);
+    	ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET);
+    	ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+    	ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
+    	ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS);
         helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
@@ -67,17 +67,19 @@ public class Soup extends Ladders implements Kit {
         return Armor;
     }
     
-    public ItemStack potionNdb = new ItemStack(Material.MUSHROOM_SOUP);
+    public ItemStack potionNdb = new ItemStack(Material.POTION, 1, (short)16421);
 
     @Override
     public ItemStack[] content() {
         ItemStack attackItem = new ItemStack(Material.DIAMOND_SWORD);
-        attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+        attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
+        attackItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 0);
+        attackItem.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
         attackItem.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         ItemStack[] Contents = {
         		attackItem,
+        		new ItemStack(Material.ENDER_PEARL, 16, (short)0),
         		potionNdb,
-        		potionNdb,
                 potionNdb,
                 potionNdb,
                 potionNdb,
@@ -85,28 +87,28 @@ public class Soup extends Ladders implements Kit {
                 potionNdb,
                 potionNdb,
 
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
 
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
-                potionNdb,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
+                air,
 
-                potionNdb,
-                potionNdb,
+                air,
+                air,
                 potionNdb,
                 potionNdb,
                 potionNdb,
@@ -127,7 +129,7 @@ public class Soup extends Ladders implements Kit {
 
 	@Override
 	public KnockbackProfile knockback() {
-		return KnockbackModule.INSTANCE.profiles.get("soup");
+		return KnockbackModule.INSTANCE.profiles.get("default");
 	}
 	
 	@Override
@@ -137,6 +139,6 @@ public class Soup extends Ladders implements Kit {
 
 	@Override
 	public boolean isRanked() {
-		return true;
+		return false;
 	}
 }

@@ -136,4 +136,8 @@ public class NoDebuff extends Ladders implements Kit {
 		return ArenaType.NORMAL;
 	}
 
+	@Override
+	public boolean isRanked() {
+		return true;
+	}
 }

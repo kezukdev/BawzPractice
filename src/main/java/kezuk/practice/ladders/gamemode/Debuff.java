@@ -45,7 +45,7 @@ public class Debuff extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -131,6 +131,11 @@ public class Debuff extends Ladders implements Kit {
 	@Override
 	public ArenaType arenaType() {
 		return ArenaType.NORMAL;
+	}
+	
+	@Override
+	public boolean isRanked() {
+		return true;
 	}
 
 }

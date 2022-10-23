@@ -44,10 +44,13 @@ public class UtilsListener implements Listener {
 	@EventHandler
 	public void onInventoryClickOfUtils(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
-			if (profile.getSubState().equals(SubState.BUILD)) return;
-			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) return;
-			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory().getName())) {
+		if (profile.getSubState().equals(SubState.BUILD)) {
+			event.setCancelled(false);
+			return;
+		}
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) return;
+		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory().getName())) {
+			if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
 				if (event.getCurrentItem().getType().equals(Material.DIAMOND)) {
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory());
 				}
@@ -76,30 +79,11 @@ public class UtilsListener implements Listener {
 					event.getWhoClicked().closeInventory();
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getTournamentInventory());
 				}
-				event.setCancelled(true);
+				event.setCancelled(true);	
 			}
-			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getHostInventory().getHost().getName())) {
-				final Player player = (Player) event.getWhoClicked();
-				if (!player.hasPermission("bawz.host")) {
-					player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You doesnt have required permissions!");
-					event.getWhoClicked().closeInventory();
-					return;
-				}
-				if (event.getCurrentItem().getType().equals(Material.FLINT)) {
-					event.getWhoClicked().closeInventory();
-					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory());
-				}
-				if (event.getCurrentItem().getType().equals(Material.ANVIL)) {
-					event.getWhoClicked().closeInventory();
-					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.SUMO, null);
-				}
-				if (event.getCurrentItem().getType().equals(Material.GOLD_SWORD)) {
-					event.getWhoClicked().closeInventory();
-					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.OITC, null);
-				}
-				event.setCancelled(true);
-			}
-			if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getTournamentInventory().getName())) {
+		}
+		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getTournamentInventory().getName())) {
+			if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
 				if (Ladders.getLadder(event.getCurrentItem().getItemMeta().getDisplayName()) == null) return;
 				event.getWhoClicked().closeInventory();
 				final Player player = (Player) event.getWhoClicked();
@@ -142,7 +126,31 @@ public class UtilsListener implements Listener {
         		} catch (IOException e) {
         			// TODO Auto-generated catch block
         			e.printStackTrace();
-        		}
+        		}	
+    			event.setCancelled(true);
+			}
+		}
+		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getHostInventory().getHost().getName())) {
+			if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
+				final Player player = (Player) event.getWhoClicked();
+				if (!player.hasPermission("bawz.host")) {
+					player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You doesnt have required permissions!");
+					event.getWhoClicked().closeInventory();
+					return;
+				}
+				if (event.getCurrentItem().getType().equals(Material.FLINT)) {
+					event.getWhoClicked().closeInventory();
+					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getFfaInventory());
+				}
+				if (event.getCurrentItem().getType().equals(Material.ANVIL)) {
+					event.getWhoClicked().closeInventory();
+					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.SUMO, null);
+				}
+				if (event.getCurrentItem().getType().equals(Material.GOLD_SWORD)) {
+					event.getWhoClicked().closeInventory();
+					Practice.getInstance().getRegisterObject().getEvent().startHost(event.getWhoClicked().getUniqueId(), EventType.OITC, null);
+				}
+				event.setCancelled(true);
 			}
 		}
 	}

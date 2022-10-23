@@ -40,6 +40,7 @@ public class RegisterObject {
 		this.hostInventory = new HostInventory();
 		this.joinInventory = new JoinInventory();
 		this.tagInventory = new TagInventory();
+		
 		this.personnalInventory = new PersonnalInventory();
 	}
 	

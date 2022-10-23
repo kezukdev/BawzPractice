@@ -44,7 +44,7 @@ public class Sumo extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 2;
+        return 8;
     }
 
     @Override
@@ -78,4 +78,8 @@ public class Sumo extends Ladders implements Kit {
 		return ArenaType.SUMO;
 	}
 
+	@Override
+	public boolean isRanked() {
+		return true;
+	}
 }

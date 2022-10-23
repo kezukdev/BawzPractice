@@ -13,8 +13,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 
-public class MatchSeeInventory
-{
+public class MatchSeeInventory {
     private ItemStack[] content;
     private ItemStack[] armor;
     private String life;
@@ -34,21 +33,21 @@ public class MatchSeeInventory
     	final Player player = Bukkit.getPlayer(uuid);
         this.content = player.getInventory().getContents();
         this.armor = player.getInventory().getArmorContents();
-        this.hits = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchStats().getHits();
-        this.longestCombo = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchStats().getLongestCombo();
-        this.missedPots = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchStats().getMissedPotions();
-        this.thrownPotions = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchStats().getThrownPotions();
+        this.hits = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getHits();
+        this.longestCombo = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getLongestCombo();
+        this.missedPots = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getMissedPotions();
+        this.thrownPotions = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getThrownPotions();
         double remainLife = player.getHealth() / 2;
         NumberFormat nf = new DecimalFormat("0.#");
         this.life = nf.format(remainLife);
         this.food = (float) player.getFoodLevel();
         this.ownerName = player.getName();
-        this.opponentName = Bukkit.getServer().getPlayer(GameUtils.getOpponent(player.getUniqueId())).getName();
-        this.opponent = GameUtils.getOpponent(player.getUniqueId());
+        this.opponentName = Bukkit.getServer().getPlayer(GameUtils.getOpponent(uuid)).getName();
+        this.opponent = GameUtils.getOpponent(uuid);
         this.amountPot = (player.getInventory().contains(new ItemStack(Material.POTION, 1, (short)16421)) ? player.getInventory().all(new ItemStack(Material.POTION, 1, (short)16421)).size() : 0);
         this.amountSoup = (player.getInventory().contains(new ItemStack(Material.MUSHROOM_SOUP)) ? player.getInventory().all(new ItemStack(Material.MUSHROOM_SOUP)).size() : 0);
         this.ladder = Practice.getInstance().getRegisterCollections().getMatchs().get(Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getMatchUUID()).getLadder();
-        Practice.getInstance().getRegisterCollections().getOfflineInventories().put(player.getUniqueId(), this);
+        Practice.getInstance().getRegisterCollections().getOfflineInventories().put(uuid, this);
     }
     
     public Inventory getPreviewInventory() {

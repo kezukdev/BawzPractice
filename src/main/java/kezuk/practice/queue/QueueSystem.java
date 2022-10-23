@@ -85,7 +85,7 @@ public class QueueSystem {
         Practice.getInstance().getRegisterObject().getLadderInventory().refreshInventory();
         if (Bukkit.getServer().getPlayer(uuid) != null) {
         	if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.QUEUE)) {
-                new SpawnItems(uuid);
+                new SpawnItems(uuid, false);
                 Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have left the queue.");	
         	}
         	else {

@@ -86,7 +86,7 @@ public class OitcEvent {
                     player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
                     player.setAllowFlight(false);
                     player.setFlying(false);
-                    new SpawnItems(player.getUniqueId());
+                    new SpawnItems(player.getUniqueId(), false);
                     profile.setGlobalState(GlobalState.SPAWN);
                     for (PotionEffect effect : player.getActivePotionEffects()) {
                     	player.removePotionEffect(effect.getType());
