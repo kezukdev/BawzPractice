@@ -22,12 +22,14 @@ import kezuk.practice.arena.Arena;
 import kezuk.practice.board.PracticeBoard;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.ladders.gamemode.Axe;
-import kezuk.practice.ladders.gamemode.Bow;
 import kezuk.practice.ladders.gamemode.Boxing;
 import kezuk.practice.ladders.gamemode.Comboxing;
 import kezuk.practice.ladders.gamemode.Debuff;
 import kezuk.practice.ladders.gamemode.NoDebuff;
+import kezuk.practice.ladders.gamemode.QuickNoDebuff;
+import kezuk.practice.ladders.gamemode.SlowNoDebuff50;
 import kezuk.practice.ladders.gamemode.Soup;
+import kezuk.practice.ladders.gamemode.SpeedNoDebuff;
 import kezuk.practice.ladders.gamemode.Sumo;
 import kezuk.practice.registering.RegisterCollections;
 import kezuk.practice.registering.RegisterCommon;
@@ -53,7 +55,7 @@ public class Practice extends JavaPlugin {
     private DataSQL databaseSQL = new DataSQL();
 	
 	public Practice() {
-		this.ladder = Arrays.asList(new NoDebuff(), new Debuff(), new Axe(), new Bow(), new Comboxing(), new Soup(), new Sumo(), new Boxing());
+		this.ladder = Arrays.asList(new NoDebuff(),new QuickNoDebuff(), new Debuff(), new Axe(), new Comboxing(), new Soup(), new Sumo(), new Boxing(), new SpeedNoDebuff(), new SlowNoDebuff50());
 	}
 	
 	public void onEnable() {

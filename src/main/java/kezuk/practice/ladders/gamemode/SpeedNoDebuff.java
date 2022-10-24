@@ -45,7 +45,7 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 9;
+        return 8;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SpeedNoDebuff extends Ladders implements Kit {
     public ItemStack[] content() {
         ItemStack attackItem = new ItemStack(Material.DIAMOND_SWORD);
         attackItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
-        attackItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 0);
+        attackItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
         attackItem.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
         attackItem.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         ItemStack[] Contents = {
@@ -139,7 +139,7 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 
 	@Override
 	public boolean isRanked() {
-		return true;
+		return false;
 	}
 
 }

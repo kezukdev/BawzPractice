@@ -11,21 +11,21 @@ import kezuk.practice.ladders.Kit;
 import kezuk.practice.ladders.Ladders;
 import net.md_5.bungee.api.ChatColor;
 
-public class QuickNoDebuff extends Ladders implements Kit {
+public class SlowNoDebuff50 extends Ladders implements Kit {
 
     @Override
     public String name() {
-        return "quickndb";
+        return "slowndb";
     }
 
     @Override
     public String displayName() {
-        return ChatColor.DARK_AQUA + "Quick NoDebuff";
+        return ChatColor.DARK_AQUA + "Slow NoDebuff 50%";
     }
 
     @Override
     public Material material() {
-        return Material.COOKIE;
+        return Material.SOUL_SAND;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class QuickNoDebuff extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 1;
+        return 9;
     }
 
     @Override
@@ -82,32 +82,32 @@ public class QuickNoDebuff extends Ladders implements Kit {
                 potionNdb,
                 potionNdb,
                 potionNdb,
+                new ItemStack(Material.POTION, 1, (short)8259),
+                new ItemStack(Material.POTION, 1, (short)8226),
+                new ItemStack(Material.COOKED_BEEF, 64),
+
                 potionNdb,
                 potionNdb,
                 potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                new ItemStack(Material.POTION, 1, (short)8226),
 
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                potionNdb,
+                new ItemStack(Material.POTION, 1, (short)8226),
 
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-                air,
-
-                air,
-                air,
+                potionNdb,
+                potionNdb,
                 potionNdb,
                 potionNdb,
                 potionNdb,
@@ -123,7 +123,7 @@ public class QuickNoDebuff extends Ladders implements Kit {
 
 	@Override
 	public int damageTicks() {
-		return 20;
+		return 40;
 	}
 
 	@Override

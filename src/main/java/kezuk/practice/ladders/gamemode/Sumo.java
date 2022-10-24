@@ -44,7 +44,7 @@ public class Sumo extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 8;
+        return 7;
     }
 
     @Override

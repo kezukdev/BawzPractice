@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import kezuk.practice.Practice;
 import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
+import kezuk.practice.match.inventory.MatchSeeInventory;
 import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
@@ -72,7 +73,7 @@ public class GameUtils {
 	public static void addKill(final UUID uuid, final UUID killer) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
 		if(Practice.getInstance().getRegisterObject().getEvent().isLaunched()) {
-			if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
+			if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC) && Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(uuid)) {
 				Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().addKill(killer, uuid);
 				return;
 			}	
@@ -105,9 +106,11 @@ public class GameUtils {
 		Bukkit.getPlayer(uuid).setSaturation(100000.0f);
 		Bukkit.getPlayer(uuid).setAllowFlight(true);
 		Bukkit.getPlayer(uuid).setFlying(true);
-        Bukkit.getPlayer(uuid).getInventory().clear();
-        Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Party Spectate."));
-        Bukkit.getPlayer(uuid).updateInventory();
+		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.PARTY)) {
+	        Bukkit.getPlayer(uuid).getInventory().clear();
+	        Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Party Spectate."));
+	        Bukkit.getPlayer(uuid).updateInventory();	
+		}
 		List<UUID> allInMatch = Lists.newArrayList(match.getAlive());
 		allInMatch.addAll(match.getSpectator());
 		if (match.getPlayers() != null) {

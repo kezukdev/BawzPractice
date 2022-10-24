@@ -22,7 +22,7 @@ public class InventoryListener implements Listener {
 			return;
 		}
 		if (event.getCurrentItem() == null) return;
-		 if (event.getClickedInventory().getTitle().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of") && (profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.FINISHED) || profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.NOTHING) || profile.getGlobalState().equals(GlobalState.QUEUE) && profile.getSubState().equals(SubState.NOTHING))) {
+		 if (event.getClickedInventory().getTitle().contains(ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Preview of") && (profile.getGlobalState().equals(GlobalState.FIGHT) && profile.getSubState().equals(SubState.FINISHED) || profile.getGlobalState().equals(GlobalState.SPAWN) && profile.getSubState().equals(SubState.NOTHING) || profile.getGlobalState().equals(GlobalState.QUEUE) && profile.getSubState().equals(SubState.NOTHING))) {
 			 if (event.getCurrentItem().getType().equals(Material.PISTON_STICKY_BASE)) {
 				 final Player player = (Player) event.getWhoClicked();
 				 player.closeInventory();

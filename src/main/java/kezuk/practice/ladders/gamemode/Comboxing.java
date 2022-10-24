@@ -45,7 +45,7 @@ public class Comboxing extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 6;
+        return 5;
     }
 
     @Override
@@ -101,6 +101,6 @@ public class Comboxing extends Ladders implements Kit {
 
 	@Override
 	public boolean isRanked() {
-		return true;
+		return false;
 	}
 }

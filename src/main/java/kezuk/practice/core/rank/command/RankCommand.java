@@ -34,6 +34,7 @@ public class RankCommand implements CommandExecutor {
 			final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(Bukkit.getPlayer(args[0]).getUniqueId());
 			profile.setRank(Rank.getRankByName(args[1].toLowerCase()));
 			profile.registerPermissions();
+			Bukkit.getPlayer(args[0]).setPlayerListName(profile.getRank().getColor() + Bukkit.getPlayer(args[0]).getName());
 		}
 		final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         try {

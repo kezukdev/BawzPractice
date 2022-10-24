@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import kezuk.practice.Practice;
-import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.ItemSerializer;
@@ -37,8 +36,6 @@ public class SpawnItems {
 		player.setSaturation(20.0f);
 		player.setHealth(player.getMaxHealth());
 		player.extinguish();
-		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
-		player.setPlayerListName(profile.getRank().getColor() + Bukkit.getPlayer(uuid).getName());
         player.updateInventory();
 	}
 

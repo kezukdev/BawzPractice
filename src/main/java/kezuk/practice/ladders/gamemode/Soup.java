@@ -45,7 +45,7 @@ public class Soup extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 7;
+        return 6;
     }
 
     @Override

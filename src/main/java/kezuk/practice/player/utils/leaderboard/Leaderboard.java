@@ -54,7 +54,9 @@ public class Leaderboard {
    public void refresh() {
        Map<String, int[]> map = getTopElo();
        for(Ladders ladder : Practice.getInstance().getLadder()) {
-           top[ladder.id()] = new Top(ladder.id(), map);
+    	   if (ladder.isRanked()) {
+               top[ladder.id()] = new Top(ladder.id(), map);   
+    	   }
        }
        global = new Top(map);
    }
