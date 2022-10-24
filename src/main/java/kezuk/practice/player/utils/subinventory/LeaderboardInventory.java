@@ -16,8 +16,10 @@ public class LeaderboardInventory implements Runnable {
     @Override
     public void run() {
         for(Ladders ladder : Practice.getInstance().getLadder()) {
-            ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-            Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().setItem(ladder.id()+9 ,item);
+        	if (ladder.isRanked()) {
+                ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+                Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().setItem(ladder.id()+9 ,item);	
+        	}
         }
         ItemStack item = ItemSerializer.serialize(new ItemStack(Material.BAKED_POTATO), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Top " + ChatColor.AQUA + "Global" + ChatColor.GRAY + " * ");
         Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().setItem(4 ,item);
@@ -28,11 +30,13 @@ public class LeaderboardInventory implements Runnable {
                 Top[] top = Practice.getInstance().getRegisterObject().getLeaderboard().getTop();
                 Top global_top = Practice.getInstance().getRegisterObject().getLeaderboard().getGlobal();
                 for (Ladders ladder : Practice.getInstance().getLadder()) {
-                    ItemStack current = Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().getItem(ladder.id() + 9);
-                    ItemMeta meta = current.getItemMeta();
+                	if (ladder.isRanked()) {
+                        ItemStack current = Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().getItem(ladder.id() + 9);
+                        ItemMeta meta = current.getItemMeta();
 
-                    meta.setLore(top[ladder.id()].getLore());
-                    current.setItemMeta(meta);
+                        meta.setLore(top[ladder.id()].getLore());
+                        current.setItemMeta(meta);	
+                	}
                 }
 
                 ItemStack current = Practice.getInstance().getRegisterObject().getUtilsInventory().getLeaderboardInventory().getItem(4);

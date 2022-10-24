@@ -14,6 +14,7 @@ import kezuk.practice.Practice;
 import kezuk.practice.event.host.items.HostItems;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
+import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 
 public class SumoEvent {
@@ -73,10 +74,18 @@ public class SumoEvent {
 			Practice.getInstance().getRegisterObject().getEvent().applyCooldown();
 			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
 			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(winner).getName() + ChatColor.DARK_AQUA + " won the sumo event!");
-			for (UUID uuid : Practice.getInstance().getRegisterObject().getEvent().getMembers()) {
-				new SpawnItems(uuid, false);
-				Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-			}
+			new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+					for (UUID uuid : Practice.getInstance().getRegisterObject().getEvent().getMembers()) {
+						new SpawnItems(uuid, false);
+						Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+						Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.FINISHED);
+						Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
+					}
+				}
+			}.runTaskLaterAsynchronously(Practice.getInstance(), 40L);
 			return;
 		}
 		new HostItems(winner);

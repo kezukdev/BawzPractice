@@ -45,7 +45,11 @@ public class Profile {
 		this.rank = Rank.PLAYER;
 		this.tag = Tag.NORMAL;
 		this.subState = SubState.NOTHING;
-		for (Ladders ladder : Practice.getInstance().getLadder()) this.elos = new int[ladder.id()];
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+			if (ladder.isRanked()) {
+				this.elos = new int[ladder.id()];	
+			}
+		}
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
         this.permissible = Maps.newHashMap();
         Practice.getInstance().getRegisterCollections().getProfile().putIfAbsent(uuid, this);

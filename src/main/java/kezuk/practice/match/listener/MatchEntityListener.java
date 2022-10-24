@@ -32,13 +32,15 @@ public class MatchEntityListener implements Listener {
 			if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
 				event.setDamage(0.0);
 			}
-			if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent() != null) {
-				event.setDamage(0.0);
-				return;
-			}
-			if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent() != null) {
-				if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE && event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
-				return;
+			if (profile.getGlobalState().equals(GlobalState.EVENT)) {
+				if (Practice.getInstance().getRegisterObject().getEvent().getMembers() != null && Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getEntity().getUniqueId()) && Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
+					event.setDamage(0.0);
+					return;
+				}
+				if (Practice.getInstance().getRegisterObject().getEvent().getMembers() != null && Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getEntity().getUniqueId()) && Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC)) {
+					if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE && event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
+					return;
+				}	
 			}
 			return;
 		}
