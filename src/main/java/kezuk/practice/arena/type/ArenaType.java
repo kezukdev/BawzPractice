@@ -5,6 +5,7 @@ public enum ArenaType {
 	NORMAL,
 	SUMO,
 	HCF,
-	FFA;
+	SOUP,
+	SMALL;
 
 }

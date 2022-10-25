@@ -134,7 +134,7 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 	
 	@Override
 	public ArenaType arenaType() {
-		return ArenaType.NORMAL;
+		return ArenaType.SMALL;
 	}
 
 	@Override

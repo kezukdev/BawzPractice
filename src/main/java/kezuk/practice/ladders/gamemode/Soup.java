@@ -132,7 +132,7 @@ public class Soup extends Ladders implements Kit {
 	
 	@Override
 	public ArenaType arenaType() {
-		return ArenaType.NORMAL;
+		return ArenaType.SOUP;
 	}
 
 	@Override
