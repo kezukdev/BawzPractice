@@ -9,6 +9,8 @@ import org.bukkit.plugin.PluginManager;
 
 import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
+import kezuk.practice.core.command.BanCommand;
+import kezuk.practice.core.command.MuteCommand;
 import kezuk.practice.core.listener.ServerListener;
 import kezuk.practice.core.rank.command.RankCommand;
 import kezuk.practice.core.tag.inventory.listener.TagInventoryListener;
@@ -72,6 +74,7 @@ public class RegisterCommon {
 	private void registerListener() {
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new QueueListener(), Practice.getInstance());
+		pm.registerEvents(new InventoryListener(), Practice.getInstance());
 		pm.registerEvents(new MatchEntityListener(), Practice.getInstance());
 		pm.registerEvents(new MatchInteractListener(), Practice.getInstance());
 		pm.registerEvents(new MatchMoveEvent(), Practice.getInstance());
@@ -86,7 +89,6 @@ public class RegisterCommon {
 		pm.registerEvents(new SpectateListener(), Practice.getInstance());
 		pm.registerEvents(new PersonnalListener(), Practice.getInstance());
 		pm.registerEvents(new TagInventoryListener(), Practice.getInstance());
-		pm.registerEvents(new InventoryListener(), Practice.getInstance());
 		pm.registerEvents(new PlayerListener(), Practice.getInstance());
 		pm.registerEvents(new ServerListener(), Practice.getInstance());
 	}
@@ -102,6 +104,10 @@ public class RegisterCommon {
 		Practice.getInstance().getCommand("inventory").setExecutor(new InventoryCommand());
 		Practice.getInstance().getCommand("rank").setExecutor(new RankCommand());
 		Practice.getInstance().getCommand("join").setExecutor(new JoinCommand());
+		Practice.getInstance().getCommand("ban").setExecutor(new BanCommand());
+		Practice.getInstance().getCommand("unban").setExecutor(new BanCommand());
+		Practice.getInstance().getCommand("mute").setExecutor(new MuteCommand());
+		Practice.getInstance().getCommand("unmute").setExecutor(new MuteCommand());
 	}
 	
 	public Location getSpawnLocation() {

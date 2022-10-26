@@ -21,3 +21,7 @@ commands:
   rank:
   tag:
   build:
+  ban:
+  mute:
+  unban:
+  unmute:

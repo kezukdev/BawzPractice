@@ -22,6 +22,7 @@ public class PersonnalListener implements Listener {
 			if (event.getCurrentItem().getType().equals(Material.NAME_TAG)) {
 				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getTagInventory().getTagTypeInventory());
 			}
+			event.setCancelled(true);
 		}
 	}
 

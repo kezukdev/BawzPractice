@@ -1,5 +1,9 @@
 package kezuk.practice.player.listener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -139,6 +143,20 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onTalking(final AsyncPlayerChatEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
+		if (profile.isMuted()) {
+        	Date todayGlobal = new Date();
+        	SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        	String today = s.format(todayGlobal);
+			try {
+				if (profile.getMuteExpiresOn() != s.parse(today)) {
+					event.getPlayer().sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You are currently silenced for the reason: " + ChatColor.WHITE + profile.getMuteReason());
+					event.setCancelled(true);
+					return;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 		event.setFormat((profile.getRank() == Rank.PLAYER ? ChatColor.GRAY.toString() : ChatColor.GRAY + "[" + profile.getRank().getColor() + profile.getRank().getDisplayName() + ChatColor.GRAY + "] " + profile.getRank().getColor()) + "%1$s" + (profile.getTag() == Tag.NORMAL ? ChatColor.RESET + ": ": ChatColor.GRAY + "(" + profile.getTag().getColor() + profile.getTag() + ChatColor.GRAY + ") " + ChatColor.RESET + ": " + (profile.getRank() == Rank.PLAYER ? ChatColor.GRAY : ChatColor.WHITE)) + "%2$s");
 	}
 

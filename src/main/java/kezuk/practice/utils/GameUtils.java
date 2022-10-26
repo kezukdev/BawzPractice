@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffect;
 import com.google.common.collect.Lists;
 
 import kezuk.practice.Practice;
+import kezuk.practice.event.host.Event;
 import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.match.inventory.MatchSeeInventory;
@@ -163,14 +164,15 @@ public class GameUtils {
 			}	
 		}
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+		final Event event = Practice.getInstance().getRegisterObject().getEvent();
 		if (profile.getGlobalState().equals(GlobalState.EVENT)) {
 			if (profile.getSubState().equals(SubState.PLAYING)) {
-				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
-					final UUID winner = Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID() == uuid ? Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getSecondUUID() : Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID();
-					Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().newRound(winner, uuid);
+				if (event.getEventType().equals(EventType.SUMO)) {
+					final UUID winner = event.getSumoEvent().getFirstUUID() == uuid ? event.getSumoEvent().getSecondUUID() : Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getFirstUUID();
+					event.getSumoEvent().newRound(winner, uuid);
 				}
-				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.OITC)) {
-					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);
+				if (event.getEventType().equals(EventType.OITC)) {
+					event.getOitcEvent().getAlive().remove(uuid);
 				}
 			}
 			else {
@@ -180,17 +182,17 @@ public class GameUtils {
 				if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().contains(uuid)) {
 					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);	
 				}
-				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid, true);
+				event.removeMemberToEvent(uuid, true);
 			}
 		}
-		if (profile.getGlobalState().equals(GlobalState.EVENT) && Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.FFA)) {
+		if (profile.getGlobalState().equals(GlobalState.EVENT) && event.getEventType().equals(EventType.FFA)) {
 			if (profile.getSubState().equals(SubState.PLAYING)) {
-				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.FFA)) {
-					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);
+				if (event.getEventType().equals(EventType.FFA)) {
+					event.getOitcEvent().getAlive().remove(uuid);
 				}
 			}
 			else {
-				Practice.getInstance().getRegisterObject().getEvent().removeMemberToEvent(uuid, true);
+				event.removeMemberToEvent(uuid, true);
 			}
 		}
 		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {

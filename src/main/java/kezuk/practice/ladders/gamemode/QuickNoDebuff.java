@@ -45,7 +45,7 @@ public class QuickNoDebuff extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 1;
+        return 7;
     }
 
     @Override

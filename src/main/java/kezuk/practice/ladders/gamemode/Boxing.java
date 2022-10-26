@@ -45,7 +45,7 @@ public class Boxing extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 4;
+        return 5;
     }
 
     @Override
