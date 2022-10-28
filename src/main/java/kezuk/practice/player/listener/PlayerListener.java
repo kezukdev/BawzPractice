@@ -4,8 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -168,6 +170,16 @@ public class PlayerListener implements Listener {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
+		}
+		if (event.getMessage().contains("#") && event.getPlayer().hasPermission("bawz.moderation")) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player.hasPermission("bawz.moderation")) {
+					final String message = event.getMessage().replace("#", "");
+					player.sendMessage(ChatColor.RED + " ✴ " + profile.getRank().getColor() + profile.getRank().getDisplayName() + " " + profile.getRank().getColor() + "%1$s" + ChatColor.GRAY + " » " + ChatColor.AQUA + message);
+				}
+			}
+			event.setCancelled(true);
+			return;
 		}
 		event.setFormat((profile.getRank() == Rank.PLAYER ? ChatColor.GRAY.toString() : ChatColor.GRAY + "[" + profile.getRank().getColor() + profile.getRank().getDisplayName() + ChatColor.GRAY + "] " + profile.getRank().getColor()) + "%1$s" + (profile.getTag() == Tag.NORMAL ? ChatColor.RESET + ": ": ChatColor.GRAY + " (" + profile.getTag().getColor() + profile.getTag().getDisplay() + ChatColor.GRAY + ") " + ChatColor.RESET + ": " + (profile.getRank() == Rank.PLAYER ? ChatColor.GRAY : ChatColor.WHITE)) + "%2$s");
 	}

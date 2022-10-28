@@ -45,6 +45,7 @@ public class Profile {
 	private String muteReason;
 	public MatchStats matchStats;
 	public OitcStats oitcStats;
+	private boolean frozen;
 	public WeakHashMap<UUID, Request> request;
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
@@ -57,6 +58,7 @@ public class Profile {
 		this.subState = SubState.NOTHING;
 		this.muted = false;
 		this.banned = false;
+		this.frozen = false;
 		for (Ladders ladder : Practice.getInstance().getLadder()) {
 			if (ladder.isRanked()) {
 				this.elos = new int[ladder.id()];	
@@ -167,7 +169,13 @@ public class Profile {
 		}
 	}
 	
+	public void setFrozen(boolean frozen) {
+		this.frozen = frozen;
+	}
 	
+	public boolean isFrozen() {
+		return frozen;
+	}
 	
 	public String getBanReason() {
 		return banReason;

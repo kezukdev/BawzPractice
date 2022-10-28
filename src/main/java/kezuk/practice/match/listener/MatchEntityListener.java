@@ -28,6 +28,10 @@ public class MatchEntityListener implements Listener {
 	public void onReceiveDamageGlobal(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING)) {
+			if (profile.isFrozen()) {
+				event.setCancelled(true);
+				return;
+			}
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
 			if (match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || match != null && match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
 				event.setDamage(0.0);

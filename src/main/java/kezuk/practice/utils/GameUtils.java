@@ -166,6 +166,13 @@ public class GameUtils {
 			}	
 		}
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+		if (profile.isFrozen()) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player.hasPermission("bawz.moderation")) {
+					player.sendMessage(ChatColor.GRAY + " [" + ChatColor.DARK_AQUA + "Staff" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " is disconnected while in a frozen state!");
+				}
+			}
+		}
 		final Event event = Practice.getInstance().getRegisterObject().getEvent();
 		if (profile.getGlobalState().equals(GlobalState.EVENT)) {
 			if (profile.getSubState().equals(SubState.PLAYING)) {

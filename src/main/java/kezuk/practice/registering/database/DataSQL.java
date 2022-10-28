@@ -28,7 +28,7 @@ public class DataSQL {
                 + "muteReason VARCHAR(255) DEFAULT 'null',"
                 + "rank VARCHAR(16) DEFAULT 'Player',"
                 + "tag VARCHAR(16) DEFAULT 'Normal',"
-                + "elos VARCHAR(255) DEFAULT '1200:1200:1200:1200:1200:1200:1200:1200:1200:1200',"
+                + "elos VARCHAR(255) DEFAULT '1200:1200:1200:1200',"
                 + "PRIMARY KEY (`ID`))";
         try {
             DatabaseMetaData dbm = Practice.getInstance().connection.getMetaData();
