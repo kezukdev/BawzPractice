@@ -135,6 +135,8 @@ public class GameUtils {
 		if (match.getFirstList() != null) {
 			if (match.getAliveFirst() == 0 || match.getAliveSecond() == 0) {
 				for (UUID winner : match.getAlive()) {
+					new MatchSeeInventory(uuid);
+					new MatchSeeInventory(winner);
 					match.endMatch(uuid, winner, Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchUUID(), true);
 				}
 			}

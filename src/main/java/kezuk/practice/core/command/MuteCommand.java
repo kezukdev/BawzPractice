@@ -30,7 +30,7 @@ public class MuteCommand implements CommandExecutor {
     	Date banExpire = null;
     	String reason = "Cheating";
 		if (cmd.getName().equalsIgnoreCase("mute")) {
-			if (args.length != 3) {
+			if (args.length > 3 || args.length < 3) {
 				sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "/mute <player> <time> <reason>");
 				return false;
 			}
@@ -71,8 +71,8 @@ public class MuteCommand implements CommandExecutor {
 	        }
 	        String banTime = s.format(banExpire);
 	        try {
-	        	DB.executeUpdate("UPDATE playersdata SET mutedOn=? WHERE name=?",  "true", args[0]);
-				DB.executeUpdate("UPDATE playersdata SET muteExpiresOn=? WHERE name=?",  banTime, args[0]);
+	        	DB.executeUpdate("UPDATE playersdata SET muted=? WHERE name=?",  "true", args[0]);
+				DB.executeUpdate("UPDATE playersdata SET muteExpires=? WHERE name=?",  banTime, args[0]);
 				DB.executeUpdate("UPDATE playersdata SET muteReason=? WHERE name=?", args[2] , args[0]);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

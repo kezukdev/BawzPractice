@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import kezuk.practice.Practice;
@@ -28,6 +29,15 @@ public class QueueListener implements Listener {
 				}
 			}
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onInteractWithInventory(final InventoryClickEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
+		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
+			event.setCancelled(true);
+			return;
 		}
 	}
 

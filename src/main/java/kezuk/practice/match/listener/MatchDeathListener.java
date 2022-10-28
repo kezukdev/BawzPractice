@@ -13,7 +13,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import kezuk.practice.Practice;
@@ -21,8 +20,6 @@ import kezuk.practice.event.tournament.Tournament;
 import kezuk.practice.event.tournament.TournamentMatch;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
-import kezuk.practice.player.items.SpawnItems;
-import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.utils.GameUtils;
 

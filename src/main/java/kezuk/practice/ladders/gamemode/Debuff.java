@@ -3,6 +3,7 @@ package kezuk.practice.ladders.gamemode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import kezuk.bspigot.knockback.KnockbackModule;
 import kezuk.bspigot.knockback.KnockbackProfile;
@@ -136,6 +137,11 @@ public class Debuff extends Ladders implements Kit {
 	@Override
 	public boolean isRanked() {
 		return true;
+	}
+
+	@Override
+	public PotionEffect potionEffect() {
+		return null;
 	}
 
 }

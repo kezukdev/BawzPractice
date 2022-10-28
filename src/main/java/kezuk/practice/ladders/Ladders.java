@@ -1,6 +1,7 @@
 package kezuk.practice.ladders;
 
 import org.bukkit.Material;
+import org.bukkit.potion.PotionEffect;
 
 import kezuk.bspigot.knockback.KnockbackProfile;
 import kezuk.practice.Practice;
@@ -17,6 +18,7 @@ public abstract class Ladders {
     public abstract short data();
     public abstract int id();
     public abstract boolean isRanked();
+    public abstract PotionEffect potionEffect();
 
     // Kit editor
     public abstract boolean isAlterable();

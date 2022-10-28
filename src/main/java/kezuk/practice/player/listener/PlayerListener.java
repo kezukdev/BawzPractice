@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -120,7 +121,8 @@ public class PlayerListener implements Listener {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING)) {
 			if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()) != null) {
-				if (Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Soup") || Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
+				final String matchLadder = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getLadder().displayName();
+				if (matchLadder.equals(ChatColor.DARK_AQUA + "Sumo") || matchLadder.equals(ChatColor.DARK_AQUA + "Boxing") || matchLadder.equals(ChatColor.DARK_AQUA + "Soup") || matchLadder.equals(ChatColor.DARK_AQUA + "Comboxing") || matchLadder.equals(ChatColor.DARK_AQUA + "Quick NoDebuff") || matchLadder.equals(ChatColor.DARK_AQUA + "Speed NoDebuff")) {
 					event.setCancelled(true);
 				}
 				else {
@@ -141,6 +143,16 @@ public class PlayerListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onClick(final InventoryClickEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
+		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
+			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) return;
+			event.setCancelled(true);
+			return;
+		}
+	}
+	
+	@EventHandler
 	public void onTalking(final AsyncPlayerChatEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
 		if (profile.isMuted()) {
@@ -157,7 +169,7 @@ public class PlayerListener implements Listener {
 				e.printStackTrace();
 			}
 		}
-		event.setFormat((profile.getRank() == Rank.PLAYER ? ChatColor.GRAY.toString() : ChatColor.GRAY + "[" + profile.getRank().getColor() + profile.getRank().getDisplayName() + ChatColor.GRAY + "] " + profile.getRank().getColor()) + "%1$s" + (profile.getTag() == Tag.NORMAL ? ChatColor.RESET + ": ": ChatColor.GRAY + "(" + profile.getTag().getColor() + profile.getTag() + ChatColor.GRAY + ") " + ChatColor.RESET + ": " + (profile.getRank() == Rank.PLAYER ? ChatColor.GRAY : ChatColor.WHITE)) + "%2$s");
+		event.setFormat((profile.getRank() == Rank.PLAYER ? ChatColor.GRAY.toString() : ChatColor.GRAY + "[" + profile.getRank().getColor() + profile.getRank().getDisplayName() + ChatColor.GRAY + "] " + profile.getRank().getColor()) + "%1$s" + (profile.getTag() == Tag.NORMAL ? ChatColor.RESET + ": ": ChatColor.GRAY + " (" + profile.getTag().getColor() + profile.getTag().getDisplay() + ChatColor.GRAY + ") " + ChatColor.RESET + ": " + (profile.getRank() == Rank.PLAYER ? ChatColor.GRAY : ChatColor.WHITE)) + "%2$s");
 	}
 
 }

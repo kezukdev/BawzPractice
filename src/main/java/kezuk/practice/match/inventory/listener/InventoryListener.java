@@ -29,7 +29,6 @@ public class InventoryListener implements Listener {
 				 String name = event.getCurrentItem().getItemMeta().getLore().get(1);
 				 String uuidWithoutColor = ChatColor.stripColor(name);
 				 player.chat("/inventory " + uuidWithoutColor);
-				 return;
 			 }
 			 event.setCancelled(true);
 		 }

@@ -3,6 +3,7 @@ package kezuk.practice.ladders.gamemode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import kezuk.bspigot.knockback.KnockbackProfile;
 import kezuk.practice.arena.type.ArenaType;
@@ -111,5 +112,10 @@ public class Axe extends Ladders implements Kit {
 	@Override
 	public boolean isRanked() {
 		return false;
+	}
+
+	@Override
+	public PotionEffect potionEffect() {
+		return null;
 	}
 }

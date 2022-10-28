@@ -96,12 +96,8 @@ public class StartMatch {
             	Bukkit.getServer().getPlayer(uuid).teleport(this.arena.getMiddle());
                 Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "A fight in ffa has just been launched! It currently contains " + ChatColor.WHITE + alive.size() + ChatColor.DARK_AQUA + " players!");	
             }
-            if (ladder.displayName().equals(ChatColor.DARK_AQUA + "Boxing") || ladder.displayName().equals(ChatColor.DARK_AQUA + "Quick NoDebuff")) {
-            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 9999999, 1)));
-            }
-            if (ladder.displayName().equals(ChatColor.DARK_AQUA + "Speed NoDebuff") || ladder.displayName().equals(ChatColor.DARK_AQUA + "Quick NoDebuff")) {
-            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 9999999, 2)));
-            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 9999999, 2)));
+            if (ladder.potionEffect() != null) {
+            	Bukkit.getServer().getPlayer(uuid).addPotionEffects(Arrays.asList(ladder.potionEffect()));
             }
             if (ranked) {
             	Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(GameUtils.getOpponent(uuid)).getName() + ChatColor.DARK_AQUA + " have " + ChatColor.AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(GameUtils.getOpponent(uuid)).getElos()[ladder.id()] + ChatColor.DARK_AQUA + " elos!");

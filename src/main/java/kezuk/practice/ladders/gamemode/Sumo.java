@@ -2,6 +2,7 @@ package kezuk.practice.ladders.gamemode;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import kezuk.bspigot.knockback.KnockbackModule;
 import kezuk.bspigot.knockback.KnockbackProfile;
@@ -81,5 +82,11 @@ public class Sumo extends Ladders implements Kit {
 	@Override
 	public boolean isRanked() {
 		return true;
+	}
+
+	@Override
+	public PotionEffect potionEffect() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

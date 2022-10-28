@@ -70,6 +70,7 @@ public class QueueSystem {
 	                    secondList.clear();
 	                    Practice.getInstance().getRegisterCollections().getQueue().remove(uuid);
 	                    Practice.getInstance().getRegisterCollections().getQueue().remove(possibleUUID);
+	                    Practice.getInstance().getRegisterObject().getLadderInventory().refreshInventory();
 	                }
 				}
 			}	

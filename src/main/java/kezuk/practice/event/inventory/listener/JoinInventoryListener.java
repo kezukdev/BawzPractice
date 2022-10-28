@@ -58,6 +58,7 @@ public class JoinInventoryListener implements Listener {
 				}
 			}
 			event.setCancelled(true);
+			System.out.println("Join inventory listener");
 			return;
 		}
 	}

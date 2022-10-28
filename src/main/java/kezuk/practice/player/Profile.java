@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.idb.DB;
 import kezuk.practice.Practice;
@@ -36,6 +37,7 @@ public class Profile {
 	private Rank rank;
 	private Tag tag;
 	private SubState subState;
+	private boolean banned;
 	private Date banExpiresOn;
 	private String banReason;
 	private boolean muted;
@@ -54,6 +56,7 @@ public class Profile {
 		this.tag = Tag.NORMAL;
 		this.subState = SubState.NOTHING;
 		this.muted = false;
+		this.banned = false;
 		for (Ladders ladder : Practice.getInstance().getLadder()) {
 			if (ladder.isRanked()) {
 				this.elos = new int[ladder.id()];	
@@ -72,6 +75,7 @@ public class Profile {
     private void update() {
         if (!this.existPlayer()) {
         	Practice.getInstance().getDatabaseSQL().createPlayerManager(this.uuid, Bukkit.getServer().getPlayer(uuid).getName());
+            this.load();
         }
         else {
         	Practice.getInstance().getDatabaseSQL().updatePlayerManager(Bukkit.getServer().getPlayer(uuid).getName(), this.uuid);
@@ -84,7 +88,8 @@ public class Profile {
         	Date todayGlobal = new Date();
         	SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         	String today = s.format(todayGlobal);
-        	if (s.parse(DB.getFirstRow("SELECT banExpires FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banExpires")) != null) {
+        	this.banned = Boolean.valueOf(DB.getFirstRow("SELECT banned FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banned"));
+        	if (this.banned) {
             	this.banExpiresOn = s.parse(DB.getFirstRow("SELECT banExpires FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banExpires"));
             	this.banReason = DB.getFirstRow("SELECT banReason FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banReason");	
         	}
@@ -94,11 +99,18 @@ public class Profile {
             		Bukkit.getPlayer(this.uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Your banning punishment has been revoked. Avoid breaking the rules in the future!");	
         		}
         		else {
-        			Bukkit.getPlayer(uuid).kickPlayer(ChatColor.AQUA + "Your account is currently suspended from accessing our server for the following reason: " + ChatColor.WHITE + this.banReason + "\n" + ChatColor.DARK_AQUA + "Expires: " + ChatColor.WHITE + this.banExpiresOn + "\n\n" + ChatColor.AQUA + "https://discord.gg/bawz");
+        			new BukkitRunnable() {
+						
+						@Override
+						public void run() {
+		        			Bukkit.getPlayer(uuid).kickPlayer(ChatColor.AQUA + "Your account is currently suspended from accessing our server for the following reason: " + ChatColor.WHITE + banReason + "\n" + ChatColor.DARK_AQUA + "Expires: " + ChatColor.WHITE + banExpiresOn + "\n\n" + ChatColor.AQUA + "https://discord.gg/bawz");
+						}
+					}.runTaskLater(Practice.getInstance(), 2L);
+					return;
         		}
         	}
         	this.muted = Boolean.valueOf(DB.getFirstRow("SELECT muted FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("muted"));
-        	if (s.parse(DB.getFirstRow("SELECT muteExpires FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("muteExpires")) != null) {
+        	if (this.muted) {
             	this.muteExpiresOn = s.parse(DB.getFirstRow("SELECT muteExpires FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("muteExpires"));
             	this.muteReason = DB.getFirstRow("SELECT muteReason FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("muteReason");
         	}

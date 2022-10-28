@@ -49,6 +49,7 @@ public class TagInventoryListener implements Listener {
 					e.printStackTrace();
 				}
         	}	
+        	event.setCancelled(true);
 		}
         if (event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagClassicInventory().getName()) || event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagJapanInventory().getName()) || event.getClickedInventory().getName().equals(Practice.getInstance().getRegisterObject().getTagInventory().getTagRegionInventory().getName())) {
         	if (pm.getGlobalState().equals(GlobalState.SPAWN)) {
@@ -64,6 +65,7 @@ public class TagInventoryListener implements Listener {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
     			}	
+            	event.setCancelled(true);
         	}
         }
 	}

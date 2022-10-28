@@ -1,6 +1,7 @@
 package kezuk.practice.player.personnal.listener;
 
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -11,6 +12,7 @@ import kezuk.practice.player.state.SubState;
 
 public class PersonnalListener implements Listener {
 	
+	@EventHandler
 	public void onClickInventory(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
 		if (event.getCurrentItem() == null) return;
