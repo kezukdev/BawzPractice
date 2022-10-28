@@ -9,7 +9,6 @@ public enum SubState {
 	FINISHED,
 	
 	QUEUE,
-	FROZEN,
 	BUILD;
 
 }
