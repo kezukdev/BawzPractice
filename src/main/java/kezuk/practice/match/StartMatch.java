@@ -81,7 +81,7 @@ public class StartMatch {
             	profile.setGlobalState(GlobalState.FIGHT);
             }
         	profile.setSubState(SubState.STARTING);
-            profile.matchStats = new MatchStats();
+            profile.getPlayerCache().matchStats = new MatchStats();
             Bukkit.getServer().getPlayer(uuid).setMaximumNoDamageTicks(ladder.damageTicks());
             if (firstList != null && !to2) {
                 Bukkit.getServer().getPlayer(uuid).teleport(firstList.contains(uuid) ? this.arena.getLoc1() : this.arena.getLoc2());

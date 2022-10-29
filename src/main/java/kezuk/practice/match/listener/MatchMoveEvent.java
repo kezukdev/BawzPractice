@@ -20,7 +20,7 @@ public class MatchMoveEvent implements Listener {
 	@EventHandler
 	public void onSumoMove(final PlayerMoveEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.isFrozen()) {
+		if (profile.getPlayerCache().isFrozen()) {
     		if (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getZ() != event.getTo().getZ()) {
     			event.getPlayer().sendMessage(ChatColor.GRAY + " ⚠ " + ChatColor.RED + "You are currently frozen, join our discord for a possible verification." + ChatColor.WHITE + " discord.gg/bawz");
     			event.setTo(event.getFrom().setDirection(event.getTo().getDirection()));
@@ -42,7 +42,7 @@ public class MatchMoveEvent implements Listener {
 							Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().newRound(winner, event.getPlayer().getUniqueId());
 							return;
 						}
-						GameUtils.addKill(event.getPlayer().getUniqueId(), profile.getMatchStats().getLastAttacker());
+						GameUtils.addKill(event.getPlayer().getUniqueId(), profile.getPlayerCache().getMatchStats().getLastAttacker());
 					}
 				}
 			}	

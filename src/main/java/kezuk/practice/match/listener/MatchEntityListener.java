@@ -28,7 +28,7 @@ public class MatchEntityListener implements Listener {
 	public void onReceiveDamageGlobal(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		if (profile.getSubState().equals(SubState.PLAYING)) {
-			if (profile.isFrozen()) {
+			if (profile.getPlayerCache().isFrozen()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -97,19 +97,19 @@ public class MatchEntityListener implements Listener {
 					}	
 				}
 				if (match.getLadder().displayName() != ChatColor.DARK_AQUA + "Comboxing") {
-	                if (dmgd.getMatchStats().getNextHitTick() != 0L && dmgd.getMatchStats().getNextHitTick() > System.currentTimeMillis()) {
+	                if (dmgd.getPlayerCache().getMatchStats().getNextHitTick() != 0L && dmgd.getPlayerCache().getMatchStats().getNextHitTick() > System.currentTimeMillis()) {
 	                    return;
 	                }
-	                dmgd.getMatchStats().updateNextHitTick();	
+	                dmgd.getPlayerCache().getMatchStats().updateNextHitTick();	
 				}
-	        	dmgd.getMatchStats().setLastAttacker(event.getDamager().getUniqueId());
-	            dmr.getMatchStats().setHits(dmr.getMatchStats().getHits() + 1);
-	            if (dmgd.getMatchStats().getCombo() > 0) {
-	            	dmgd.getMatchStats().setCombo(0);
+	        	dmgd.getPlayerCache().getMatchStats().setLastAttacker(event.getDamager().getUniqueId());
+	            dmr.getPlayerCache().getMatchStats().setHits(dmr.getPlayerCache().getMatchStats().getHits() + 1);
+	            if (dmgd.getPlayerCache().getMatchStats().getCombo() > 0) {
+	            	dmgd.getPlayerCache().getMatchStats().setCombo(0);
 	            }
-	            dmr.getMatchStats().setCombo(dmr.getMatchStats().getCombo() + 1);
-	            if (dmr.getMatchStats().getCombo() > dmr.getMatchStats().getLongestCombo()) {
-	            	dmr.getMatchStats().setLongestCombo(dmr.getMatchStats().getCombo());
+	            dmr.getPlayerCache().getMatchStats().setCombo(dmr.getPlayerCache().getMatchStats().getCombo() + 1);
+	            if (dmr.getPlayerCache().getMatchStats().getCombo() > dmr.getPlayerCache().getMatchStats().getLongestCombo()) {
+	            	dmr.getPlayerCache().getMatchStats().setLongestCombo(dmr.getPlayerCache().getMatchStats().getCombo());
 	            }
 	        	if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Sumo")) {
 	                event.setDamage(0.0D);
@@ -118,16 +118,16 @@ public class MatchEntityListener implements Listener {
 	                event.setDamage(0.0D);
 	                final Player damager = (Player) event.getDamager();
 	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing")) {
-	                	final float hitExp = dmr.getMatchStats().getHits() / 100.0f;
+	                	final float hitExp = dmr.getPlayerCache().getMatchStats().getHits() / 100.0f;
 	                	damager.setExp(hitExp);
 	                }
 	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing")) {
-	                	final float hitExp = dmr.getMatchStats().getHits() / 300.0f;
+	                	final float hitExp = dmr.getPlayerCache().getMatchStats().getHits() / 300.0f;
 		                damager.setExp(hitExp);
 	                }
-	                damager.setLevel(dmr.getMatchStats().getCombo());
-	                dmgd.getMatchStats().setCombo(0);
-	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") && dmr.getMatchStats().getHits() == 100 || match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing") && (dmr.getMatchStats().getCombo() == 40 || dmr.getMatchStats().getHits() == 300)) {
+	                damager.setLevel(dmr.getPlayerCache().getMatchStats().getCombo());
+	                dmgd.getPlayerCache().getMatchStats().setCombo(0);
+	                if (match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Boxing") && dmr.getPlayerCache().getMatchStats().getHits() == 100 || match.getLadder().displayName().equals(ChatColor.DARK_AQUA + "Comboxing") && (dmr.getPlayerCache().getMatchStats().getCombo() == 40 || dmr.getPlayerCache().getMatchStats().getHits() == 300)) {
 	                	if (match.getFirstList().size() == 1) {
 	                    	match.endMatch(event.getEntity().getUniqueId(), damager.getUniqueId(), dmr.getMatchUUID(), true);	
 	                    	return;

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import kezuk.practice.Practice;
 import kezuk.practice.player.Profile;
+import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 
@@ -24,6 +25,8 @@ public class BuildCommand implements CommandExecutor {
 			return false;
 		}
 		if (profile.getSubState().equals(SubState.BUILD)) {
+			new SpawnItems(Bukkit.getPlayer(sender.getName()).getUniqueId(), false);
+			Bukkit.getPlayer(sender.getName()).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 			profile.setSubState(SubState.NOTHING);
 			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Build mode: " + ChatColor.WHITE + "Off");
 			return false;

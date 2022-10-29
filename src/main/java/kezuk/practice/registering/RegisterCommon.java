@@ -15,6 +15,7 @@ import kezuk.practice.core.staff.command.BanCommand;
 import kezuk.practice.core.staff.command.FreezeCommand;
 import kezuk.practice.core.staff.command.ModCommand;
 import kezuk.practice.core.staff.command.MuteCommand;
+import kezuk.practice.core.staff.listener.StaffListeners;
 import kezuk.practice.core.tag.inventory.listener.TagInventoryListener;
 import kezuk.practice.event.command.JoinCommand;
 import kezuk.practice.event.host.items.listener.HostInteractItemListener;
@@ -91,6 +92,7 @@ public class RegisterCommon {
 		pm.registerEvents(new SpectateListener(), Practice.getInstance());
 		pm.registerEvents(new PersonnalListener(), Practice.getInstance());
 		pm.registerEvents(new TagInventoryListener(), Practice.getInstance());
+		pm.registerEvents(new StaffListeners(), Practice.getInstance());
 		pm.registerEvents(new PlayerListener(), Practice.getInstance());
 		pm.registerEvents(new ServerListener(), Practice.getInstance());
 	}

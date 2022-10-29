@@ -27,7 +27,6 @@ import org.bukkit.potion.PotionEffect;
 import kezuk.practice.Practice;
 import kezuk.practice.core.rank.Rank;
 import kezuk.practice.core.tag.Tag;
-import kezuk.practice.event.host.type.EventType;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
@@ -47,6 +46,11 @@ public class PlayerListener implements Listener {
 		event.getPlayer().setSaturation(20.0f);
 		for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) {
 			event.getPlayer().removePotionEffect(effect.getType());
+		}
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
+				event.getPlayer().hidePlayer(players);
+			}
 		}
 		event.getPlayer().setPlayerListName(Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId()).getRank().getColor() + event.getPlayer().getName());
 	}
@@ -158,13 +162,13 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onTalking(final AsyncPlayerChatEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId());
-		if (profile.isMuted()) {
+		if (profile.getPlayerCache().isMuted()) {
         	Date todayGlobal = new Date();
         	SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         	String today = s.format(todayGlobal);
 			try {
-				if (profile.getMuteExpiresOn() != s.parse(today)) {
-					event.getPlayer().sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You are currently silenced for the reason: " + ChatColor.WHITE + profile.getMuteReason());
+				if (profile.getPlayerCache().getMuteExpiresOn() != s.parse(today)) {
+					event.getPlayer().sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You are currently silenced for the reason: " + ChatColor.WHITE + profile.getPlayerCache().getMuteReason());
 					event.setCancelled(true);
 					return;
 				}

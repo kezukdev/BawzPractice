@@ -144,6 +144,9 @@ public class EndMatch {
 				@Override
 				public void run() {
 		        	for (Player players : Bukkit.getOnlinePlayers()) {
+		    			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
+		    				Bukkit.getPlayer(uuid2).getPlayer().hidePlayer(players);
+		    			}
 		        		players.showPlayer(Bukkit.getPlayer(uuid2));
 		        		Bukkit.getPlayer(uuid2).showPlayer(players);
 		        	}	
@@ -180,6 +183,9 @@ public class EndMatch {
 				@Override
 				public void run() {
 		        	for (Player players : Bukkit.getOnlinePlayers()) {
+		    			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
+		    				Bukkit.getPlayer(uuid).getPlayer().hidePlayer(players);
+		    			}
 		        		players.showPlayer(Bukkit.getPlayer(uuid));
 		        		Bukkit.getPlayer(uuid).showPlayer(players);
 		        	}	

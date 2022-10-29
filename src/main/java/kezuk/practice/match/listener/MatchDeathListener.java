@@ -80,7 +80,7 @@ public class MatchDeathListener implements Listener {
                         }
                     }
             	}
-            	GameUtils.addKill(player.getUniqueId(), (profile.getMatchStats().getLastAttacker() != null ? profile.getMatchStats().getLastAttacker() : null));
+            	GameUtils.addKill(player.getUniqueId(), (profile.getPlayerCache().getMatchStats().getLastAttacker() != null ? profile.getPlayerCache().getMatchStats().getLastAttacker() : null));
             	return;
             }
         	if (match != null && match.isTournament()) {

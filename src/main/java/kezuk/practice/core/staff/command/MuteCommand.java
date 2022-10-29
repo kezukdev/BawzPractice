@@ -81,9 +81,9 @@ public class MuteCommand implements CommandExecutor {
 			if (Bukkit.getPlayer(args[0]) != null) {
 				final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(Bukkit.getPlayer(args[0]).getUniqueId());
 				try {
-					profile.setMuted(true);
-					profile.setMuteExpiresOn(s.parse(banTime));
-					profile.setMuteReason(reason);
+					profile.getPlayerCache().setMuted(true);
+					profile.getPlayerCache().setMuteExpiresOn(s.parse(banTime));
+					profile.getPlayerCache().setMuteReason(reason);
 					Bukkit.getPlayer(args[0]).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have just received a mute penalty for the following reason: " + ChatColor.WHITE + reason);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -100,7 +100,7 @@ public class MuteCommand implements CommandExecutor {
 	        try {
 	        	Bukkit.broadcastMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + args[0] + ChatColor.DARK_AQUA + " will be able to reconnect in peace");
 	        	DB.executeUpdate("UPDATE playersdata SET muted=? WHERE name=?",  "false", args[0]);
-				DB.executeUpdate("UPDATE playersdata SET muteExpiresOn=? WHERE name=?",  "null", args[0]);
+				DB.executeUpdate("UPDATE playersdata SET muteExpires=? WHERE name=?",  "null", args[0]);
 				DB.executeUpdate("UPDATE playersdata SET muteReason=? WHERE name=?", "null" , args[0]);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -108,9 +108,9 @@ public class MuteCommand implements CommandExecutor {
 			}
 			if (Bukkit.getPlayer(args[0]) != null) {
 				final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(Bukkit.getPlayer(args[0]).getUniqueId());
-				profile.setMuted(false);
-				profile.setMuteExpiresOn(null);
-				profile.setMuteReason(null);
+				profile.getPlayerCache().setMuted(false);
+				profile.getPlayerCache().setMuteExpiresOn(null);
+				profile.getPlayerCache().setMuteReason(null);
 				Bukkit.getPlayer(args[0]).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Your sanction has just been revoked by a member of the moderation.");
 			}
 		}

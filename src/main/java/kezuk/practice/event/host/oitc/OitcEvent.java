@@ -35,7 +35,7 @@ public class OitcEvent {
 			Bukkit.getPlayer(uuid).sendMessage(ChatColor.DARK_AQUA + "OITC have started!");
 			new OitcStuff(uuid);
 			Bukkit.getPlayer(uuid).teleport(this.getRandomLocation(Practice.getInstance().getRegisterCommon().getOitcLocations()));
-			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).oitcStats = new OitcStats();
+			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getPlayerCache().oitcStats = new OitcStats();
 		}
 	}
 	
@@ -51,11 +51,11 @@ public class OitcEvent {
 			
 			@Override
 			public void run() {
-				killerProfile.getOitcStats().setKill(killerProfile.getOitcStats().getKill()+1);
-				killedProfile.getOitcStats().setDeath(killedProfile.getOitcStats().getDeath()+1);
-				Bukkit.getPlayer(killed).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have got killed your statistics:\n" + ChatColor.WHITE + "Kill: " + ChatColor.GREEN + killedProfile.getOitcStats().getKill() + ChatColor.WHITE + "\nDeath: " + ChatColor.RED + killedProfile.getOitcStats().getDeath());
-				Bukkit.getPlayer(killer).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Your statistics as upgraded\n" + ChatColor.WHITE + "Kill: " + ChatColor.GREEN + killerProfile.getOitcStats().getKill() + ChatColor.WHITE + "\nDeath: " + ChatColor.RED + killerProfile.getOitcStats().getDeath());
-				if (killerProfile.getOitcStats().getKill() >= 20) {
+				killerProfile.getPlayerCache().getOitcStats().setKill(killerProfile.getPlayerCache().getOitcStats().getKill()+1);
+				killedProfile.getPlayerCache().getOitcStats().setDeath(killedProfile.getPlayerCache().getOitcStats().getDeath()+1);
+				Bukkit.getPlayer(killed).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have got killed your statistics:\n" + ChatColor.WHITE + "Kill: " + ChatColor.GREEN + killedProfile.getPlayerCache().getOitcStats().getKill() + ChatColor.WHITE + "\nDeath: " + ChatColor.RED + killedProfile.getPlayerCache().getOitcStats().getDeath());
+				Bukkit.getPlayer(killer).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Your statistics as upgraded\n" + ChatColor.WHITE + "Kill: " + ChatColor.GREEN + killerProfile.getPlayerCache().getOitcStats().getKill() + ChatColor.WHITE + "\nDeath: " + ChatColor.RED + killerProfile.getPlayerCache().getOitcStats().getDeath());
+				if (killerProfile.getPlayerCache().getOitcStats().getKill() >= 20) {
 					endOitc(killer);
 					return;
 				}

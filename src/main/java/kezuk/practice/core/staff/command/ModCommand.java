@@ -30,11 +30,14 @@ public class ModCommand implements CommandExecutor {
 		if (profile.getGlobalState().equals(GlobalState.MOD)) {
 			new SpawnItems(player.getUniqueId(), false);
 			profile.setGlobalState(GlobalState.SPAWN);
-			profile.setVanish(false);
+			profile.getPlayerCache().getStaffCache().setVanish(false);
+			profile.getPlayerCache().getStaffCache().setSilent(false);
+			player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 			sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been left the mod mode!");
 	        return false;
 		}
-		profile.setVanish(true);
+		profile.getPlayerCache().getStaffCache().setVanish(true);
+		profile.getPlayerCache().getStaffCache().setSilent(false);
 		profile.setGlobalState(GlobalState.MOD);
 		new ModItems(player.getUniqueId());
 		sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been entered the mod mode!");

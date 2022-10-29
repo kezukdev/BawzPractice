@@ -43,7 +43,7 @@ public class MatchInteractListener implements Listener {
 					event.getPlayer().updateInventory();
 					return;
 				}
-				MatchStats matchStats = profile.getMatchStats();
+				MatchStats matchStats = profile.getPlayerCache().getMatchStats();
 				if (!matchStats.isEnderPearlCooldownActive()) {
 					matchStats.applyEnderPearlCooldown();
 					return;

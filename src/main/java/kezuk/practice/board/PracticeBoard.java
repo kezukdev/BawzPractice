@@ -14,7 +14,6 @@ import com.bizarrealex.aether.scoreboard.BoardAdapter;
 import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
 
 import kezuk.practice.Practice;
-import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
@@ -63,8 +62,8 @@ public class PracticeBoard implements BoardAdapter
         board.add(spacer);
     	board.add(ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName() + " " + ChatColor.AQUA + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "R" : "U"));
     	board.add(ChatColor.DARK_AQUA + "Ping" + ChatColor.RESET + ": " + ChatColor.AQUA + player.getPing());
-        if (pm.getMatchStats().getEnderPearlCooldown() != 0L) {
-    		final double time = pm.getMatchStats().getEnderPearlCooldown() / 1000.0D;
+        if (pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() != 0L) {
+    		final double time = pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() / 1000.0D;
     		final DecimalFormat df = new DecimalFormat("#.#");
     		board.add(ChatColor.DARK_AQUA + "Enderpearl" + ChatColor.RESET + ": " + ChatColor.AQUA + df.format(time));	
         }

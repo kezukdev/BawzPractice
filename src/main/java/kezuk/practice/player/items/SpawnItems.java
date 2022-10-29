@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +30,7 @@ public class SpawnItems {
         player.getInventory().setItem(8, utils);
         player.getInventory().setItem(4, personnal);
         player.getInventory().setArmorContents((ItemStack[])null);
+		player.setGameMode(GameMode.SURVIVAL);
 		player.setAllowFlight(false);
 		player.setFlying(false);
 		player.setLevel(0);

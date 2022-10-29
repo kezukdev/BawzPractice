@@ -33,10 +33,10 @@ public class MatchSeeInventory {
     	final Player player = Bukkit.getPlayer(uuid);
         this.content = player.getInventory().getContents();
         this.armor = player.getInventory().getArmorContents();
-        this.hits = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getHits();
-        this.longestCombo = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getLongestCombo();
-        this.missedPots = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getMissedPotions();
-        this.thrownPotions = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getMatchStats().getThrownPotions();
+        this.hits = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getPlayerCache().getMatchStats().getHits();
+        this.longestCombo = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getPlayerCache().getMatchStats().getLongestCombo();
+        this.missedPots = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getPlayerCache().getMatchStats().getMissedPotions();
+        this.thrownPotions = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getPlayerCache().getMatchStats().getThrownPotions();
         double remainLife = player.getHealth() / 2;
         NumberFormat nf = new DecimalFormat("0.#");
         this.life = nf.format(remainLife);

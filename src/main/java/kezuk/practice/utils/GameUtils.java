@@ -166,7 +166,7 @@ public class GameUtils {
 			}	
 		}
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
-		if (profile.isFrozen()) {
+		if (profile.getPlayerCache().isFrozen()) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.hasPermission("bawz.moderation")) {
 					player.sendMessage(ChatColor.GRAY + " [" + ChatColor.DARK_AQUA + "Staff" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " is disconnected while in a frozen state!");

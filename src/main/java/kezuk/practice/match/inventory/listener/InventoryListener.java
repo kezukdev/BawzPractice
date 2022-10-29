@@ -1,5 +1,7 @@
 package kezuk.practice.match.inventory.listener;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +29,7 @@ public class InventoryListener implements Listener {
 				 final Player player = (Player) event.getWhoClicked();
 				 player.closeInventory();
 				 String name = event.getCurrentItem().getItemMeta().getLore().get(1);
-				 String uuidWithoutColor = ChatColor.stripColor(name);
+				 UUID uuidWithoutColor = UUID.fromString(ChatColor.stripColor(name));
 				 player.chat("/inventory " + uuidWithoutColor);
 			 }
 			 event.setCancelled(true);
