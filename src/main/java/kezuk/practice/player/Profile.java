@@ -25,6 +25,8 @@ import kezuk.practice.match.stats.MatchStats;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.request.Requesting.Request;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 import net.minecraft.util.com.google.common.collect.Maps;
 
 public class Profile {
@@ -46,6 +48,7 @@ public class Profile {
 	public MatchStats matchStats;
 	public OitcStats oitcStats;
 	private boolean frozen;
+	private boolean vanish;
 	public WeakHashMap<UUID, Request> request;
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
@@ -59,6 +62,7 @@ public class Profile {
 		this.muted = false;
 		this.banned = false;
 		this.frozen = false;
+		this.vanish = false;
 		for (Ladders ladder : Practice.getInstance().getLadder()) {
 			if (ladder.isRanked()) {
 				this.elos = new int[ladder.id()];	
@@ -167,6 +171,39 @@ public class Profile {
 		for (String perm : profile.getRank().getPermissions()) {
 			attachment.setPermission(perm, true);	
 		}
+	}
+	
+	public void setVanish(boolean vanish) {
+		if (vanish == true) {
+			final Player player = Bukkit.getPlayer(uuid);
+	        final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo((EntityPlayer) player, PacketPlayOutPlayerInfo.PlayerInfo.REMOVE_PLAYER );
+	        for(Player entityplayer : Bukkit.getOnlinePlayers()) {
+	        	((EntityPlayer)entityplayer).playerConnection.sendPacket(packet);
+	            ((EntityPlayer)player).playerConnection.sendPacket(new PacketPlayOutPlayerInfo(((EntityPlayer)entityplayer), PacketPlayOutPlayerInfo.PlayerInfo.REMOVE_PLAYER ));
+	        }
+		}
+		if (vanish == false) {
+			final Player player = Bukkit.getPlayer(uuid);
+	        final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo((EntityPlayer) player, PacketPlayOutPlayerInfo.PlayerInfo.ADD_PLAYER );
+	        final PacketPlayOutPlayerInfo displayPacket = new PacketPlayOutPlayerInfo((EntityPlayer) player, PacketPlayOutPlayerInfo.PlayerInfo.UPDATE_DISPLAY_NAME);
+	        for(Player entityplayer : Bukkit.getOnlinePlayers()) {
+	        	((EntityPlayer)entityplayer).playerConnection.sendPacket(packet);
+	            ((EntityPlayer)player).playerConnection.sendPacket(new PacketPlayOutPlayerInfo(((EntityPlayer)entityplayer), PacketPlayOutPlayerInfo.PlayerInfo.ADD_PLAYER ));
+	            if (!player.getName().equals(((EntityPlayer)entityplayer).listName)) {
+	            	if (((EntityPlayer)player).playerConnection.networkManager.getVersion() > 28) {
+	            		((EntityPlayer)player).playerConnection.sendPacket(new PacketPlayOutPlayerInfo(((EntityPlayer)entityplayer), PacketPlayOutPlayerInfo.PlayerInfo.UPDATE_DISPLAY_NAME));
+	            	}
+	            	if (((EntityPlayer)entityplayer).playerConnection.networkManager.getVersion() > 28) {
+	            		((EntityPlayer)entityplayer).playerConnection.sendPacket(displayPacket);
+	            	}
+	            }
+	        }
+		}
+		this.vanish = vanish;
+	}
+	
+	public boolean isVanish() {
+		return vanish;
 	}
 	
 	public void setFrozen(boolean frozen) {

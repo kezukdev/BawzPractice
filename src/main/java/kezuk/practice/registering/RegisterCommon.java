@@ -13,6 +13,7 @@ import kezuk.practice.core.listener.ServerListener;
 import kezuk.practice.core.rank.command.RankCommand;
 import kezuk.practice.core.staff.command.BanCommand;
 import kezuk.practice.core.staff.command.FreezeCommand;
+import kezuk.practice.core.staff.command.ModCommand;
 import kezuk.practice.core.staff.command.MuteCommand;
 import kezuk.practice.core.tag.inventory.listener.TagInventoryListener;
 import kezuk.practice.event.command.JoinCommand;
@@ -110,6 +111,7 @@ public class RegisterCommon {
 		Practice.getInstance().getCommand("mute").setExecutor(new MuteCommand());
 		Practice.getInstance().getCommand("unmute").setExecutor(new MuteCommand());
 		Practice.getInstance().getCommand("freeze").setExecutor(new FreezeCommand());
+		Practice.getInstance().getCommand("mod").setExecutor(new ModCommand());
 	}
 	
 	public Location getSpawnLocation() {

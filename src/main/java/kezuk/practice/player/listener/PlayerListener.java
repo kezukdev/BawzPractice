@@ -148,6 +148,7 @@ public class PlayerListener implements Listener {
 	public void onClick(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
 		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
+			if (profile.getSubState().equals(SubState.BUILD)) return;
 			if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) return;
 			event.setCancelled(true);
 			return;
@@ -171,11 +172,11 @@ public class PlayerListener implements Listener {
 				e.printStackTrace();
 			}
 		}
-		if (event.getMessage().contains("#") && event.getPlayer().hasPermission("bawz.moderation")) {
+		if (event.getMessage().startsWith("#") && event.getPlayer().hasPermission("bawz.moderation")) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.hasPermission("bawz.moderation")) {
 					final String message = event.getMessage().replace("#", "");
-					player.sendMessage(ChatColor.RED + " ✴ " + profile.getRank().getColor() + profile.getRank().getDisplayName() + " " + profile.getRank().getColor() + event.getPlayer().getName() + ChatColor.GRAY + " » " + ChatColor.AQUA + message);
+					player.sendMessage(ChatColor.RED + " ✴ " + profile.getRank().getColor() + profile.getRank().getDisplayName() + " " + profile.getRank().getColor() + event.getPlayer().getName() + ChatColor.GRAY + " » " + ChatColor.RED + message);
 				}
 			}
 			event.setCancelled(true);

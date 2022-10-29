@@ -36,7 +36,7 @@ public class FreezeCommand implements CommandExecutor {
 			return false;
 		}
 		profile.setFrozen(true);
-		sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have frozen " + ChatColor.WHITE + sender.getName());
+		sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have frozen " + ChatColor.WHITE + args[0]);
 		target.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "A staff member has frozen you please join our discord for verification: " + ChatColor.WHITE + "discord.gg/bawz !");
 		return false;
 	}
