@@ -45,47 +45,59 @@ public class LadderInventory {
 	private void setPreviewInventory() {
     	this.unrankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
-    		this.unrankedInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
+        		this.unrankedInventory.addItem(item);	
+    		}
     	}
     	this.rankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		if (ladder.isRanked()) {
+    		if (ladder.isRanked() && !ladder.privateGame()) {
         		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
         		this.rankedInventory.addItem(item);	
     		}
     	}
     	this.duelInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-    		this.duelInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+        		this.duelInventory.addItem(item);	
+    		}
     	}
     	this.ffaInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-    		this.ffaInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+        		this.ffaInventory.addItem(item);	
+    		}
     	}
     	this.splitInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-    		this.splitInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+        		this.splitInventory.addItem(item);	
+    		}
     	}
 		this.unrankedPartyInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, true))));
-    		this.unrankedPartyInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
+        		this.unrankedPartyInventory.addItem(item);	
+    		}
     	}
     	this.editorInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		if (ladder.isAlterable()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), null);
+    		if (ladder.isAlterable() && !ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
         		this.editorInventory.addItem(item);
     		}
     	}
     	this.tournamentInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
-    		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-    		this.tournamentInventory.addItem(item);
+    		if (!ladder.privateGame()) {
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+        		this.tournamentInventory.addItem(item);
+    		}
     	}
 	}
 	

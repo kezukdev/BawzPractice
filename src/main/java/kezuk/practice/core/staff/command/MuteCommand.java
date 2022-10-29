@@ -1,4 +1,4 @@
-package kezuk.practice.core.command;
+package kezuk.practice.core.staff.command;
 
 import java.sql.SQLException;
 import java.text.ParseException;

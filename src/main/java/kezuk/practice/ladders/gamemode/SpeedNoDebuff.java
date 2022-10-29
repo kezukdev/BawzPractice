@@ -1,5 +1,8 @@
 package kezuk.practice.ladders.gamemode;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +40,7 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 
     @Override
     public boolean isAlterable() {
-        return true;
+        return false;
     }
 
     @Override
@@ -145,9 +148,15 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 	}
 	
 	@Override
-	public PotionEffect potionEffect() {
-		final PotionEffect potionEffects = new PotionEffect(PotionEffectType.SPEED, 99999999, 1);
-		return potionEffects;
+	public List<PotionEffect> potionEffect() {
+		final PotionEffect potionSpeed = new PotionEffect(PotionEffectType.SPEED, 99999999, 2);
+		final PotionEffect potionResistance = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999999, 0);
+		return Arrays.asList(potionSpeed, potionResistance);
+	}
+	
+	@Override
+	public boolean privateGame() {
+		return false;
 	}
 
 }

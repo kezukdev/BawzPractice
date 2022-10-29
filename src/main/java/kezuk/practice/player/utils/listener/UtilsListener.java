@@ -56,7 +56,8 @@ public class UtilsListener implements Listener {
 				}
 				if (event.getCurrentItem().getType().equals(Material.CAKE)) {
 					event.getWhoClicked().closeInventory();
-					new Party(event.getWhoClicked().getUniqueId());
+					final Player player = (Player) event.getWhoClicked();
+					player.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Currently under developement.");
 				}
 				if (event.getCurrentItem().getType().equals(Material.ENDER_PORTAL)) {
 					event.getWhoClicked().closeInventory();
@@ -78,6 +79,10 @@ public class UtilsListener implements Listener {
 				if (event.getCurrentItem().getType().equals(Material.FERMENTED_SPIDER_EYE)) {
 					event.getWhoClicked().closeInventory();
 					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getTournamentInventory());
+				}
+				if (event.getCurrentItem().getType().equals(Material.ENCHANTMENT_TABLE)) {
+					event.getWhoClicked().closeInventory();
+					event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getEditorInventory());
 				}
 				event.setCancelled(true);	
 			}

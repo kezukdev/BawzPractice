@@ -1,5 +1,7 @@
 package kezuk.practice.ladders;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.potion.PotionEffect;
 
@@ -18,7 +20,8 @@ public abstract class Ladders {
     public abstract short data();
     public abstract int id();
     public abstract boolean isRanked();
-    public abstract PotionEffect potionEffect();
+    public abstract List<PotionEffect> potionEffect();
+    public abstract boolean privateGame();
 
     // Kit editor
     public abstract boolean isAlterable();

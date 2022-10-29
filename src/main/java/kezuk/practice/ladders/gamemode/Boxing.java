@@ -1,5 +1,9 @@
 package kezuk.practice.ladders.gamemode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -90,8 +94,13 @@ public class Boxing extends Ladders implements Kit {
 	}
 
 	@Override
-	public PotionEffect potionEffect() {
+	public List<PotionEffect> potionEffect() {
 		final PotionEffect potionEffects = new PotionEffect(PotionEffectType.SPEED, 99999999, 1);
-		return potionEffects;
+		return Arrays.asList(potionEffects);
+	}
+	
+	@Override
+	public boolean privateGame() {
+		return false;
 	}
 }

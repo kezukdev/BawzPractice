@@ -1,5 +1,7 @@
 package kezuk.practice.ladders.gamemode;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -85,8 +87,12 @@ public class Sumo extends Ladders implements Kit {
 	}
 
 	@Override
-	public PotionEffect potionEffect() {
-		// TODO Auto-generated method stub
+	public List<PotionEffect> potionEffect() {
 		return null;
+	}
+	
+	@Override
+	public boolean privateGame() {
+		return false;
 	}
 }

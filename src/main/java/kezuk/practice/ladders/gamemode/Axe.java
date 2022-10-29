@@ -1,5 +1,7 @@
 package kezuk.practice.ladders.gamemode;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -115,7 +117,12 @@ public class Axe extends Ladders implements Kit {
 	}
 
 	@Override
-	public PotionEffect potionEffect() {
+	public List<PotionEffect> potionEffect() {
 		return null;
+	}
+
+	@Override
+	public boolean privateGame() {
+		return false;
 	}
 }

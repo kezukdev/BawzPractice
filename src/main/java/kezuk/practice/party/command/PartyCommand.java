@@ -23,6 +23,7 @@ public class PartyCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) return false;
 		final Player player = (Player) sender;
+		if (!player.isOp()) return false;
 		final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
 		if (args.length == 0) {
 			player.sendMessage(" ");

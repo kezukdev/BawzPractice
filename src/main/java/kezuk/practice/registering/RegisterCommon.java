@@ -9,10 +9,11 @@ import org.bukkit.plugin.PluginManager;
 
 import kezuk.practice.Practice;
 import kezuk.practice.arena.command.ArenaCommand;
-import kezuk.practice.core.command.BanCommand;
-import kezuk.practice.core.command.MuteCommand;
 import kezuk.practice.core.listener.ServerListener;
 import kezuk.practice.core.rank.command.RankCommand;
+import kezuk.practice.core.staff.command.BanCommand;
+import kezuk.practice.core.staff.command.FreezeCommand;
+import kezuk.practice.core.staff.command.MuteCommand;
 import kezuk.practice.core.tag.inventory.listener.TagInventoryListener;
 import kezuk.practice.event.command.JoinCommand;
 import kezuk.practice.event.host.items.listener.HostInteractItemListener;
@@ -108,6 +109,7 @@ public class RegisterCommon {
 		Practice.getInstance().getCommand("unban").setExecutor(new BanCommand());
 		Practice.getInstance().getCommand("mute").setExecutor(new MuteCommand());
 		Practice.getInstance().getCommand("unmute").setExecutor(new MuteCommand());
+		Practice.getInstance().getCommand("freeze").setExecutor(new FreezeCommand());
 	}
 	
 	public Location getSpawnLocation() {

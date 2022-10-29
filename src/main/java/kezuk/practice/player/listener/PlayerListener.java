@@ -175,7 +175,7 @@ public class PlayerListener implements Listener {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.hasPermission("bawz.moderation")) {
 					final String message = event.getMessage().replace("#", "");
-					player.sendMessage(ChatColor.RED + " ✴ " + profile.getRank().getColor() + profile.getRank().getDisplayName() + " " + profile.getRank().getColor() + "%1$s" + ChatColor.GRAY + " » " + ChatColor.AQUA + message);
+					player.sendMessage(ChatColor.RED + " ✴ " + profile.getRank().getColor() + profile.getRank().getDisplayName() + " " + profile.getRank().getColor() + event.getPlayer().getName() + ChatColor.GRAY + " » " + ChatColor.AQUA + message);
 				}
 			}
 			event.setCancelled(true);

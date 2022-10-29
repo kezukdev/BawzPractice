@@ -27,9 +27,9 @@ public class PersonnalInventory implements Listener {
         for (int i = 0; i < 27; ++i) {
             this.personnalInventory.setItem(i, glass);
         }
-        final ItemStack stats = ItemSerializer.serialize(new ItemStack(Material.CAULDRON_ITEM),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Statistics", Arrays.asList(new String(ChatColor.WHITE + " View your statistics")));
+        final ItemStack stats = ItemSerializer.serialize(new ItemStack(Material.CAULDRON_ITEM),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Comming soon");
         final ItemStack tag = ItemSerializer.serialize(new ItemStack(Material.NAME_TAG),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Tag", Arrays.asList(new String(ChatColor.WHITE + " Change your tag")));
-        final ItemStack settings = ItemSerializer.serialize(new ItemStack(Material.DAYLIGHT_DETECTOR),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Settings", Arrays.asList(new String(ChatColor.WHITE + " Select your settings")));
+        final ItemStack settings = ItemSerializer.serialize(new ItemStack(Material.DAYLIGHT_DETECTOR),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Comming soon");
         this.personnalInventory.setItem(12, stats);
         this.personnalInventory.setItem(13, tag);
         this.personnalInventory.setItem(14, settings);
