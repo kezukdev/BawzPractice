@@ -1,6 +1,5 @@
 package kezuk.practice.match;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -10,8 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
@@ -67,16 +64,15 @@ public class StartMatch {
         spectator = Lists.newArrayList();
         Practice.getInstance().getRegisterCollections().getMatchs().put(this.matchUUID, this);
         for (final UUID uuid : alive) {
-            for (Player playersO : Bukkit.getOnlinePlayers()) {
-            	playersO.hidePlayer(Bukkit.getPlayer(uuid));
-            	Bukkit.getPlayer(uuid).hidePlayer(playersO);
-            }
         	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
+            profile.setMatchUUID(matchUUID);
+        	if (!Practice.getInstance().getRegisterCollections().getMatchs().isEmpty()) {
+                GameUtils.displayMatchPlayer(Bukkit.getPlayer(uuid));	
+        	}
         	if (Practice.getInstance().getRegisterCollections().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getRegisterCollections().getOfflineInventories().remove(uuid);
         		Bukkit.getPlayer(uuid).closeInventory();
         	}
-            profile.setMatchUUID(matchUUID);
             if (profile.getGlobalState() == GlobalState.QUEUE || profile.getGlobalState() == GlobalState.SPAWN) {
             	profile.setGlobalState(GlobalState.FIGHT);
             }
@@ -109,8 +105,6 @@ public class StartMatch {
             Bukkit.getServer().getPlayer(uuid).getInventory().setContents(kit.content());
             Bukkit.getServer().getPlayer(uuid).getInventory().setArmorContents(kit.armor());
             Bukkit.getServer().getPlayer(uuid).updateInventory();
-            Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(GameUtils.getOpponent(uuid)).getPlayer());
-            Bukkit.getPlayer(GameUtils.getOpponent(uuid)).getPlayer().showPlayer(Bukkit.getPlayer(uuid));
             new BukkitRunnable() {
 	            int i = 5;
 

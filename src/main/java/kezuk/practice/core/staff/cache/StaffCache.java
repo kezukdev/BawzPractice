@@ -27,6 +27,7 @@ public class StaffCache {
 	        for(Player entityplayer : Bukkit.getOnlinePlayers()) {
 	        	((CraftPlayer)entityplayer).getHandle().playerConnection.sendPacket(packet);
 	            ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(((CraftPlayer)entityplayer).getHandle(), PacketPlayOutPlayerInfo.PlayerInfo.REMOVE_PLAYER ));
+	            ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(((CraftPlayer)entityplayer).getHandle(), PacketPlayOutPlayerInfo.PlayerInfo.ADD_PLAYER ));
 	        }
 		}
 		if (silent == false) {

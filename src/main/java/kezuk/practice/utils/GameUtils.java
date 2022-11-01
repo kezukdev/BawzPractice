@@ -1,6 +1,7 @@
 package kezuk.practice.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -28,22 +29,33 @@ import kezuk.practice.player.state.SubState;
 public class GameUtils {
 	
 	public static void displayMatchPlayer(final Player player) {
+		final List<UUID> allPlayers = Lists.newArrayList();
 		for (StartMatch match : Practice.getInstance().getRegisterCollections().getMatchs().values()) {
-			final List<UUID> allPlayers = Lists.newArrayList();
 			if (match.getFirstList() != null) {
 				allPlayers.addAll(match.getFirstList());
 				allPlayers.addAll(match.getSecondList());
 			}
 			if (match.getPlayers() != null) {
-				if (Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getGlobalState().equals(GlobalState.PARTY)) {
-				}
 				allPlayers.addAll(match.getPlayers());
 			}
-			allPlayers.addAll(match.getSpectator());
-			for (UUID lotOfPlayer : allPlayers) {
-				Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
-				player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));
+			if (match.getSpectator().isEmpty()) {
+				allPlayers.addAll(match.getSpectator());	
 			}
+			final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
+			final StartMatch playerMatch = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
+			if (playerMatch.getFirstList() != null) {
+				allPlayers.removeAll(playerMatch.getFirstList());
+				allPlayers.removeAll(playerMatch.getSecondList());
+			}
+			if (playerMatch.getPlayers() != null) {
+				allPlayers.removeAll(playerMatch.getPlayers());
+			}
+		}
+		for (UUID lotOfPlayer : allPlayers) {
+			Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
+			player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));	
+		}
+		if (Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getGlobalState().equals(GlobalState.PARTY)) {
 			for (UUID uuid : Party.getPartyMap().get(player.getUniqueId()).getPartyList()) {
 				if (!Bukkit.getPlayer(uuid).canSee(player)) {
 					Bukkit.getPlayer(uuid).showPlayer(player);
@@ -51,7 +63,7 @@ public class GameUtils {
 				if (!player.canSee(Bukkit.getPlayer(uuid))) {
 					player.showPlayer(Bukkit.getPlayer(uuid));
 				}
-			}
+			}	
 		}
 	}
 	

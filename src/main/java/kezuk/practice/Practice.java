@@ -34,7 +34,6 @@ import kezuk.practice.ladders.gamemode.Sumo;
 import kezuk.practice.registering.RegisterCollections;
 import kezuk.practice.registering.RegisterCommon;
 import kezuk.practice.registering.RegisterObject;
-import kezuk.practice.registering.RegisterThread;
 import kezuk.practice.registering.database.DataSQL;
 
 public class Practice extends JavaPlugin {
@@ -49,7 +48,6 @@ public class Practice extends JavaPlugin {
     public File kitFile;
     public YamlConfiguration kitConfig;
 	private RegisterCommon registerCommon;
-	private RegisterThread registerThread;
 	private List<Ladders> ladder;
     public Connection connection;
     private DataSQL databaseSQL = new DataSQL();
@@ -66,7 +64,6 @@ public class Practice extends JavaPlugin {
 		this.registerCommon = new RegisterCommon();
 		this.setupHikariCP();
 		this.setupDatabase();
-		this.registerThread = new RegisterThread();
         this.registerArena();
         new Aether(this, new PracticeBoard());
 	}
@@ -147,10 +144,6 @@ public class Practice extends JavaPlugin {
 	
 	public RegisterCommon getRegisterCommon() {
 		return registerCommon;
-	}
-	
-	public RegisterThread getRegisterThread() {
-		return registerThread;
 	}
 	
 	public List<Ladders> getLadder() {

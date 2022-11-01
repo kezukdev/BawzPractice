@@ -49,7 +49,7 @@ public class Event {
 			Bukkit.getPlayer(uuid).sendMessage(ChatColor.AQUA + "An event is already in progress, please wait for it to end or join it if it hasn't started yet!");
 			return;
 		}
-		if (cooldown != 0L) {
+		if (cooldown > 0L) {
 			final double time = this.getCooldown() / 1000.0D;
 			final DecimalFormat df = new DecimalFormat("##.##");
 			Bukkit.getPlayer(uuid).sendMessage(ChatColor.AQUA + "The cooldown to launch an event is currently underway please be patient" + ChatColor.WHITE + ": " + df.format(time) + "seconds.");

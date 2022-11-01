@@ -16,7 +16,7 @@ public class Leaderboard {
     Top[] top = new Top[99];
     Top global;
 
-    public static int getRowNumber(final String table) {
+    public int getRowNumber(final String table) {
         try {
             final PreparedStatement sts = Practice.getInstance().connection.prepareStatement("select count(*) from " + table);
             final ResultSet rs = sts.executeQuery();

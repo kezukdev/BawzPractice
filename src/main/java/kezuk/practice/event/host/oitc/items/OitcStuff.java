@@ -18,6 +18,7 @@ public class OitcStuff {
 		player.getInventory().setItem(0, bow);
 		player.getInventory().setItem(1, new ItemStack(Material.ARROW));
 		player.getInventory().setItem(8, new ItemStack(Material.GOLD_SWORD));
+		player.setHealth(player.getMaxHealth());
 		player.updateInventory();
 	}
 

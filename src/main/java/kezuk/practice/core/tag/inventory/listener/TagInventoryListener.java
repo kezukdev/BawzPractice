@@ -42,12 +42,7 @@ public class TagInventoryListener implements Listener {
         		event.getWhoClicked().closeInventory();
         		final Player player = (Player) event.getWhoClicked();
         		player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You have been reset your tags!");
-            	try {
-					DB.executeUpdate("UPDATE playersdata SET tag=? WHERE name=?", "Normal", player.getName());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	DB.executeUpdateAsync("UPDATE playersdata SET tag=? WHERE name=?", "Normal", player.getName());
         	}	
         	event.setCancelled(true);
 		}
@@ -59,12 +54,7 @@ public class TagInventoryListener implements Listener {
             	event.getWhoClicked().closeInventory();
             	final Player player = (Player) event.getWhoClicked();
             	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You've been set the " + ChatColor.AQUA + tag.getDisplay() + ChatColor.DARK_AQUA + " tag!");
-            	try {
-    				DB.executeUpdate("UPDATE playersdata SET tag=? WHERE name=?", ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()), player.getName());
-    			} catch (SQLException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
-    			}	
+            	DB.executeUpdateAsync("UPDATE playersdata SET tag=? WHERE name=?", ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()), player.getName());	
             	event.setCancelled(true);
         	}
         }

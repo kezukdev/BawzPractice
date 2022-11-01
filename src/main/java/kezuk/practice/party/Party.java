@@ -42,6 +42,7 @@ public class Party {
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.PARTY);
 		this.partyList.add(uuid);
 		partyMap.putIfAbsent(uuid, this);
+		System.out.println("TEST ADD TO PARTY!");
 		new PartyItems(Bukkit.getPlayer(uuid));
 	}
 	

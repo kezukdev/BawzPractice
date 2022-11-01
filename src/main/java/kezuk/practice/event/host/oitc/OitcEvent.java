@@ -42,11 +42,6 @@ public class OitcEvent {
 	public void addKill(UUID killer, UUID killed) {
 		final Profile killerProfile = Practice.getInstance().getRegisterCollections().getProfile().get(killer);
 		final Profile killedProfile = Practice.getInstance().getRegisterCollections().getProfile().get(killed);
-		Bukkit.getPlayer(killer).setHealth(Bukkit.getPlayer(killer).getMaxHealth());
-		Bukkit.getPlayer(killer).setAllowFlight(false);
-		Bukkit.getPlayer(killer).setFlying(false);
-		Bukkit.getPlayer(killed).setAllowFlight(false);
-		Bukkit.getPlayer(killed).setFlying(false);
 		new BukkitRunnable() {
 			
 			@Override

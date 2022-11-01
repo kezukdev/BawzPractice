@@ -1,9 +1,7 @@
 package kezuk.practice.match;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -68,13 +66,9 @@ public class EndMatch {
 	    			Bukkit.getServer().getPlayer(uuid2).spigot().sendMessage((BaseComponent)inventoriesMessage);
 	    			Bukkit.getServer().getPlayer(uuid2).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Elo changes" + ChatColor.RESET + ": " + ChatColor.GREEN + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.GRAY + " (" + ChatColor.AQUA + "+" + scoreChange + ChatColor.GRAY + ") " + ChatColor.RED + Bukkit.getServer().getPlayer(killed).getName() + ChatColor.GRAY + " (" + ChatColor.AQUA + "-" + scoreChange + ChatColor.GRAY + ")");
 	        		Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(uuid2);
-	                try {
-	                    final String elos = Profile.getStringValue(pm.getElos(), ":");
-	                    DB.executeUpdate("UPDATE playersdata SET elos=? WHERE name=?", elos, Bukkit.getServer().getPlayer(uuid2).getName());
-	                }
-	                catch (SQLException e) {
-	                    e.printStackTrace();
-	                }
+	                final String elos = Profile.getStringValue(pm.getElos(), ":");
+					DB.executeUpdateAsync("UPDATE playersdata SET elos=? WHERE name=?", elos, Bukkit.getServer().getPlayer(uuid2).getName());
+					Practice.getInstance().getRegisterObject().getUtilsInventory().refreshLeaderboard();
 	    		}
 	        }
 		}
@@ -96,7 +90,6 @@ public class EndMatch {
         	}
         	Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.FINISHED);
             final Player player = Bukkit.getServer().getPlayer(uuid2);
-            new MatchSeeInventory(uuid2);
             player.setAllowFlight(true);
             player.setFlying(true);
             player.extinguish();
@@ -121,7 +114,6 @@ public class EndMatch {
                     player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
                 }
             }
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             new BukkitRunnable() {
                 public void run() {
                 	Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setMatchUUID(null);
@@ -132,7 +124,7 @@ public class EndMatch {
             			Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.NOTHING);
             			new PartyItems(Bukkit.getPlayer(uuid2));
             		}
-            		else {
+            		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().equals(GlobalState.FIGHT) || Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState().equals(GlobalState.EVENT)) {
                         Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setSubState(SubState.NOTHING);
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).setGlobalState(GlobalState.SPAWN);
                 		new SpawnItems(uuid2, true);

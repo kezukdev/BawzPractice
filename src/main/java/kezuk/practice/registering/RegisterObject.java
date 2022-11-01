@@ -30,9 +30,9 @@ public class RegisterObject {
 	
 	public RegisterObject() {
 		this.queueSystem = new QueueSystem();
-		this.utilsInventory = new UtilsInventory();
 		this.spectateInventory = new SpectateInventory();
 		this.leaderboard = new Leaderboard();
+		this.utilsInventory = new UtilsInventory();
 		this.ladderInventory = new LadderInventory();
 		this.partyMatchInventory = new MatchInventory();
 		this.partyManageInventory = new ManageInventory();

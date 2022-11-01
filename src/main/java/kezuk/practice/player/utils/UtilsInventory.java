@@ -1,6 +1,7 @@
 package kezuk.practice.player.utils;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,7 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import kezuk.practice.Practice;
+import kezuk.practice.ladders.Ladders;
+import kezuk.practice.player.utils.leaderboard.Top;
 import kezuk.practice.utils.ItemSerializer;
 
 public class UtilsInventory {
@@ -20,8 +25,48 @@ public class UtilsInventory {
 		this.leaderboardInventory = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Leaderboard:");
 		this.utilsInventory = Bukkit.createInventory((InventoryHolder)null, 27, ChatColor.DARK_GRAY + "Utils:");
 		this.setUtilsInventory();
+		this.setLeaderboardInventory();
 	}
 	
+	private void setLeaderboardInventory() {
+		this.leaderboardInventory.clear();
+        for(Ladders ladder : Practice.getInstance().getLadder()) {
+        	if (ladder.isRanked()) {
+                ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
+                this.leaderboardInventory.setItem(ladder.id()+9 ,item);	
+        	}
+        }
+        ItemStack item = ItemSerializer.serialize(new ItemStack(Material.BAKED_POTATO), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Top " + ChatColor.AQUA + "Global" + ChatColor.GRAY + " * ");
+        this.leaderboardInventory.setItem(4 ,item);
+        this.refreshLeaderboard();
+	}
+	
+	public void refreshLeaderboard() {
+    	CompletableFuture<Void> refresh = CompletableFuture.runAsync(() -> {
+            Practice.getInstance().getRegisterObject().getLeaderboard().refresh();
+    	});
+    	refresh.whenCompleteAsync((t, u) -> {
+            Top[] top = Practice.getInstance().getRegisterObject().getLeaderboard().getTop();
+            Top global_top = Practice.getInstance().getRegisterObject().getLeaderboard().getGlobal();
+            for (Ladders ladder : Practice.getInstance().getLadder()) {
+            	if (ladder.isRanked()) {
+                    ItemStack current = this.leaderboardInventory.getItem(ladder.id() + 9);
+                    ItemMeta meta = current.getItemMeta();
+
+                    meta.setLore(top[ladder.id()].getLore());
+                    current.setItemMeta(meta);	
+            	}
+            }
+
+            ItemStack current = this.leaderboardInventory.getItem(4);
+            ItemMeta meta = current.getItemMeta();
+
+            meta.setLore(global_top.getLore());
+            current.setItemMeta(meta);
+
+    	});
+	}
+
 	private void setUtilsInventory() {
         final ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)3);
         for (int i = 0; i < 27; ++i) {

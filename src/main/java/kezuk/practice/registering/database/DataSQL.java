@@ -11,8 +11,8 @@ import kezuk.practice.Practice;
 
 public class DataSQL {
 
-    public boolean createPlayerManagerTable() {
-        return DB.createTransaction(stm -> createPlayerManagerTable(stm));
+    public void createPlayerManagerTable() {
+        DB.createTransactionAsync(stm -> createPlayerManagerTable(stm));
     }
 
     private boolean createPlayerManagerTable(DbStatement stm) {
@@ -49,9 +49,8 @@ public class DataSQL {
         return false;
     }
 
-    public boolean createPlayerManager(UUID uuid, String name)
-    {
-        return DB.createTransaction(stm -> createPlayerManager(uuid, name, stm));
+    public void createPlayerManager(UUID uuid, String name) {
+        DB.createTransactionAsync(stm -> createPlayerManager(uuid, name, stm));
     }
     
 
@@ -67,9 +66,8 @@ public class DataSQL {
     }
     
 
-    public boolean updatePlayerManager(String name, UUID uuid)
-    {
-        return DB.createTransaction(stm -> updatePlayerManager(name, uuid, stm));
+    public void updatePlayerManager(String name, UUID uuid) {
+    	DB.createTransactionAsync(stm -> updatePlayerManager(name, uuid, stm));
     }
     
 
@@ -77,21 +75,6 @@ public class DataSQL {
         String query = "UPDATE playersdata SET name=? WHERE uuid=?";
         try {
             return stm.executeUpdateQuery(query, name, uuid.toString()) > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public boolean existPlayerManager(UUID uuid)
-    {
-        return DB.createTransaction(stm -> existPlayerManager(uuid, stm));
-    }
-    
-    private boolean existPlayerManager(UUID uuid, DbStatement stm) {
-        String query = "SELECT * FROM playersdata WHERE uuid=?";
-        try {
-            return stm.executeQueryGetFirstRow(query, uuid.toString()) != null;
         } catch (SQLException e) {
             e.printStackTrace();
         }

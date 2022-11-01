@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import kezuk.practice.Practice;
 import kezuk.practice.player.Profile;
@@ -19,8 +20,10 @@ public class ModItems {
 		final Player player = Bukkit.getPlayer(uuid);
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
 		final ItemStack knockback = new ItemStack(Material.BONE);
-		knockback.getItemMeta().setDisplayName(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Knockback VI");
-		knockback.addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+		final ItemMeta kbMeta = knockback.getItemMeta();
+		kbMeta.setDisplayName(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Knockback VI");
+		knockback.setItemMeta(kbMeta);
+		knockback.addUnsafeEnchantment(Enchantment.KNOCKBACK, 6);
         final ItemStack vanish = ItemSerializer.serialize(new ItemStack(Material.INK_SACK),(short) (profile.getPlayerCache().getStaffCache().isVanish() ? 10 : 8), ChatColor.GRAY + "» " + ChatColor.AQUA + "Vanish: " + (profile.getPlayerCache().getStaffCache().isVanish() ? ChatColor.WHITE + "On" : ChatColor.RED + "Off"), null, true);
         final ItemStack silent = ItemSerializer.serialize(new ItemStack(Material.GLOWSTONE_DUST),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Silent: " + (profile.getPlayerCache().getStaffCache().isSilent() ? ChatColor.WHITE + "On" : ChatColor.RED + "Off"), null, true);
         final ItemStack randomtp = ItemSerializer.serialize(new ItemStack(Material.SPIDER_EYE),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Random TP (In Fight)", null, true);
