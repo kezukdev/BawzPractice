@@ -270,7 +270,14 @@ public class GameUtils {
     	for (UUID uuids : allUUID) {
         	Bukkit.getServer().getPlayer(uuid).showPlayer(Bukkit.getServer().getPlayer(uuids));
         	Bukkit.getServer().getPlayer(uuids).hidePlayer(Bukkit.getServer().getPlayer(uuid));
-        	Bukkit.getServer().getPlayer(uuids).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " come viewing your match.");
+        	if (pm.getPlayerCache().getStaffCache() != null && pm.getPlayerCache().getStaffCache().isSilent()) {
+        		if (Bukkit.getPlayer(uuids).isOp()) {
+                	Bukkit.getServer().getPlayer(uuids).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " come viewing your match. (Silent)");
+        		}
+        	}
+        	else {
+            	Bukkit.getServer().getPlayer(uuids).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + Bukkit.getServer().getPlayer(uuid).getName() + ChatColor.DARK_AQUA + " come viewing your match.");
+        	}
     	}
     	allUUID.clear();
     	Bukkit.getServer().getPlayer(uuid).teleport(Bukkit.getServer().getPlayer(targetUUID).getLocation());

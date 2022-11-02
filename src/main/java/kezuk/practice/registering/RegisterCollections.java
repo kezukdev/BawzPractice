@@ -27,7 +27,7 @@ public class RegisterCollections {
 	private HashMap<UUID, StartMatch> matchs;
 	private HashMap<UUID, Event> event;
 	private HashMap<UUID, Profile> profile;
-	private HashMap<UUID, Party> partys;
+	private ConcurrentMap<UUID, Party> partys;
 	private ArrayList<Arena> arena;
     private Map<UUID, MatchSeeInventory> offlineInventories;
     private List<Tournament> runningTournaments;
@@ -38,7 +38,7 @@ public class RegisterCollections {
 		this.matchs = Maps.newHashMap();
 		this.event = Maps.newHashMap();
 		this.profile = Maps.newHashMap();
-		this.partys = Maps.newHashMap();
+		this.partys = Maps.newConcurrentMap();
 		this.arena = Lists.newArrayList();
 		this.offlineInventories = Maps.newHashMap();
 		this.runningTournaments = Lists.newArrayList();
@@ -60,7 +60,7 @@ public class RegisterCollections {
 		return profile;
 	}
 	
-	public HashMap<UUID, Party> getPartys() {
+	public ConcurrentMap<UUID, Party> getPartys() {
 		return partys;
 	}
 	

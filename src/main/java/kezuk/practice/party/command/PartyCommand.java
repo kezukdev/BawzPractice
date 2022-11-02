@@ -48,9 +48,8 @@ public class PartyCommand implements CommandExecutor {
 				return false;
 			}
 			final Party party = Party.getPartyMap().get(player.getUniqueId());
-			if (party.getStatus() != PartyState.SPAWN) {
-				sender.sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "You can't do this right now.");
-				return false;
+			if (party == null) {
+				System.out.println("TA PRTY EST NULL:!");
 			}
 			party.removeToParty(player.getUniqueId(), false);
 		}
