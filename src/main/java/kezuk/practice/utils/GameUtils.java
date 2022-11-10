@@ -65,6 +65,7 @@ public class GameUtils {
             			}	
             		}
                 }
+                player.showPlayer(Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())));
 			}
 		}
 	}
