@@ -27,7 +27,7 @@ public class MatchEntityListener implements Listener {
 	@EventHandler
 	public void onReceiveDamageGlobal(final EntityDamageEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
-		if (profile.getSubState().equals(SubState.PLAYING) || profile.getGlobalState().equals(GlobalState.MOD) && profile.getSubState().equals(SubState.NOTHING)) {
+		if (profile.getSubState().equals(SubState.PLAYING)) {
 			if (profile.getPlayerCache().isFrozen()) {
 				event.setCancelled(true);
 				return;
@@ -60,7 +60,7 @@ public class MatchEntityListener implements Listener {
 		if (!(event.getDamager() instanceof Player)) return;
 		final Profile dmgd = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
 		final Profile dmr = Practice.getInstance().getRegisterCollections().getProfile().get(event.getDamager().getUniqueId());
-		if (dmgd.getSubState().equals(SubState.PLAYING)) {
+		if (dmgd.getSubState().equals(SubState.PLAYING) || dmr.getGlobalState().equals(GlobalState.MOD)) {
 			if (dmgd.getGlobalState().equals(GlobalState.EVENT) && (Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getEntity().getUniqueId()) && Practice.getInstance().getRegisterObject().getEvent().getMembers().contains(event.getDamager().getUniqueId()))) {
 				if (Practice.getInstance().getRegisterObject().getEvent().getEventType().equals(EventType.SUMO)) {
 					event.setDamage(0.0);
@@ -91,6 +91,11 @@ public class MatchEntityListener implements Listener {
 			        }
 					return;
 				}	
+			}
+			final Player dmgr = (Player) event.getDamager();
+			if (dmr.getGlobalState().equals(GlobalState.MOD) && dmgr.getItemInHand().getType().equals(Material.BONE)) {
+				event.setDamage(0.0D);
+				return;
 			}
 			final StartMatch match = Practice.getInstance().getRegisterCollections().getMatchs().get(dmr.getMatchUUID());
 			if (match != null) {

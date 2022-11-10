@@ -6,6 +6,10 @@ import org.bukkit.inventory.meta.*;
 
 public class ItemSerializer
 {
+    public static ItemStack serialize(final ItemStack itemStack, final String displayName) {
+        return serialize(itemStack, (short) 0, displayName, null, false);
+    }
+	
     public static ItemStack serialize(final ItemStack itemStack, short typeID, final String displayName) {
         return serialize(itemStack, typeID, displayName, null, false);
     }

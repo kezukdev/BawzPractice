@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 
 import co.aikar.idb.DB;
 import kezuk.practice.Practice;
-import kezuk.practice.match.inventory.MatchSeeInventory;
 import kezuk.practice.party.items.PartyItems;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
@@ -75,14 +74,13 @@ public class EndMatch {
 		if (match.getPlayers() != null) {
 			allPlayers = Lists.newArrayList(match.getAlive());
 		}
-        GameUtils.clearDrops(killed);
         if(!kill && firstList != null) {
         	allPlayers.removeAll(firstList);
         }
         if (Practice.getInstance().getRegisterCollections().getProfile().get(killer).getGlobalState().equals(GlobalState.EVENT)) {
 			Practice.getInstance().getRegisterObject().getEvent().applyCooldown();
 			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
-			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(killer).getName() + ChatColor.DARK_AQUA + " won the sumo event!");
+			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(killer).getName() + ChatColor.DARK_AQUA + " won the " + ChatColor.stripColor(match.getLadder().displayName()) + ChatColor.DARK_AQUA + " FFA event!");
         }
         for (final UUID uuid2 : allPlayers) {
         	if (match.getSpectator().contains(uuid2)) {
@@ -131,19 +129,8 @@ public class EndMatch {
             		}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 120L);
-            new BukkitRunnable() {
-				
-				@Override
-				public void run() {
-		        	for (Player players : Bukkit.getOnlinePlayers()) {
-		    			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
-		    				Bukkit.getPlayer(uuid2).getPlayer().hidePlayer(players);
-		    			}
-		        		players.showPlayer(Bukkit.getPlayer(uuid2));
-		        		Bukkit.getPlayer(uuid2).showPlayer(players);
-		        	}	
-				}
-			}.runTaskLater(Practice.getInstance(), 120L);
+            GameUtils.showToPlayer(player);
+            GameUtils.clearDrops(killed);
         }
         for (UUID uuid : match.getSpectator()) {
         	final Player player = Bukkit.getServer().getPlayer(uuid);
@@ -170,19 +157,7 @@ public class EndMatch {
             		}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
-            new BukkitRunnable() {
-				
-				@Override
-				public void run() {
-		        	for (Player players : Bukkit.getOnlinePlayers()) {
-		    			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
-		    				Bukkit.getPlayer(uuid).getPlayer().hidePlayer(players);
-		    			}
-		        		players.showPlayer(Bukkit.getPlayer(uuid));
-		        		Bukkit.getPlayer(uuid).showPlayer(players);
-		        	}	
-				}
-			}.runTaskLater(Practice.getInstance(), 60L);
+            GameUtils.showToPlayer(player);
         }
         if (firstList != null) {
             match.getFirstList().clear();
@@ -193,7 +168,6 @@ public class EndMatch {
         allPlayers.clear();
         try {
 			match.destroy();
-	        Practice.getInstance().getRegisterCollections().getMatchs().remove(matchUUID);
 			this.destroy();
 		}
         catch (Throwable e) {

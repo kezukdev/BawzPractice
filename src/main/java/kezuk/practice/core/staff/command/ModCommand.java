@@ -29,6 +29,8 @@ public class ModCommand implements CommandExecutor {
 		}
 		if (profile.getGlobalState().equals(GlobalState.MOD)) {
 			new SpawnItems(player.getUniqueId(), false);
+			player.setAllowFlight(false);
+			player.setFlying(false);
 			profile.setGlobalState(GlobalState.SPAWN);
 			profile.getPlayerCache().getStaffCache().setVanish(false);
 			profile.getPlayerCache().getStaffCache().setSilent(false);
@@ -39,6 +41,7 @@ public class ModCommand implements CommandExecutor {
 		profile.getPlayerCache().getStaffCache().setVanish(true);
 		profile.getPlayerCache().getStaffCache().setSilent(false);
 		profile.setGlobalState(GlobalState.MOD);
+		player.setAllowFlight(true);
 		new ModItems(player.getUniqueId());
 		sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "You have been entered the mod mode!");
 		return false;

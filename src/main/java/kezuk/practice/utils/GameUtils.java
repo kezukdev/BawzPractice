@@ -1,5 +1,6 @@
 package kezuk.practice.utils;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,8 @@ import com.google.common.collect.Lists;
 import kezuk.practice.Practice;
 import kezuk.practice.event.host.Event;
 import kezuk.practice.event.host.type.EventType;
+import kezuk.practice.event.tournament.Tournament;
+import kezuk.practice.event.tournament.TournamentMatch;
 import kezuk.practice.match.StartMatch;
 import kezuk.practice.match.inventory.MatchSeeInventory;
 import kezuk.practice.party.Party;
@@ -30,40 +33,58 @@ public class GameUtils {
 	
 	public static void displayMatchPlayer(final Player player) {
 		final List<UUID> allPlayers = Lists.newArrayList();
-		for (StartMatch match : Practice.getInstance().getRegisterCollections().getMatchs().values()) {
-			if (match.getFirstList() != null) {
-				allPlayers.addAll(match.getFirstList());
-				allPlayers.addAll(match.getSecondList());
-			}
-			if (match.getPlayers() != null) {
-				allPlayers.addAll(match.getPlayers());
-			}
-			if (match.getSpectator().isEmpty()) {
-				allPlayers.addAll(match.getSpectator());	
-			}
-			final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
-			final StartMatch playerMatch = Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID());
-			if (playerMatch.getFirstList() != null) {
-				allPlayers.removeAll(playerMatch.getFirstList());
-				allPlayers.removeAll(playerMatch.getSecondList());
-			}
-			if (playerMatch.getPlayers() != null) {
-				allPlayers.removeAll(playerMatch.getPlayers());
+		for (Profile profiles : Practice.getInstance().getRegisterCollections().getProfile().values()) {
+			if (profiles.getMatchUUID() == null) return;
+			for (final Map.Entry<UUID, StartMatch> map : Practice.getInstance().getRegisterCollections().getMatchs().entrySet()) {
+                final UUID key = map.getKey();
+                final StartMatch match = map.getValue();
+    			final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
+                if (profile.getMatchUUID() != key) {
+        			if (match.getFirstList() != null) {
+        				allPlayers.addAll(match.getFirstList());
+        				allPlayers.addAll(match.getSecondList());
+        			}
+        			if (match.getPlayers() != null) {
+        				allPlayers.addAll(match.getPlayers());
+        			}
+        			if (match.getSpectator().isEmpty()) {
+        				allPlayers.addAll(match.getSpectator());	
+        			}
+            		for (UUID lotOfPlayer : allPlayers) {
+            			Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
+            			player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));	
+            		}
+            		if (Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getGlobalState().equals(GlobalState.PARTY)) {
+            			for (UUID uuid : Party.getPartyMap().get(player.getUniqueId()).getPartyList()) {
+            				if (!Bukkit.getPlayer(uuid).canSee(player)) {
+            					Bukkit.getPlayer(uuid).showPlayer(player);
+            				}
+            				if (!player.canSee(Bukkit.getPlayer(uuid))) {
+            					player.showPlayer(Bukkit.getPlayer(uuid));
+            				}
+            			}	
+            		}
+                }
 			}
 		}
-		for (UUID lotOfPlayer : allPlayers) {
-			Bukkit.getPlayer(lotOfPlayer).hidePlayer(player);
-			player.hidePlayer(Bukkit.getPlayer(lotOfPlayer));	
-		}
-		if (Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId()).getGlobalState().equals(GlobalState.PARTY)) {
-			for (UUID uuid : Party.getPartyMap().get(player.getUniqueId()).getPartyList()) {
-				if (!Bukkit.getPlayer(uuid).canSee(player)) {
-					Bukkit.getPlayer(uuid).showPlayer(player);
+	}
+	
+	public static void showToPlayer(final Player player) {
+		final List<UUID> allPlayers = Lists.newArrayList();
+		for (Profile profiles : Practice.getInstance().getRegisterCollections().getProfile().values()) {
+			if (profiles.getMatchUUID() != null) return;
+			allPlayers.add(profiles.uuid);
+			allPlayers.remove(player.getUniqueId());
+			for (UUID uuid : allPlayers) {
+				final Player players = Bukkit.getPlayer(uuid);
+				if (!players.canSee(player)) players.showPlayer(player);
+				if (profiles.getPlayerCache().getStaffCache() != null && profiles.getPlayerCache().getStaffCache().isVanish() && player.canSee(players)) {
+					player.hidePlayer(players);
 				}
-				if (!player.canSee(Bukkit.getPlayer(uuid))) {
-					player.showPlayer(Bukkit.getPlayer(uuid));
+				else {
+					player.showPlayer(players);
 				}
-			}	
+			}
 		}
 	}
 	
@@ -162,6 +183,31 @@ public class GameUtils {
 			if (match.getPlayers() != null) {
 				match.getPlayers().remove(uuid);	
 			}
+			if (match.isTournament()) {
+                for (final Tournament tournament : Tournament.getTournaments()) {
+                    if (tournament != null) {
+                        final Iterator<TournamentMatch> iterator = tournament.getCurrentMatches().iterator();
+                        while (iterator.hasNext()) {
+                            final TournamentMatch tmatch = iterator.next();
+                            if (tmatch.getFirstTeam().getPlayers().equals(match.getFirstList()) && tmatch.getSecondTeam().getPlayers().equals(match.getSecondList())) {
+                                final String winningTeamOne = ChatColor.GRAY + "(" + ChatColor.DARK_AQUA + "Tournament" + ChatColor.GRAY + ") " + ChatColor.WHITE + Bukkit.getOfflinePlayer(getOpponent(uuid)).getName() + ChatColor.AQUA + " have eliminated " + ChatColor.WHITE + Bukkit.getOfflinePlayer(uuid).getName();
+                                Bukkit.broadcastMessage(winningTeamOne);
+                                tmatch.setWinndingId(match.getFirstList().contains(uuid) ? 2 : 1);
+                                tournament.getTeams().remove(tmatch.getFirstTeam().getPlayers().contains(uuid) ? tmatch.getSecondTeam() : tmatch.getSecondTeam());
+                                tournament.getCurrentQueue().remove(match.getFirstList().contains(uuid) ? match.getSecondList() : match.getFirstList());
+                                iterator.remove();
+                            }
+                        }
+                        for (final TournamentMatch tournmatch : tournament.getCurrentMatches()) {
+                        	tournmatch.getMatchPlayers().remove(uuid);
+                        	tournmatch.getMatchPlayers().remove(GameUtils.getOpponent(uuid));
+                        }
+                        if (tournament.getCurrentMatches().size() == 0) {
+                        	tournament.generateRoundMatches();
+                        }
+                    }
+                }
+			}
 			if (match.getAlive().contains(uuid)) {
 				for (UUID uuidIG : match.getAlive()) {
 					Bukkit.getPlayer(uuidIG).sendMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " have disconnected.");
@@ -185,6 +231,9 @@ public class GameUtils {
 				}
 			}
 		}
+		if (profile.getGlobalState().equals(GlobalState.SPECTATE)) {
+			getMatchManagerBySpectator(uuid).getSpectator().remove(uuid);
+		}
 		final Event event = Practice.getInstance().getRegisterObject().getEvent();
 		if (profile.getGlobalState().equals(GlobalState.EVENT)) {
 			if (profile.getSubState().equals(SubState.PLAYING)) {
@@ -195,6 +244,9 @@ public class GameUtils {
 				if (event.getEventType().equals(EventType.OITC)) {
 					event.getOitcEvent().getAlive().remove(uuid);
 				}
+				if (event.getEventType().equals(EventType.FFA)) {
+					Practice.getInstance().getRegisterCollections().getMatchs().get(profile.getMatchUUID()).getAlive().remove(uuid);
+				}
 			}
 			else {
 				if (Practice.getInstance().getRegisterObject().getEvent().getSumoEvent().getAlives().contains(uuid)) {
@@ -203,18 +255,8 @@ public class GameUtils {
 				if (Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().contains(uuid)) {
 					Practice.getInstance().getRegisterObject().getEvent().getOitcEvent().getAlive().remove(uuid);	
 				}
-				event.removeMemberToEvent(uuid, true);
 			}
-		}
-		if (profile.getGlobalState().equals(GlobalState.EVENT) && event.getEventType().equals(EventType.FFA)) {
-			if (profile.getSubState().equals(SubState.PLAYING)) {
-				if (event.getEventType().equals(EventType.FFA)) {
-					event.getOitcEvent().getAlive().remove(uuid);
-				}
-			}
-			else {
-				event.removeMemberToEvent(uuid, true);
-			}
+			event.removeMemberToEvent(uuid, true);
 		}
 		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
 			Practice.getInstance().getRegisterObject().getQueueSystem().leaveQueue(uuid);

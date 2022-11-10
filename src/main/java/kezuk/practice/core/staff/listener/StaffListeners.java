@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -49,5 +50,13 @@ public class StaffListeners implements Listener {
 			event.setCancelled(true);
 		}
 	}
-
+	
+	@EventHandler
+	public void onDamage(final EntityDamageEvent event) {
+		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getEntity().getUniqueId());
+		if (profile.getGlobalState().equals(GlobalState.MOD)) {
+			event.setCancelled(true);
+			return;
+		}
+	}
 }

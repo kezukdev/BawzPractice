@@ -51,6 +51,9 @@ public class StaffCache {
 	}
 	
 	public void setVanish(boolean vanish) {
+		if (Bukkit.getOnlinePlayers().size() == 0) {
+			this.vanish = false;
+		}
 		if (vanish == true) {
 			for (Player players : Bukkit.getOnlinePlayers()) {
 				if (!players.hasPermission("bawz.moderation")) {

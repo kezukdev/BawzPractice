@@ -4,15 +4,14 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
 import co.aikar.idb.DB;
 import co.aikar.idb.DbStatement;
 import kezuk.practice.Practice;
 
 public class DataSQL {
 
-    public void createPlayerManagerTable() {
-        DB.createTransactionAsync(stm -> createPlayerManagerTable(stm));
+    public boolean createPlayerManagerTable() {
+        return DB.createTransaction(stm -> createPlayerManagerTable(stm));
     }
 
     private boolean createPlayerManagerTable(DbStatement stm) {
@@ -49,11 +48,24 @@ public class DataSQL {
         return false;
     }
 
-    public void createPlayerManager(UUID uuid, String name) {
-        DB.createTransactionAsync(stm -> createPlayerManager(uuid, name, stm));
+    public boolean createPlayerManager(UUID uuid, String name) {
+        return DB.createTransaction(stm -> createPlayerManager(uuid, name, stm));
+    }
+	
+    public boolean existPlayerManager(UUID uuid) {
+        return DB.createTransaction(stm -> existPlayerManager(uuid, stm));
     }
     
-
+    private boolean existPlayerManager(UUID uuid, DbStatement stm) {
+        String query = "SELECT * FROM playersdata WHERE uuid=?";
+        try {
+            return stm.executeQueryGetFirstRow(query, uuid.toString()) != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     private boolean createPlayerManager(UUID uuid, String name, DbStatement stm) {
         String query = "INSERT INTO playersdata (uuid, name) " +
                 "VALUES (?, ?)";
@@ -66,8 +78,8 @@ public class DataSQL {
     }
     
 
-    public void updatePlayerManager(String name, UUID uuid) {
-    	DB.createTransactionAsync(stm -> updatePlayerManager(name, uuid, stm));
+    public boolean updatePlayerManager(String name, UUID uuid) {
+    	return DB.createTransaction(stm -> updatePlayerManager(name, uuid, stm));
     }
     
 

@@ -7,11 +7,13 @@ import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -30,8 +32,8 @@ public class MatchDeathListener implements Listener {
     @EventHandler
     public void onDeath(final PlayerDeathEvent event) {
         event.setDeathMessage((String)null);
-        event.getDrops().clear();
         final Player player = event.getEntity();
+        event.getDrops().clear();
         final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
         if (profile.getSubState().equals(SubState.PLAYING)) {
             final Location deathLocation = player.getLocation();
@@ -77,6 +79,11 @@ public class MatchDeathListener implements Listener {
                                     player.sendMessage(ChatColor.AQUA + "You are now eliminated from the tournament, maybe one more time. Who knows.");
                                 }
                             }
+                            for (final TournamentMatch tournmatch : tournament.getCurrentMatches()) {
+                            	tournmatch.getMatchPlayers().remove(player.getUniqueId());
+                            	tournmatch.getMatchPlayers().remove(GameUtils.getOpponent(player.getUniqueId()));
+                            	tournament.generateRoundMatches();
+                            }
                         }
                     }
             	}
@@ -99,6 +106,11 @@ public class MatchDeathListener implements Listener {
                                 iterator.remove();
                                 player.sendMessage(ChatColor.AQUA + "You are now eliminated from the tournament, maybe one more time. Who knows.");
                             }
+                        }
+                        for (final TournamentMatch tournmatch : tournament.getCurrentMatches()) {
+                        	tournmatch.getMatchPlayers().remove(player.getUniqueId());
+                        	tournmatch.getMatchPlayers().remove(GameUtils.getOpponent(player.getUniqueId()));
+                        	tournament.generateRoundMatches();
                         }
                     }
                 }

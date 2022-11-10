@@ -38,21 +38,22 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onJoining(final PlayerJoinEvent event) {
 		event.setJoinMessage(null);
-		new Profile(event.getPlayer().getUniqueId());
-		new SpawnItems(event.getPlayer().getUniqueId(), false);
-		event.getPlayer().teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-		event.getPlayer().setFoodLevel(20);
-		event.getPlayer().setHealth(event.getPlayer().getMaxHealth());
-		event.getPlayer().setSaturation(20.0f);
+		final Profile profile = new Profile(event.getPlayer().getUniqueId());
+		final Player player = event.getPlayer();
+		new SpawnItems(player.getUniqueId(), false);
+		player.teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+		player.setFoodLevel(20);
+		player.setHealth(event.getPlayer().getMaxHealth());
+		player.setSaturation(20.0f);
 		for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) {
 			event.getPlayer().removePotionEffect(effect.getType());
 		}
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			if (players.hasPermission("bawz.moderation") && Practice.getInstance().getRegisterCollections().getProfile().get(players.getUniqueId()).getPlayerCache().getStaffCache().isVanish()) {
-				event.getPlayer().hidePlayer(players);
+			if (players.hasPermission("bawz.moderation") && (profile.getPlayerCache().getStaffCache() != null && profile.getPlayerCache().getStaffCache().isVanish())) {
+				player.hidePlayer(players);
 			}
 		}
-		event.getPlayer().setPlayerListName(Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId()).getRank().getColor() + event.getPlayer().getName());
+		event.getPlayer().setPlayerListName(profile.getRank().getColor() + player.getName());
 	}
 	
 	@EventHandler
