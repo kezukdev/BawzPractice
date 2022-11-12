@@ -14,6 +14,7 @@ import com.bizarrealex.aether.scoreboard.BoardAdapter;
 import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
 
 import kezuk.practice.Practice;
+import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
@@ -44,6 +45,9 @@ public class PracticeBoard implements BoardAdapter
             this.plugin.getLogger().warning(String.valueOf(player.getName()) + "'s player data is null");
             return null;
         }
+        if (pm.getGlobalState().equals(GlobalState.SPAWN) || pm.getGlobalState().equals(GlobalState.QUEUE) || pm.getGlobalState().equals(GlobalState.PARTY)) {
+        	return this.getLobbyBoard(player);
+        }
         if (pm.getGlobalState().equals(GlobalState.FIGHT)) {
             if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()) != null && pm.getSubState().equals(SubState.PLAYING)) {
             	return this.getGameBoard(player);
@@ -54,6 +58,20 @@ public class PracticeBoard implements BoardAdapter
             return null;
         }
 		return null;
+    }
+    
+	private List<String> getLobbyBoard(final Player player) {
+        final List<String> board = new LinkedList<String>();
+        final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
+        board.add(spacer);
+        for (Ladders ladder : Practice.getInstance().getLadder()) {
+        	if (ladder.isRanked()) {
+            	board.add(ChatColor.WHITE + ChatColor.stripColor(ladder.displayName()) + ChatColor.GRAY + ": " + ChatColor.DARK_AQUA + pm.getElos()[ladder.id()]);	
+        	}
+        }
+        board.add(spacer);
+        board.add("      " + ip.toString());
+        return board;
     }
     
 	private List<String> getGameBoard(final Player player) {

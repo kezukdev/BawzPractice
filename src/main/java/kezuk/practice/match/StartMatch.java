@@ -61,13 +61,11 @@ public class StartMatch {
         this.dropped = Sets.newHashSet();
         this.arena = Arena.getRandomArena(ladder.arenaType());
         spectator = Lists.newArrayList();
-        Practice.getInstance().getRegisterCollections().getMatchs().put(this.matchUUID, this);
+        Practice.getInstance().getRegisterCollections().getMatchs().putIfAbsent(this.matchUUID, this);
         for (final UUID uuid : alive) {
         	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
             profile.setMatchUUID(matchUUID);
-        	if (!Practice.getInstance().getRegisterCollections().getMatchs().isEmpty()) {
-                GameUtils.displayMatchPlayer(Bukkit.getPlayer(uuid));	
-        	}
+            GameUtils.displayMatchPlayer(Bukkit.getPlayer(uuid));	
         	if (Practice.getInstance().getRegisterCollections().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getRegisterCollections().getOfflineInventories().remove(uuid);
         		Bukkit.getPlayer(uuid).closeInventory();

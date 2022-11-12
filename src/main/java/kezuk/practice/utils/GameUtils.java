@@ -78,12 +78,9 @@ public class GameUtils {
 			allPlayers.remove(player.getUniqueId());
 			for (UUID uuid : allPlayers) {
 				final Player players = Bukkit.getPlayer(uuid);
-				if (!players.canSee(player)) players.showPlayer(player);
+				player.showPlayer(players);
 				if (profiles.getPlayerCache().getStaffCache() != null && profiles.getPlayerCache().getStaffCache().isVanish() && player.canSee(players)) {
 					player.hidePlayer(players);
-				}
-				else {
-					player.showPlayer(players);
 				}
 			}
 		}

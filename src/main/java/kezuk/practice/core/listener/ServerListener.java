@@ -13,10 +13,10 @@ public class ServerListener implements Listener {
 	public void onPing(ServerListPingEvent event) {
 		event.setMaxPlayers(Bukkit.getOnlinePlayers().size() + 1);
 		if (Bukkit.getServer().hasWhitelist()) {
-			event.setMotd(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Bawz" + ChatColor.AQUA + " Network" + ChatColor.GRAY + " ~ " + ChatColor.DARK_AQUA + "22/10/2022 BETA RELEASE!\n" + ChatColor.GRAY + " * " + ChatColor.AQUA + "Follow the advance on our twitter @BawzNet");
+			event.setMotd(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Bawz" + ChatColor.AQUA + " Network" + ChatColor.GRAY + " ~ " + ChatColor.DARK_AQUA + "Currently Under Developement!\n" + ChatColor.GRAY + " * " + ChatColor.AQUA + "Follow the advance on our twitter @BawzNet");
 			return;
 		}
-		event.setMotd(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Bawz" + ChatColor.AQUA + " Network" + ChatColor.GRAY + " ~ " + ChatColor.DARK_AQUA + "BETA\n" + ChatColor.GRAY + " * " + ChatColor.AQUA + "Follow us twitter @BawzNet");
+		event.setMotd(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "Bawz" + ChatColor.AQUA + " Network" + ChatColor.GRAY + " ~ " + ChatColor.DARK_AQUA + "Official First Practice Release!\n" + ChatColor.GRAY + " * " + ChatColor.AQUA + "Follow us twitter @BawzNet");
 	}
 	
 	@EventHandler

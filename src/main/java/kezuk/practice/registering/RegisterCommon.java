@@ -58,7 +58,7 @@ public class RegisterCommon {
 	private List<Location> oitcLocations;
 	
 	public RegisterCommon() {
-		this.spawnLocation = new Location(Bukkit.getWorld("world"), 135.556D, 126.50000D, 6.540D, 45.3f, -0.8f);
+		this.spawnLocation = new Location(Bukkit.getWorld("world"), 135.273D, 124.00000D, 6.453D, 92.4f, 12.6f);
 		this.firstLocation = new Location(Bukkit.getWorld("world"), 986.668D ,60.0D, 1000.450D, -88.4f, 5.4f);
 		this.secondLocation = new Location(Bukkit.getWorld("world"), 1000.317D, 60.0D, 1000.442D, 90.9f, 1.3f);
 		this.spectatorLocation = new Location(Bukkit.getWorld("world"), 1010.366D, 63.0D, 1000.488D, 91.6f, 10.4f);

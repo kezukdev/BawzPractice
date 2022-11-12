@@ -155,6 +155,7 @@ public class EndMatch {
                 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
                 		new SpawnItems(uuid, true);
             		}
+            		Practice.getInstance().getRegisterCollections().getMatchs().remove(matchUUID);
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
             GameUtils.showToPlayer(player);
