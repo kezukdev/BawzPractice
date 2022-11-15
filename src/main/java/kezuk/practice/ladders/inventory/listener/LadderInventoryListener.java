@@ -33,6 +33,14 @@ public class LadderInventoryListener implements Listener {
 			return;
 		}
 		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getQueueInventory().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)) {
+			if (event.getCurrentItem().getType().equals(Material.STONE_SWORD)) {
+				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory());
+			}
+			if (event.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)) {
+				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getRankedInventory());
+			}
+		}
 		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)) {
 			event.getWhoClicked().closeInventory();
 			List<UUID> uuid = Lists.newArrayList(event.getWhoClicked().getUniqueId());

@@ -23,7 +23,7 @@ public class NoDebuff extends Ladders implements Kit {
 
     @Override
     public String displayName() {
-        return ChatColor.DARK_AQUA + "NoDebuff";
+        return ChatColor.DARK_AQUA.toString() + "NoDebuff";
     }
 
     @Override

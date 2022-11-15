@@ -20,11 +20,28 @@ public class PersonnalListener implements Listener {
 			event.setCancelled(false);
 			return;
 		}
-		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getPersonnalInventory().getPersonnalInventory().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)){
+		if (event.getClickedInventory().getName().equalsIgnoreCase(profile.getPersonnalInventory().getPersonnalInventory().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)){
 			if (event.getCurrentItem().getType().equals(Material.NAME_TAG)) {
 				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getTagInventory().getTagTypeInventory());
 			}
+			if (event.getCurrentItem().getType().equals(Material.DAYLIGHT_DETECTOR)) {
+				event.getWhoClicked().openInventory(profile.getPlayerCache().getSettings().getSettings());
+			}
 			event.setCancelled(true);
+		}
+		if (event.getClickedInventory().getName().equalsIgnoreCase(profile.getPlayerCache().getSettings().getSettings().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)){
+			if (event.getCurrentItem().getType().equals(Material.PAINTING)) {
+				profile.getPlayerCache().setScoreboard(profile.getPlayerCache().isScoreboard() ? false : true);
+				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+			}
+			if (event.getCurrentItem().getType().equals(Material.PAPER)) {
+				profile.getPlayerCache().setPm(profile.getPlayerCache().isPm() ? false : true);
+				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+			}
+			if (event.getCurrentItem().getType().equals(Material.IRON_SWORD)) {
+				profile.getPlayerCache().setDuel(profile.getPlayerCache().isDuel() ? false : true);
+				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+			}
 		}
 	}
 

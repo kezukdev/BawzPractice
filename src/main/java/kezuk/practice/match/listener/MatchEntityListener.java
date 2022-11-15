@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import kezuk.practice.Practice;
@@ -51,6 +52,9 @@ public class MatchEntityListener implements Listener {
 				}	
 			}
 			return;
+		}
+		if (event.getCause().equals(DamageCause.VOID)) {
+			event.getEntity().teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
 		}
 		event.setCancelled(true);
 	}

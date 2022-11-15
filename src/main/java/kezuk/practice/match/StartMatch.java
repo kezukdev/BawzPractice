@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
@@ -63,9 +64,12 @@ public class StartMatch {
         spectator = Lists.newArrayList();
         Practice.getInstance().getRegisterCollections().getMatchs().putIfAbsent(this.matchUUID, this);
         for (final UUID uuid : alive) {
+        	for (Player playersOn : Bukkit.getOnlinePlayers()) {
+        		playersOn.hidePlayer(Bukkit.getPlayer(uuid));
+        		Bukkit.getPlayer(uuid).hidePlayer(playersOn);
+        	}
         	final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(uuid);
             profile.setMatchUUID(matchUUID);
-            GameUtils.displayMatchPlayer(Bukkit.getPlayer(uuid));	
         	if (Practice.getInstance().getRegisterCollections().getOfflineInventories().containsKey(uuid)) {
         		Practice.getInstance().getRegisterCollections().getOfflineInventories().remove(uuid);
         		Bukkit.getPlayer(uuid).closeInventory();
@@ -109,6 +113,7 @@ public class StartMatch {
 	            public void run() {
 	                if (profile.getSubState().equals(SubState.FINISHED)) {
 	                    this.cancel();
+	                    return;
 	                } else {
 	                	Bukkit.getServer().getPlayer(uuid).sendMessage(ChatColor.GRAY + " » " + ChatColor.WHITE + "The fight begins in " + ChatColor.AQUA + i + ChatColor.WHITE + " seconds.");
 	                    i -= 1;
@@ -119,7 +124,9 @@ public class StartMatch {
 	                    }
 	                }
 	            }
-	        }.runTaskTimer(Practice.getInstance(), 20L, 20L);
+	        }.runTaskTimerAsynchronously(Practice.getInstance(), 20L, 20L);
+            Bukkit.getPlayer(uuid).showPlayer(Bukkit.getPlayer(GameUtils.getOpponent(uuid)));
+            Bukkit.getPlayer(GameUtils.getOpponent(uuid)).showPlayer(Bukkit.getPlayer(uuid));
         }
 	}
 	

@@ -129,36 +129,45 @@ public class EndMatch {
             		}
                 }
             }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 120L);
-            GameUtils.showToPlayer(player);
             GameUtils.clearDrops(killed);
         }
-        for (UUID uuid : match.getSpectator()) {
-        	final Player player = Bukkit.getServer().getPlayer(uuid);
-            if (match.getPlayers() != null) {
-                player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + " won the ffa match!");
-            }
-            if (firstList != null) {
-                player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + (firstList.size() > 1 ? " party's won!" : " won!"));
-                if (firstList.size() == 1 && secondList.size() == 1) {
-                    player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
+		for (UUID uuid : allPlayers) {	
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Practice.getInstance(), new BukkitRunnable() {
+				@Override
+				public void run() {
+					Practice.getInstance().getRegisterCollections().getMatchs().remove(matchUUID);
+	                GameUtils.showToPlayer(Bukkit.getPlayer(uuid));	
+				}
+			}, 120L);
+		}
+        if (match.getSpectator().size() != 0) {
+            for (UUID uuid : match.getSpectator()) {
+            	final Player player = Bukkit.getServer().getPlayer(uuid);
+                if (match.getPlayers() != null) {
+                    player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + " won the ffa match!");
                 }
-            }
-            new BukkitRunnable() {
-                public void run() {
-            		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
-            		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.PARTY)) {
-            			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
-            			new PartyItems(Bukkit.getPlayer(uuid));
-            		}
-            		else {
-                        Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
-                		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
-                		new SpawnItems(uuid, true);
-            		}
-            		Practice.getInstance().getRegisterCollections().getMatchs().remove(matchUUID);
+                if (firstList != null) {
+                    player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + (firstList.size() > 1 ? " party's won!" : " won!"));
+                    if (firstList.size() == 1 && secondList.size() == 1) {
+                        player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
+                    }
                 }
-            }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
-            GameUtils.showToPlayer(player);
+                new BukkitRunnable() {
+                    public void run() {
+                		Bukkit.getPlayer(uuid).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
+                		if (Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getGlobalState().equals(GlobalState.PARTY)) {
+                			Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
+                			new PartyItems(Bukkit.getPlayer(uuid));
+                		}
+                		else {
+                            Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setSubState(SubState.NOTHING);
+                    		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).setGlobalState(GlobalState.SPAWN);
+                    		new SpawnItems(uuid, true);
+                		}
+                    }
+                }.runTaskLaterAsynchronously((Plugin)Practice.getInstance(), 60L);
+                GameUtils.showToPlayer(player);
+            }	
         }
         if (firstList != null) {
             match.getFirstList().clear();
@@ -175,7 +184,6 @@ public class EndMatch {
 			e.printStackTrace();
 		}
 	}
-
 	@SuppressWarnings("deprecation")
 	public void destroy() throws Throwable {
 		this.finalize();

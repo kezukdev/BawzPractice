@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 
 public class StaffCache {
@@ -18,6 +19,11 @@ public class StaffCache {
 		this.uuid = uuid;
 		this.vanish = false;
 		this.silent = false;
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			if (players.hasPermission("bawz.moderation")) {
+				players.sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "❇" + ChatColor.GRAY + "] " + ChatColor.WHITE + Bukkit.getPlayer(uuid).getName() + ChatColor.AQUA + " is now online!");
+			}
+		}
 	}
 	
 	public void setSilent(boolean silent) {

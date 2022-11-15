@@ -35,6 +35,10 @@ public class DuelCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "You can't do this right now.");
 			return false;
 		}
+		if (!Practice.getInstance().getRegisterCollections().getProfile().get(target.getUniqueId()).getPlayerCache().isDuel()) {
+			sender.sendMessage(ChatColor.GRAY + " » " + ChatColor.AQUA + "Sorry but this person has disabled duel requests!");
+			return false;
+		}
 		if (Practice.getInstance().getRegisterCollections().getProfile().get(target.getUniqueId()).getRequest() != null && Practice.getInstance().getRegisterCollections().getProfile().get(target.getUniqueId()).getRequest().get(player.getUniqueId()) != null){
 			if (Practice.getInstance().getRegisterCollections().getProfile().get(target.getUniqueId()).getRequest().get(player.getUniqueId()).getRequestCooldown() != 0L) {
 				sender.sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Please, wait for retry this command!");

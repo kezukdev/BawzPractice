@@ -37,13 +37,11 @@ public class QueueSystem {
 					pm.setSubState(SubState.QUEUE);
 				}
 	            Bukkit.getPlayer(uuid).getInventory().clear();
+	            Bukkit.getPlayer(uuid).getInventory().setItem(0, ItemSerializer.serialize(new ItemStack(Material.PAPER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Potential Opponents."));
 	            Bukkit.getPlayer(uuid).getInventory().setItem(8, ItemSerializer.serialize(new ItemStack(Material.BLAZE_POWDER), (short)0, ChatColor.GRAY + " * " + ChatColor.AQUA + "Leave Queue."));
 	            Bukkit.getPlayer(uuid).updateInventory();
 	            Bukkit.getPlayer(uuid).sendMessage(ChatColor.DARK_AQUA + "You have joined the queue with " + ChatColor.WHITE + ChatColor.stripColor(ladder.displayName()) + ChatColor.DARK_AQUA + " as your game mode!");
 	            Practice.getInstance().getRegisterObject().getLadderInventory().refreshInventory();
-	            if (ranked) {
-	                new EloRange(uuid, ladder);
-	            }
 			}
 			if (!Practice.getInstance().getRegisterCollections().getQueue().isEmpty()) {
 				UUID possibleUUID;
@@ -111,11 +109,17 @@ public class QueueSystem {
 		private Ladders ladder;
 		private boolean ranked;
 		private boolean to2;
+		private EloRange eloRange;
 		
 		public QueueEntry(final List<UUID> uuid, final Ladders ladder, final boolean ranked, final boolean to2) {
 			this.uuid = uuid;
 			this.ladder = ladder;
 			this.ranked = ranked;
+			if (ranked) {
+				for (UUID uuids : uuid) {
+					this.eloRange = new EloRange(uuids, ladder);
+				}
+			}
 			this.to2 = to2;
 		}
 		
@@ -133,6 +137,10 @@ public class QueueSystem {
 		
 		public boolean isTo2() {
 			return to2;
+		}
+		
+		public EloRange getEloRange() {
+			return eloRange;
 		}
 	}
 

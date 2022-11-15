@@ -149,14 +149,14 @@ public class SpeedNoDebuff extends Ladders implements Kit {
 	
 	@Override
 	public List<PotionEffect> potionEffect() {
-		final PotionEffect potionSpeed = new PotionEffect(PotionEffectType.SPEED, 99999999, 2);
+		final PotionEffect potionSpeed = new PotionEffect(PotionEffectType.SPEED, 99999999, 1);
 		final PotionEffect potionResistance = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999999, 0);
 		return Arrays.asList(potionSpeed, potionResistance);
 	}
 	
 	@Override
 	public boolean privateGame() {
-		return false;
+		return true;
 	}
 
 }

@@ -37,13 +37,8 @@ public class RankCommand implements CommandExecutor {
 			Bukkit.getPlayer(args[0]).setPlayerListName(profile.getRank().getColor() + Bukkit.getPlayer(args[0]).getName());
 		}
 		final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-        try {
-        	Bukkit.broadcastMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + target.getName() + ChatColor.DARK_AQUA + " have received the rank " + ChatColor.WHITE + args[1]);
-			DB.executeUpdate("UPDATE playersdata SET rank=? WHERE name=?", args[1].toLowerCase() , args[0]);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        Bukkit.broadcastMessage(ChatColor.GRAY + " * " + ChatColor.WHITE + target.getName() + ChatColor.DARK_AQUA + " have received the rank " + ChatColor.WHITE + args[1]);
+		DB.executeUpdateAsync("UPDATE playersdata SET rank=? WHERE name=?", args[1].toLowerCase() , args[0]);
 		return false;
 	}
 

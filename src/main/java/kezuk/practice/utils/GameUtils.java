@@ -71,18 +71,9 @@ public class GameUtils {
 	}
 	
 	public static void showToPlayer(final Player player) {
-		final List<UUID> allPlayers = Lists.newArrayList();
-		for (Profile profiles : Practice.getInstance().getRegisterCollections().getProfile().values()) {
-			if (profiles.getMatchUUID() != null) return;
-			allPlayers.add(profiles.uuid);
-			allPlayers.remove(player.getUniqueId());
-			for (UUID uuid : allPlayers) {
-				final Player players = Bukkit.getPlayer(uuid);
-				player.showPlayer(players);
-				if (profiles.getPlayerCache().getStaffCache() != null && profiles.getPlayerCache().getStaffCache().isVanish() && player.canSee(players)) {
-					player.hidePlayer(players);
-				}
-			}
+		for (Player uuid : Bukkit.getOnlinePlayers()) {
+			player.showPlayer(uuid);
+			uuid.showPlayer(player);
 		}
 	}
 	

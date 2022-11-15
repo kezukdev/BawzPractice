@@ -10,7 +10,7 @@ import kezuk.practice.Practice;
 import kezuk.practice.utils.InventorySerialization;
 
 //yml save
-//uuid.<ladder>.<id 1-5>
+//uuid.<ladder>.<id>
 
 public class Editor {
 
@@ -22,7 +22,6 @@ public class Editor {
     }
 
     private void registerKits() {
-
     }
 
     public UUID getUuid() {
@@ -39,7 +38,7 @@ public class Editor {
                 for(int i = 0; i < kits.get(key).size(); i++) {
                     PlayerInventory kit = kits.get(key).get(i);
                     String[] kit_data = InventorySerialization.playerInventoryToBase64(kit);
-                    Practice.getInstance().kitConfig.set(uuid+"."+key+"."+i, kit_data);
+                    Practice.getInstance().kitConfig.set(uuid+"."+key + "." + i, kit_data);
                 }
             }
         }

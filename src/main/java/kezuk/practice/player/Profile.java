@@ -20,6 +20,7 @@ import kezuk.practice.core.tag.Tag;
 import kezuk.practice.editor.Editor;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.cache.PlayerCache;
+import kezuk.practice.player.personnal.PersonnalInventory;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.request.Requesting.Request;
@@ -40,6 +41,7 @@ public class Profile {
 	public WeakHashMap<UUID, Request> request;
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
+	private PersonnalInventory personnalInventory;
 	
 	public Profile(final UUID uuid) {
 		this.uuid = uuid;
@@ -53,9 +55,10 @@ public class Profile {
 			}
 		}
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
-        this.permissible = Maps.newHashMap();
+        this.permissible = Maps.newHashMap(); 
         Practice.getInstance().getRegisterCollections().getProfile().putIfAbsent(uuid, this);
         this.update();
+        this.personnalInventory = new PersonnalInventory(Bukkit.getPlayer(uuid));
 	}
     
     private void update() {
@@ -69,6 +72,10 @@ public class Profile {
         }
     }
     
+    public PersonnalInventory getPersonnalInventory() {
+		return personnalInventory;
+	}
+    
     private void load() {
     	try {
         	Calendar calendar = Calendar.getInstance();
@@ -76,12 +83,16 @@ public class Profile {
         	this.setRank(Rank.getRankByName(DB.getFirstRow("SELECT rank FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("rank")));
             this.registerPermissions();
     		this.playerCache = new PlayerCache(uuid);
+    		this.playerCache.setScoreboard(Boolean.valueOf(DB.getFirstRow("SELECT scoreboard FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("scoreboard")));
+    		this.playerCache.setPm(Boolean.valueOf(DB.getFirstRow("SELECT pm FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("pm")));
+    		this.playerCache.setDuel(Boolean.valueOf(DB.getFirstRow("SELECT duel FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("duel")));
+    		this.playerCache.getSettings().setPreviewSettings(uuid);
         	this.playerCache.banned = Boolean.valueOf(DB.getFirstRow("SELECT banned FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banned"));
         	if (this.playerCache.banned) {
         		this.playerCache.banExpiresOn = s.parse(DB.getFirstRow("SELECT banExpires FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banExpires"));
             	this.playerCache.banReason = DB.getFirstRow("SELECT banReason FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("banReason");	
         	}
-        	if (this.playerCache.banExpiresOn != null) {
+        	if (this.playerCache.banned) {
         		if (this.playerCache.banExpiresOn.after(calendar.getTime())) {
         			new BukkitRunnable() {
     					
@@ -150,6 +161,10 @@ public class Profile {
 		for (String perm : profile.getRank().getPermissions()) {
 			attachment.setPermission(perm, true);	
 		}
+	}
+	
+	public void destroyProfile() {
+		
 	}
 	
 	public boolean isExistData() {

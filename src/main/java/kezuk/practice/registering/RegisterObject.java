@@ -26,7 +26,6 @@ public class RegisterObject {
 	private HostInventory hostInventory;
 	private JoinInventory joinInventory;
 	private TagInventory tagInventory;
-	private PersonnalInventory personnalInventory;
 	
 	public RegisterObject() {
 		this.queueSystem = new QueueSystem();
@@ -41,11 +40,6 @@ public class RegisterObject {
 		this.joinInventory = new JoinInventory();
 		this.tagInventory = new TagInventory();
 		
-		this.personnalInventory = new PersonnalInventory();
-	}
-	
-	public PersonnalInventory getPersonnalInventory() {
-		return personnalInventory;
 	}
 	
 	public TagInventory getTagInventory() {

@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,6 +18,7 @@ import kezuk.practice.utils.ItemSerializer;
 
 public class LadderInventory {
 	
+	private Inventory queueInventory;
 	private Inventory unrankedInventory;
 	private Inventory rankedInventory;
 	private Inventory duelInventory;
@@ -29,31 +32,39 @@ public class LadderInventory {
 	private Inventory tournamentInventory;
 	
 	public LadderInventory() {
-		this.unrankedInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Unranked Selection:");
-		this.rankedInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Ranked Selection:");
-		this.duelInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Duel Gametype?");
+		this.queueInventory = Bukkit.createInventory(null, InventoryType.FURNACE, ChatColor.DARK_GRAY + "Queue Selection:");
+		this.unrankedInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Unranked Selection:");
+		this.rankedInventory = Bukkit.createInventory(null, InventoryType.HOPPER, ChatColor.DARK_GRAY + "Ranked Selection:");
+		this.duelInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Duel Gametype?");
 		
-		this.ffaInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "FFA Selection:");
-		this.splitInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Split Selection:");
-		this.unrankedPartyInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "2v2 Selection:");
+		this.ffaInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "FFA Selection:");
+		this.splitInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Split Selection:");
+		this.unrankedPartyInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "2v2 Selection:");
 		
-		this.editorInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Editor Selection:");
-		this.tournamentInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Tournament Gametype Selection:");
+		this.editorInventory = Bukkit.createInventory(null, InventoryType.HOPPER, ChatColor.DARK_GRAY + "Editor Selection:");
+		this.tournamentInventory = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Tournament Gametype Selection:");
 		this.setPreviewInventory();
 	}
 
 	private void setPreviewInventory() {
+		this.queueInventory.clear();
+		final ItemStack unranked = ItemSerializer.serialize(new ItemStack(Material.STONE_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Casual", Arrays.asList(ChatColor.WHITE + "To practice before you show your real skills in ranked!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false)));
+		final ItemStack duos = ItemSerializer.serialize(new ItemStack(Material.GOLD_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Duos", Arrays.asList(ChatColor.WHITE + "Play with a friend of yours or a random person in two on two!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false)));
+		final ItemStack ranked = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Ranked", Arrays.asList(ChatColor.WHITE + "Move up the ranking and show who has the best level!!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(true)));
+		this.queueInventory.setItem(0, unranked);
+		this.queueInventory.setItem(1, duos);
+		this.queueInventory.setItem(2, ranked);
     	this.unrankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
     		if (!ladder.privateGame()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
         		this.unrankedInventory.addItem(item);	
     		}
     	}
     	this.rankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
     		if (ladder.isRanked() && !ladder.privateGame()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
         		this.rankedInventory.addItem(item);	
     		}
     	}
@@ -81,7 +92,7 @@ public class LadderInventory {
 		this.unrankedPartyInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
     		if (!ladder.privateGame()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.AQUA + "Waiting" + ChatColor.RESET + ": " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
         		this.unrankedPartyInventory.addItem(item);	
     		}
     	}
@@ -110,6 +121,21 @@ public class LadderInventory {
 			}
 		}
 		return count;
+	}
+	
+	public int getQueued(boolean ranked) {
+		int count = 0;
+		for (Map.Entry<UUID, QueueEntry> map : Practice.getInstance().getRegisterCollections().getQueue().entrySet()) {
+			QueueEntry value = map.getValue();
+			if (value.isRanked() == ranked) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public Inventory getQueueInventory() {
+		return queueInventory;
 	}
 	
 	public void refreshInventory() {

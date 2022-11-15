@@ -91,14 +91,12 @@ public class PlayerListener implements Listener {
 		if (profile.getGlobalState().equals(GlobalState.SPAWN)) {
 			if (!event.hasItem()) return;
 			if (profile.getSubState().equals(SubState.BUILD)) return;
-			if (event.getItem().getType().equals(Material.STONE_SWORD) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory());
+			if (event.getItem().getType().equals(Material.ANVIL) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getQueueInventory());
 			}
-			if (event.getItem().getType().equals(Material.DIAMOND_SWORD) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getRankedInventory());
-			}
-			if (event.getItem().getType().equals(Material.NETHER_STAR) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getPersonnalInventory().getPersonnalInventory());
+			if (event.getItem().getType().equals(Material.WATCH) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				profile.getPersonnalInventory().setPersonnalInventory(event.getPlayer());
+				event.getPlayer().openInventory(profile.getPersonnalInventory().getPersonnalInventory());
 			}
 			if (event.getItem().getType().equals(Material.BOOK) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory());

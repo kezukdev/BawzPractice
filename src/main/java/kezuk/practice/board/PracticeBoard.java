@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,16 +17,17 @@ import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
 
 import kezuk.practice.Practice;
 import kezuk.practice.ladders.Ladders;
+import kezuk.practice.match.StartMatch;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
+import kezuk.practice.queue.QueueSystem.QueueEntry;
 import kezuk.practice.utils.GameUtils;
 
 public class PracticeBoard implements BoardAdapter
 {
     private final Practice plugin;
-    private String spacer = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "»--*------*--«";
-    private String ip = ChatColor.ITALIC.toString() + ChatColor.AQUA + "bawz.eu";
+    private String spacer = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "»--*---------*--«";
     DateFormat shortDateFormat = DateFormat.getDateTimeInstance(
             DateFormat.SHORT,
             DateFormat.SHORT);
@@ -35,7 +38,7 @@ public class PracticeBoard implements BoardAdapter
     
     @Override
     public String getTitle(final Player player) {
-        return ChatColor.GRAY.toString() + shortDateFormat.format(new Date());
+        return "§3§opractice";
     }
     
     @Override
@@ -45,19 +48,39 @@ public class PracticeBoard implements BoardAdapter
             this.plugin.getLogger().warning(String.valueOf(player.getName()) + "'s player data is null");
             return null;
         }
-        if (pm.getGlobalState().equals(GlobalState.SPAWN) || pm.getGlobalState().equals(GlobalState.QUEUE) || pm.getGlobalState().equals(GlobalState.PARTY)) {
-        	return this.getLobbyBoard(player);
-        }
-        if (pm.getGlobalState().equals(GlobalState.FIGHT)) {
-            if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()) != null && pm.getSubState().equals(SubState.PLAYING)) {
-            	return this.getGameBoard(player);
+        if (pm.getPlayerCache().isScoreboard()) {
+            if (pm.getGlobalState().equals(GlobalState.SPAWN) || pm.getGlobalState().equals(GlobalState.QUEUE) || pm.getGlobalState().equals(GlobalState.PARTY)) {
+            	return this.getLobbyBoard(player);
             }
-            if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()) != null && pm.getSubState().equals(SubState.STARTING)) {
-            	return this.getStartBoard(player);
+            if (pm.getGlobalState().equals(GlobalState.SPECTATE)) {
+            	return this.getSpectateBoard(player);
             }
-            return null;
+            if (pm.getGlobalState().equals(GlobalState.FIGHT)) {
+                if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()) != null && pm.getSubState().equals(SubState.PLAYING)) {
+                	return this.getGameBoard(player);
+                }
+                if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()) != null && pm.getSubState().equals(SubState.STARTING)) {
+                	return this.getStartBoard(player);
+                }
+            }	
         }
 		return null;
+    }
+    
+	private List<String> getSpectateBoard(final Player player) {
+        final List<String> board = new LinkedList<String>();
+        final StartMatch match = GameUtils.getMatchManagerBySpectator(player.getUniqueId());
+        board.add(spacer);
+        board.add(ChatColor.WHITE + ChatColor.stripColor(match.getLadder().displayName()) + ChatColor.GRAY + " [" + (match.isRanked() ? "§5R" : "§eC") + ChatColor.GRAY + "]");
+        for (UUID uuid : match.getFirstList()) {
+            board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
+        }
+        for (UUID uuid : match.getSecondList()) {
+            board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
+        }
+        board.add(spacer);
+        board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));
+        return board;
     }
     
 	private List<String> getLobbyBoard(final Player player) {
@@ -69,8 +92,19 @@ public class PracticeBoard implements BoardAdapter
             	board.add(ChatColor.WHITE + ChatColor.stripColor(ladder.displayName()) + ChatColor.GRAY + ": " + ChatColor.DARK_AQUA + pm.getElos()[ladder.id()]);	
         	}
         }
+        if (pm.getGlobalState().equals(GlobalState.QUEUE)) {
+        	board.add(spacer);
+        	board.add(ChatColor.GRAY + " * " + ChatColor.WHITE + "Currently in queue");
+        	final QueueEntry queue = Practice.getInstance().getRegisterObject().getQueueSystem().getQueue().get(player.getUniqueId());
+        	board.add(ChatColor.WHITE + " Ladder: " + queue.getLadder().displayName());
+        	board.add(ChatColor.WHITE + " Type: " + (queue.isRanked() ? "§5Ranked" : "§eCasual"));
+        	if (queue.isRanked()) {
+            	board.add(ChatColor.WHITE + " Range: " + ChatColor.AQUA + queue.getEloRange().getMinimumRange() + " §7» §b" + queue.getEloRange().getMaximumRange());	
+        	}
+        	board.add(ChatColor.WHITE + " Ping: " + ChatColor.DARK_AQUA + player.getPing());
+        }
         board.add(spacer);
-        board.add("      " + ip.toString());
+        board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));
         return board;
     }
     
@@ -78,15 +112,15 @@ public class PracticeBoard implements BoardAdapter
         final List<String> board = new LinkedList<String>();
         final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
         board.add(spacer);
-    	board.add(ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName() + " " + ChatColor.AQUA + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "R" : "U"));
-    	board.add(ChatColor.DARK_AQUA + "Ping" + ChatColor.RESET + ": " + ChatColor.AQUA + player.getPing());
+    	board.add(ChatColor.WHITE + ChatColor.stripColor(Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName()).toString() + ChatColor.GRAY + " [" + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "§5R" : "§eC") + ChatColor.GRAY + "]");
+    	board.add("Their Ping: " + ChatColor.DARK_AQUA + Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())).getPing());
         if (pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() != 0L) {
     		final double time = pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() / 1000.0D;
     		final DecimalFormat df = new DecimalFormat("#.#");
-    		board.add(ChatColor.DARK_AQUA + "Enderpearl" + ChatColor.RESET + ": " + ChatColor.AQUA + df.format(time));	
+    		board.add("Enderpearl: " + ChatColor.DARK_AQUA + df.format(time) + "s");	
         }
         board.add(spacer);
-        board.add("      " + ip.toString());
+        board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));
         return board;
     }
 
@@ -94,14 +128,14 @@ public class PracticeBoard implements BoardAdapter
         final List<String> board = new LinkedList<String>();
         final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
     	board.add(spacer);
-    	board.add(ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName() + ChatColor.AQUA + " " + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "R" : "U"));
+    	board.add(ChatColor.WHITE + ChatColor.stripColor(Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName()).toString() + ChatColor.GRAY + " [" + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "§5R" : "§eC") + ChatColor.GRAY + "]");
     	board.add(ChatColor.DARK_AQUA + "Opponent" + ChatColor.RESET + ": " + Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())).getName());
     	board.add(ChatColor.DARK_AQUA + "Their Ping" + ChatColor.RESET + ": " + ChatColor.AQUA + Bukkit.getServer().getPlayer(GameUtils.getOpponent(player.getUniqueId())).getPing());
     	if (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked()) {
     		board.add(ChatColor.DARK_AQUA + "Elo" + ChatColor.RESET + ": " + ChatColor.AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())).getUniqueId()).getElos()[Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().id()]);
     	}
     	board.add(spacer);
-    	board.add("      " + ip.toString().toString());
+        board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));
         return board;
     }
 }

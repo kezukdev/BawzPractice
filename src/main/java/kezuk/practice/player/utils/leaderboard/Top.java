@@ -19,11 +19,9 @@ public class Top {
     }
 
     Top(Map<String, int[]> map) {
-        for(Map.Entry<String, int[]> entry : map.entrySet())
-        {
+        for(Map.Entry<String, int[]> entry : map.entrySet()) {
             int global_elo=0;
-            for(int elo : entry.getValue())
-            {
+            for(int elo : entry.getValue()) {
                 global_elo+=elo;
             }
             global_elo = global_elo/entry.getValue().length;
