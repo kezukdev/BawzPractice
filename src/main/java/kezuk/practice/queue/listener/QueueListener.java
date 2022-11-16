@@ -64,9 +64,10 @@ public class QueueListener implements Listener {
 	@EventHandler
 	public void onInteractWithInventory(final InventoryClickEvent event) {
 		final Profile profile = Practice.getInstance().getRegisterCollections().getProfile().get(event.getWhoClicked().getUniqueId());
-		if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
+		if (profile.getGlobalState().equals(GlobalState.QUEUE) || profile.getGlobalState().equals(GlobalState.SPAWN)) {
 			if (event.getClickedInventory().getName().equalsIgnoreCase(ChatColor.DARK_GRAY + "Potential Opponents:")) {
-	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.CACTUS || event.getCurrentItem().getType() == Material.PAPER) return;
+				event.setCancelled(true);
+	        	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.STAINED_GLASS_PANE|| event.getCurrentItem().getType() == Material.CACTUS || event.getCurrentItem().getType() == Material.PAPER || event.getCurrentItem().getType() == Material.AIR) return;
 	        	final Player player = (Player) event.getWhoClicked();
 	            if (event.getCurrentItem().getType() == Material.ARROW) {
 	                String str = event.getCurrentItem().getItemMeta().getLore().get(0).substring(7);
@@ -78,15 +79,17 @@ public class QueueListener implements Listener {
 	                Practice.getInstance().getRegisterObject().getQueuePotential().getPotential().open(player, Integer.parseInt(str));
 	                return;
 	            }
-	        	player.closeInventory();
 	            String title = event.getCurrentItem().getItemMeta().getDisplayName();
 	            String arr[] = title.split(" ", 2);
 	            String first = arr[0];
 	            final Player target = Bukkit.getPlayer(ChatColor.stripColor(first));
 	            if (event.getClick().equals(ClickType.LEFT)) {
-	            	if (target == player) return;
+	            	if (target.getName() == player.getName()) return;
+		        	player.closeInventory();
 	            	final QueueSystem queue = Practice.getInstance().getRegisterObject().getQueueSystem();
-	            	queue.leaveQueue(player.getUniqueId());
+	            	if (profile.getGlobalState().equals(GlobalState.QUEUE)) {
+		            	queue.leaveQueue(player.getUniqueId());	
+	            	}
 	            	queue.addPlayerToQueue(Arrays.asList(player.getUniqueId()), queue.getQueue().get(target.getUniqueId()).getLadder(), queue.getQueue().get(target.getUniqueId()).isRanked(), queue.getQueue().get(target.getUniqueId()).isTo2());
 	            }
 	            if (event.getClick().equals(ClickType.RIGHT)) {

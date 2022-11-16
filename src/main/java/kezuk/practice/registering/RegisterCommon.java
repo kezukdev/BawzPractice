@@ -56,6 +56,10 @@ public class RegisterCommon {
 	private Location oitcSeventhLocation;
 	private Location spectatorLocation;
 	private List<Location> oitcLocations;
+	private Location topOneLoc;
+	private Location topSecondLoc;
+	private Location topThirdLoc;
+	private List<Location> topNPC;
 	
 	public RegisterCommon() {
 		this.spawnLocation = new Location(Bukkit.getWorld("world"), 135.273D, 124.00000D, 6.453D, 92.4f, 12.6f);
@@ -69,6 +73,10 @@ public class RegisterCommon {
 		this.oitcFifthLocation = new Location(Bukkit.getWorld("world"), 3531.695D, 84.0D, 3471.675D, -31.2f, 12.6f);
 		this.oitcSixthLocation = new Location(Bukkit.getWorld("world"), 3500.342D, 72.0D, 3494.811D, 179.0f, -6.9f);
 		this.oitcSeventhLocation = new Location(Bukkit.getWorld("world"), 3446.674D, 84.0D, 3419.450D, -26.0f, -3.4f);
+		this.topOneLoc = new Location(Bukkit.getWorld("world"), 112.589, 125.00000, 6.498, -90.5f, 11.0f);
+		this.topSecondLoc = new Location(Bukkit.getWorld("world"), 113.594D, 125.00000, 10.392D, 145.9f, 6.8f);
+		this.topThirdLoc = new Location(Bukkit.getWorld("world"), 113.624D, 125.00000D, 2.639D, -48.1f, 9.7f);
+		this.topNPC = Arrays.asList(this.topOneLoc, this.topSecondLoc, this.topThirdLoc);
 		this.oitcLocations = Arrays.asList(this.oitcFirstLocation, this.oitcSecondLocation, this.oitcThirdLocation, this.oitcFourthLocation, this.oitcFifthLocation, this.oitcSixthLocation, this.oitcSeventhLocation);
 		this.registerCommand();
 		this.registerListener();
@@ -114,6 +122,10 @@ public class RegisterCommon {
 		Practice.getInstance().getCommand("unmute").setExecutor(new MuteCommand());
 		Practice.getInstance().getCommand("freeze").setExecutor(new FreezeCommand());
 		Practice.getInstance().getCommand("mod").setExecutor(new ModCommand());
+	}
+	
+	public List<Location> getTopNPC() {
+		return topNPC;
 	}
 	
 	public Location getSpawnLocation() {

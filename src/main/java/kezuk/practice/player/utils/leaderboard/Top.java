@@ -1,8 +1,13 @@
 package kezuk.practice.player.utils.leaderboard;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
+
+import kezuk.practice.Practice;
+import kezuk.practice.utils.NPCUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class Top {
@@ -40,6 +45,17 @@ public class Top {
         int x=1;
         for(Map.Entry<String, Integer> entry : entries) {
             if(x > 10) break;
+            for (int i = 0; i < 1; i++) {
+            	if (x == 1) {
+                    NPCUtils.createNPC(Bukkit.getOfflinePlayer(entry.getKey()).getUniqueId(), Practice.getInstance().getRegisterCommon().getTopNPC().get(0), ChatColor.DARK_AQUA + entry.getKey(), 0);	
+            	}	
+            	if (x == 2) {
+                    NPCUtils.createNPC(Bukkit.getOfflinePlayer(entry.getKey()).getUniqueId(), Practice.getInstance().getRegisterCommon().getTopNPC().get(1), ChatColor.DARK_AQUA + entry.getKey(), 1);
+            	}
+            	if (x == 3) {
+                    NPCUtils.createNPC(Bukkit.getOfflinePlayer(entry.getKey()).getUniqueId(), Practice.getInstance().getRegisterCommon().getTopNPC().get(2), ChatColor.DARK_AQUA + entry.getKey(), 2);
+            	}
+            }
             lore.add(ChatColor.DARK_GRAY + "#" + x + " " + ChatColor.DARK_AQUA + entry.getKey() + ChatColor.GRAY + " (" + ChatColor.AQUA + entry.getValue() + ChatColor.GRAY + ")");
             x++;
         }

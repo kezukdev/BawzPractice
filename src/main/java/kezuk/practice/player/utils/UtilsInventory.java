@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import kezuk.practice.Practice;
 import kezuk.practice.ladders.Ladders;
@@ -27,6 +28,31 @@ public class UtilsInventory {
 		this.utilsInventory = Bukkit.createInventory((InventoryHolder)null, InventoryType.DISPENSER, ChatColor.DARK_GRAY + "Utils:");
 		this.setUtilsInventory();
 		this.setLeaderboardInventory();
+        new BukkitRunnable() {
+			
+			@Override
+			public void run() {
+	            Practice.getInstance().getRegisterObject().getLeaderboard().refresh();
+	            Top[] top = Practice.getInstance().getRegisterObject().getLeaderboard().getTop();
+	            Top global_top = Practice.getInstance().getRegisterObject().getLeaderboard().getGlobal();
+	            for (Ladders ladder : Practice.getInstance().getLadder()) {
+	            	if (ladder.isRanked()) {
+	                    ItemStack current = leaderboardInventory.getItem(ladder.id() + 9);
+	                    ItemMeta meta = current.getItemMeta();
+
+	                    meta.setLore(top[ladder.id()].getLore());
+	                    current.setItemMeta(meta);	
+	            	}
+	            }
+
+	            ItemStack current = leaderboardInventory.getItem(4);
+	            ItemMeta meta = current.getItemMeta();
+
+	            meta.setLore(global_top.getLore());
+	            current.setItemMeta(meta);
+				
+			}
+		}.runTaskLaterAsynchronously(Practice.getInstance(), 20L);
 	}
 	
 	private void setLeaderboardInventory() {
@@ -39,7 +65,6 @@ public class UtilsInventory {
         }
         ItemStack item = ItemSerializer.serialize(new ItemStack(Material.BAKED_POTATO), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Top " + ChatColor.AQUA + "Global" + ChatColor.GRAY + " * ");
         this.leaderboardInventory.setItem(4 ,item);
-        this.refreshLeaderboard();
 	}
 	
 	public void refreshLeaderboard() {

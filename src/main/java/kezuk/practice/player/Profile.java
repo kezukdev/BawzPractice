@@ -24,6 +24,7 @@ import kezuk.practice.player.personnal.PersonnalInventory;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.request.Requesting.Request;
+import kezuk.practice.utils.NPCUtils;
 import net.minecraft.util.com.google.common.collect.Maps;
 
 public class Profile {
@@ -59,6 +60,7 @@ public class Profile {
         Practice.getInstance().getRegisterCollections().getProfile().putIfAbsent(uuid, this);
         this.update();
         this.personnalInventory = new PersonnalInventory(Bukkit.getPlayer(uuid));
+        NPCUtils.showNPCtoPlayer(uuid);
 	}
     
     private void update() {
