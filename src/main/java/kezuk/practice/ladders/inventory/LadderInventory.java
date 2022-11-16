@@ -48,23 +48,23 @@ public class LadderInventory {
 
 	private void setPreviewInventory() {
 		this.queueInventory.clear();
-		final ItemStack unranked = ItemSerializer.serialize(new ItemStack(Material.STONE_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Casual", Arrays.asList(ChatColor.WHITE + "To practice before you show your real skills in ranked!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false)));
-		final ItemStack duos = ItemSerializer.serialize(new ItemStack(Material.GOLD_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Duos", Arrays.asList(ChatColor.WHITE + "Play with a friend of yours or a random person in two on two!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false)));
-		final ItemStack ranked = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Ranked", Arrays.asList(ChatColor.WHITE + "Move up the ranking and show who has the best level!!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(true)));
+		final ItemStack unranked = ItemSerializer.serialize(new ItemStack(Material.STONE_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Casual", Arrays.asList(ChatColor.WHITE + "To practice before you show your real skills in ranked!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false), "", ChatColor.DARK_GRAY + "(Middle-Click) Currently in queue."));
+		final ItemStack duos = ItemSerializer.serialize(new ItemStack(Material.GOLD_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Duos", Arrays.asList(ChatColor.WHITE + "Play with a friend of yours or a random person in two on two!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(false), "", ChatColor.DARK_GRAY + "(Middle-Click) Currently in queue."));
+		final ItemStack ranked = ItemSerializer.serialize(new ItemStack(Material.DIAMOND_SWORD), (short) 0, ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + "Ranked", Arrays.asList(ChatColor.WHITE + "Move up the ranking and show who has the best level!", "", ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.AQUA + getQueued(true), "", ChatColor.DARK_GRAY + "(Middle-Click) Currently in queue."));
 		this.queueInventory.setItem(0, unranked);
 		this.queueInventory.setItem(1, duos);
 		this.queueInventory.setItem(2, ranked);
     	this.unrankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
     		if (!ladder.privateGame()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false))));
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String[] {ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, false, false), "", ChatColor.DARK_GRAY + "(Shift-Click) Edit this ladder."}));
         		this.unrankedInventory.addItem(item);	
     		}
     	}
     	this.rankedInventory.clear();
     	for (Ladders ladder : Practice.getInstance().getLadder()) {
     		if (ladder.isRanked() && !ladder.privateGame()) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String(ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false))));
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName(), Arrays.asList(new String[] {ChatColor.GRAY + " * " + ChatColor.WHITE + "Waiting: " + ChatColor.DARK_AQUA + getQueuedFromLadder(ladder, true, false), "", ChatColor.DARK_GRAY + "(Shift-Click) Edit this ladder."}));
         		this.rankedInventory.addItem(item);	
     		}
     	}

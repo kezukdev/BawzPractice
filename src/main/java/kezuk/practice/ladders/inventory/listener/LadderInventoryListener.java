@@ -1,15 +1,19 @@
 package kezuk.practice.ladders.inventory.listener;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
@@ -21,7 +25,9 @@ import kezuk.practice.party.Party;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
+import kezuk.practice.queue.QueueSystem.QueueEntry;
 import kezuk.practice.request.Requesting;
+import kezuk.practice.utils.ItemSerializer;
 
 public class LadderInventoryListener implements Listener {
 	
@@ -34,10 +40,35 @@ public class LadderInventoryListener implements Listener {
 		}
 		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 		if (event.getClickedInventory().getName().equalsIgnoreCase(Practice.getInstance().getRegisterObject().getLadderInventory().getQueueInventory().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)) {
+			final Player player = (Player) event.getWhoClicked();
 			if (event.getCurrentItem().getType().equals(Material.STONE_SWORD)) {
+				if (event.getClick().equals(ClickType.MIDDLE)) {
+					List<ItemStack> queue = Lists.newArrayList();
+			        for (QueueEntry queueEntry : Practice.getInstance().getRegisterObject().getQueueSystem().getQueue().values()) {
+			        	for (UUID uuid : queueEntry.getUuid()) {
+			        		final ItemStack item = ItemSerializer.serialize(new ItemStack(queueEntry.getLadder().material()), queueEntry.getLadder().data(), ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + Bukkit.getPlayer(uuid).getName(), Arrays.asList("", ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Ladder" + ChatColor.WHITE + ": " + ChatColor.stripColor(queueEntry.getLadder().displayName()) + ChatColor.GRAY + " [" + (queueEntry.isRanked() ? "§5Ranked" : "§eCasual") + ChatColor.GRAY + "]" , "", ChatColor.DARK_GRAY + "(Left-Click) Join his queue!"));
+			        		queue.add(item);
+			        	}
+			        }
+			        Practice.getInstance().getRegisterObject().getQueuePotential().getPotential().refresh(queue);
+			        Practice.getInstance().getRegisterObject().getQueuePotential().getPotential().open(player, 1);
+					return;
+				}
 				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getUnrankedInventory());
 			}
 			if (event.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)) {
+				if (event.getClick().equals(ClickType.MIDDLE)) {
+					List<ItemStack> queue = Lists.newArrayList();
+			        for (QueueEntry queueEntry : Practice.getInstance().getRegisterObject().getQueueSystem().getQueue().values()) {
+			        	for (UUID uuid : queueEntry.getUuid()) {
+			        		final ItemStack item = ItemSerializer.serialize(new ItemStack(queueEntry.getLadder().material()), queueEntry.getLadder().data(), ChatColor.GRAY + " » " + ChatColor.DARK_AQUA + Bukkit.getPlayer(uuid).getName(), Arrays.asList("", ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Ladder" + ChatColor.WHITE + ": " + ChatColor.stripColor(queueEntry.getLadder().displayName()) + ChatColor.GRAY + " [" + (queueEntry.isRanked() ? "§5Ranked" : "§eCasual") + ChatColor.GRAY + "]" , "", ChatColor.DARK_GRAY + "(Left-Click) Join his queue!"));
+			        		queue.add(item);
+			        	}
+			        }
+			        Practice.getInstance().getRegisterObject().getQueuePotential().getPotential().refresh(queue);
+			        Practice.getInstance().getRegisterObject().getQueuePotential().getPotential().open(player, 1);
+					return;
+				}
 				event.getWhoClicked().openInventory(Practice.getInstance().getRegisterObject().getLadderInventory().getRankedInventory());
 			}
 		}

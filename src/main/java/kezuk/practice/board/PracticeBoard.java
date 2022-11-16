@@ -113,11 +113,11 @@ public class PracticeBoard implements BoardAdapter
         final Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(player.getUniqueId());
         board.add(spacer);
     	board.add(ChatColor.WHITE + ChatColor.stripColor(Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).getLadder().displayName()).toString() + ChatColor.GRAY + " [" + (Practice.getInstance().getRegisterCollections().getMatchs().get(pm.getMatchUUID()).isRanked() ? "§5R" : "§eC") + ChatColor.GRAY + "]");
-    	board.add("Their Ping: " + ChatColor.DARK_AQUA + Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())).getPing());
+    	board.add(ChatColor.DARK_AQUA + "Their Ping" + ChatColor.WHITE + ": " + Bukkit.getPlayer(GameUtils.getOpponent(player.getUniqueId())).getPing());
         if (pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() != 0L) {
     		final double time = pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() / 1000.0D;
     		final DecimalFormat df = new DecimalFormat("#.#");
-    		board.add("Enderpearl: " + ChatColor.DARK_AQUA + df.format(time) + "s");	
+    		board.add(ChatColor.DARK_AQUA + "Enderpearl" + ChatColor.WHITE + ": " + df.format(time) + "s");	
         }
         board.add(spacer);
         board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));

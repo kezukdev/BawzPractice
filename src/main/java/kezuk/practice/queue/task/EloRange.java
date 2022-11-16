@@ -75,7 +75,7 @@ public class EloRange {
         	}
 			continue;
         }
-		this.range(minimumRange-60, maximumRange+60);
+		this.range((minimumRange <= 60 ? 0 : minimumRange-60), maximumRange+60);
 		Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + "[" + ChatColor.AQUA + "!" + ChatColor.GRAY + "] " + ChatColor.DARK_AQUA + "Your elo range has updated " + ChatColor.WHITE + minimumRange + ChatColor.DARK_AQUA + " to " + ChatColor.WHITE + maximumRange);
 	}
 	

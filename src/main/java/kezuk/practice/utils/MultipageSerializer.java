@@ -22,12 +22,10 @@ public class MultipageSerializer {
         refresh(itemStacks);
     }
 
-    public void refresh(List<ItemStack> itemStacks)
-    {
+    public void refresh(List<ItemStack> itemStacks) {
         int var0 = itemStacks.size() <= 36 ? 1 : (itemStacks.size()/36)+1;
         inventories = new Inventory[var0];
-        for(int page = 1; page <= var0; page++)
-        {
+        for(int page = 1; page <= var0; page++) {
             int start = page == 1 ? 0 : (page-1) * 36;
             Inventory inventory = Bukkit.createInventory(null, 9*6, inventoryName);
 
