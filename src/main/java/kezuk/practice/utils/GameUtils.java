@@ -75,6 +75,7 @@ public class GameUtils {
 			player.showPlayer(uuid);
 			uuid.showPlayer(player);
 		}
+		NPCUtils.showNPCtoPlayer(player.getUniqueId());
 	}
 	
     public static UUID getOpponent(final UUID uuid) {

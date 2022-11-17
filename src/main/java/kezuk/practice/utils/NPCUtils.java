@@ -1,5 +1,9 @@
 package kezuk.practice.utils;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +21,10 @@ import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo.PlayerInfo;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 import net.minecraft.server.v1_7_R4.PlayerInteractManager;
+import net.minecraft.util.com.google.gson.JsonObject;
+import net.minecraft.util.com.google.gson.JsonParser;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
+import net.minecraft.util.com.mojang.authlib.properties.Property;
 
 public class NPCUtils {
 	
@@ -25,8 +32,22 @@ public class NPCUtils {
 	static EntityPlayer secondNPC;
 	static EntityPlayer thirdNPC;
 	
-	public static void createNPC(final UUID uuid, final Location location, final String displayName, final Integer id) {
-		final EntityPlayer entityNPC = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(),((CraftWorld)Bukkit.getWorld("world")).getHandle(), new GameProfile(uuid, displayName), new PlayerInteractManager(((CraftWorld)Bukkit.getWorld("world")).getHandle()));
+	public static void createNPC(final String entry, final Location location, final String displayName, final Integer id) {
+		final GameProfile profile = new GameProfile(UUID.randomUUID(), displayName);
+		try {
+			URL url_0 = new URL("https://api.mojang.com/users/profiles/minecraft/" + entry);
+			InputStreamReader reader_0 = new InputStreamReader(url_0.openStream());
+			String uuid = new JsonParser().parse(reader_0).getAsJsonObject().get("id").getAsString();
+			URL url_1 = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+			InputStreamReader reader_1 = new InputStreamReader(url_1.openStream());
+			JsonObject textureProperty = new JsonParser().parse(reader_1).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
+			String texture = textureProperty.get("value").getAsString();
+			String signature = textureProperty.get("signature").getAsString();
+			profile.getProperties().put("texture", new Property("texture", texture, signature));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		final EntityPlayer entityNPC = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(),((CraftWorld)Bukkit.getWorld("world")).getHandle(), profile, new PlayerInteractManager(((CraftWorld)Bukkit.getWorld("world")).getHandle()));
 		entityNPC.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 		if (id == 0) {
 			firstNPC = entityNPC;
@@ -54,7 +75,7 @@ public class NPCUtils {
 				public void run() {
 					connection.sendPacket(packet);
 				}
-			}.runTaskLaterAsynchronously(Practice.getInstance(), 20L);
+			}.runTaskLaterAsynchronously(Practice.getInstance(), 2L);
 		}
 		if (secondNPC != null) {
 			final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(secondNPC, PacketPlayOutPlayerInfo.PlayerInfo.REMOVE_PLAYER);
@@ -65,7 +86,7 @@ public class NPCUtils {
 				public void run() {
 					connection.sendPacket(packet);
 				}
-			}.runTaskLaterAsynchronously(Practice.getInstance(), 20L);
+			}.runTaskLaterAsynchronously(Practice.getInstance(), 2L);
 		}
 		if (thirdNPC != null) {
 			final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(thirdNPC, PacketPlayOutPlayerInfo.PlayerInfo.REMOVE_PLAYER);
@@ -76,7 +97,7 @@ public class NPCUtils {
 				public void run() {
 					connection.sendPacket(packet);
 				}
-			}.runTaskLaterAsynchronously(Practice.getInstance(), 20L);
+			}.runTaskLaterAsynchronously(Practice.getInstance(), 2L);
 		}
 	}
 

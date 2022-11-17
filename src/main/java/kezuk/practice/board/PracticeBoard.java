@@ -118,6 +118,9 @@ public class PracticeBoard implements BoardAdapter
     		final double time = pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() / 1000.0D;
     		final DecimalFormat df = new DecimalFormat("#.#");
     		board.add(ChatColor.DARK_AQUA + "Enderpearl" + ChatColor.WHITE + ": " + df.format(time) + "s");	
+    		player.setLevel((int)time);
+    		final float timeInf = pm.getPlayerCache().getMatchStats().getEnderPearlCooldown() / 16000.0f;
+    		player.setExp(timeInf);
         }
         board.add(spacer);
         board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));

@@ -52,7 +52,7 @@ public class UtilsInventory {
 	            current.setItemMeta(meta);
 				
 			}
-		}.runTaskLaterAsynchronously(Practice.getInstance(), 20L);
+		}.runTaskLaterAsynchronously(Practice.getInstance(), 2L);
 	}
 	
 	private void setLeaderboardInventory() {
