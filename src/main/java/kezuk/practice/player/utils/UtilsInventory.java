@@ -17,6 +17,7 @@ import kezuk.practice.Practice;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.utils.leaderboard.Top;
 import kezuk.practice.utils.ItemSerializer;
+import kezuk.practice.utils.NPCUtils;
 
 public class UtilsInventory {
 	
@@ -39,7 +40,6 @@ public class UtilsInventory {
 	            	if (ladder.isRanked()) {
 	                    ItemStack current = leaderboardInventory.getItem(ladder.id() + 9);
 	                    ItemMeta meta = current.getItemMeta();
-
 	                    meta.setLore(top[ladder.id()].getLore());
 	                    current.setItemMeta(meta);	
 	            	}
@@ -47,12 +47,22 @@ public class UtilsInventory {
 
 	            ItemStack current = leaderboardInventory.getItem(4);
 	            ItemMeta meta = current.getItemMeta();
-
 	            meta.setLore(global_top.getLore());
 	            current.setItemMeta(meta);
-				
+                createNPC(current);
 			}
 		}.runTaskLaterAsynchronously(Practice.getInstance(), 2L);
+	}
+	
+	private void createNPC(final ItemStack current) {
+        for (int i = 0; i < 3; i++) {
+        	int place = i+1;
+            final String replacer = current.getItemMeta().getLore().get(i).replace("#" + place + " ", "");
+            String arr[] = replacer.split(" ", 2);
+            String first = arr[0];
+            String name = ChatColor.stripColor(first);
+            NPCUtils.createNPC(name, Practice.getInstance().getRegisterCommon().getTopNPC().get(i), ChatColor.DARK_AQUA + name, i);
+        }
 	}
 	
 	private void setLeaderboardInventory() {
@@ -89,7 +99,7 @@ public class UtilsInventory {
 
             meta.setLore(global_top.getLore());
             current.setItemMeta(meta);
-
+            createNPC(current);
     	});
 	}
 

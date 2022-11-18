@@ -35,10 +35,7 @@ public class NPCUtils {
 	public static void createNPC(final String entry, final Location location, final String displayName, final Integer id) {
 		final GameProfile profile = new GameProfile(UUID.randomUUID(), displayName);
 		try {
-			URL url_0 = new URL("https://api.mojang.com/users/profiles/minecraft/" + entry);
-			InputStreamReader reader_0 = new InputStreamReader(url_0.openStream());
-			String uuid = new JsonParser().parse(reader_0).getAsJsonObject().get("id").getAsString();
-			URL url_1 = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+			URL url_1 = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + Bukkit.getOfflinePlayer(entry).getUniqueId() + "?unsigned=false");
 			InputStreamReader reader_1 = new InputStreamReader(url_1.openStream());
 			JsonObject textureProperty = new JsonParser().parse(reader_1).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
 			String texture = textureProperty.get("value").getAsString();
