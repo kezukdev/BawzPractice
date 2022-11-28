@@ -19,6 +19,10 @@ public class DataSQL {
                 + "ID INT(64) NOT NULL AUTO_INCREMENT,"
                 + "name VARCHAR(16) NOT NULL,"
                 + "uuid VARCHAR(64) NOT NULL,"
+                + "unrankedPlayed INT(9999) DEFAULT 0,"
+                + "unrankedWin INT(9999) DEFAULT 0,"
+                + "rankedPlayed INT(9999) DEFAULT 0,"
+                + "rankedWin INT(9999) DEFAULT 0,"
                 + "scoreboard VARCHAR(16) DEFAULT 'true',"
                 + "duel VARCHAR(16) DEFAULT 'true',"
                 + "pm VARCHAR(16) DEFAULT 'true',"
@@ -31,6 +35,7 @@ public class DataSQL {
                 + "rank VARCHAR(16) DEFAULT 'Player',"
                 + "tag VARCHAR(16) DEFAULT 'Normal',"
                 + "elos VARCHAR(255) DEFAULT '1200:1200:1200:1200:1200',"
+                + "mostPlayed VARCHAR(255) DEFAULT '0:0:0:0:0:0:0:0:0:0:0',"
                 + "PRIMARY KEY (`ID`))";
         try {
             DatabaseMetaData dbm = Practice.getInstance().connection.getMetaData();

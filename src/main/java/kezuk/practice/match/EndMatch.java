@@ -41,6 +41,10 @@ public class EndMatch {
 	        allPlayers.addAll(secondList);
 	        inventoriesMessage = new TextComponent(ChatColor.GRAY + " * " + ChatColor.AQUA + "Inventories" + ChatColor.RESET + ": ");
 	        for (final UUID winnerUUID : secondList) {
+	        	if (!match.isRanked()) {
+		        	Practice.getInstance().getRegisterCollections().getProfile().get(winnerUUID).getHistoric().addUnrankedWin();
+					DB.executeUpdateAsync("UPDATE playersdata SET unrankedWin=? WHERE name=?", Practice.getInstance().getRegisterCollections().getProfile().get(killer).getHistoric().getRankedWin(), Bukkit.getServer().getPlayer(winnerUUID).getName());
+	        	}
 	            final TextComponent name1 = new TextComponent(ChatColor.GREEN + Bukkit.getServer().getPlayer(winnerUUID).getName());
 	            name1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/inventory " + winnerUUID));
 	            name1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GRAY + "Click to view this inventory.").create()));
@@ -54,6 +58,8 @@ public class EndMatch {
 	            inventoriesMessage.addExtra((BaseComponent)name2);
 	        }
 	        if (match.isRanked()) {
+	        	Practice.getInstance().getRegisterCollections().getProfile().get(killer).getHistoric().addRankedWin();
+				DB.executeUpdateAsync("UPDATE playersdata SET rankedWin=? WHERE name=?", Practice.getInstance().getRegisterCollections().getProfile().get(killer).getHistoric().getRankedWin(), Bukkit.getServer().getPlayer(killer).getName());
 	    		int winnersElo = Practice.getInstance().getRegisterCollections().getProfile().get(killer).getElos()[match.getLadder().id()];
 	    		int losersElo = Practice.getInstance().getRegisterCollections().getProfile().get(killed).getElos()[match.getLadder().id()];
 	    		final double expectedp = 1.0D / (1.0D + Math.pow(10.0D, (winnersElo - losersElo) / 400.0D));
@@ -61,12 +67,14 @@ public class EndMatch {
 	    		Practice.getInstance().getRegisterCollections().getProfile().get(killer).getElos()[match.getLadder().id()] += scoreChange;
 	    		Practice.getInstance().getRegisterCollections().getProfile().get(killed).getElos()[match.getLadder().id()] -= scoreChange;
 	    		for (final UUID uuid2 : allPlayers) {
+	    			Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getHistoric().addRankedPlayed();
 	    			Bukkit.getServer().getPlayer(uuid2).sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + " won!");
 	    			Bukkit.getServer().getPlayer(uuid2).spigot().sendMessage((BaseComponent)inventoriesMessage);
 	    			Bukkit.getServer().getPlayer(uuid2).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "Elo changes" + ChatColor.RESET + ": " + ChatColor.GREEN + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.GRAY + " (" + ChatColor.AQUA + "+" + scoreChange + ChatColor.GRAY + ") " + ChatColor.RED + Bukkit.getServer().getPlayer(killed).getName() + ChatColor.GRAY + " (" + ChatColor.AQUA + "-" + scoreChange + ChatColor.GRAY + ")");
 	        		Profile pm = Practice.getInstance().getRegisterCollections().getProfile().get(uuid2);
 	                final String elos = Profile.getStringValue(pm.getElos(), ":");
 					DB.executeUpdateAsync("UPDATE playersdata SET elos=? WHERE name=?", elos, Bukkit.getServer().getPlayer(uuid2).getName());
+					DB.executeUpdateAsync("UPDATE playersdata SET rankedPlayed=? WHERE name=?", Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getHistoric().getRankedPlayed(), Bukkit.getServer().getPlayer(uuid2).getName());
 					Practice.getInstance().getRegisterObject().getUtilsInventory().refreshLeaderboard();
 	    		}
 	        }
@@ -81,6 +89,10 @@ public class EndMatch {
 			Practice.getInstance().getRegisterObject().getEvent().applyCooldown();
 			Practice.getInstance().getRegisterObject().getEvent().setLaunched(false);
 			Bukkit.broadcastMessage(Practice.getInstance().getRegisterObject().getEvent().getPrefix() + ChatColor.WHITE + " " + Bukkit.getPlayer(killer).getName() + ChatColor.DARK_AQUA + " won the " + ChatColor.stripColor(match.getLadder().displayName()) + ChatColor.DARK_AQUA + " FFA event!");
+        }
+        if (!match.isRanked()) {
+            Practice.getInstance().getRegisterCollections().getProfile().get(killer).getHistoric().addUnrankedWin();
+			DB.executeUpdateAsync("UPDATE playersdata SET unrankedWin=? WHERE name=?", Practice.getInstance().getRegisterCollections().getProfile().get(killer).getHistoric().getUnrankedPlayed(), Bukkit.getServer().getPlayer(killer).getName());
         }
         for (final UUID uuid2 : allPlayers) {
         	if (match.getSpectator().contains(uuid2)) {
@@ -110,7 +122,10 @@ public class EndMatch {
             if (!match.isRanked() && match.getPlayers() == null) {
                 player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + (firstList.size() > 1 ? " party's won!" : " won!"));
                 if (firstList.size() == 1 && secondList.size() == 1) {
+                	Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getHistoric().addUnrankedPlayed();
+					DB.executeUpdateAsync("UPDATE playersdata SET unrankedPlayed=? WHERE name=?", Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getHistoric().getUnrankedPlayed(), Bukkit.getServer().getPlayer(uuid2).getName());
                     player.spigot().sendMessage((BaseComponent)inventoriesMessage);	
+                    
                 }
             }
             new BukkitRunnable() {
@@ -177,16 +192,5 @@ public class EndMatch {
             secondList.clear();	
         }
         allPlayers.clear();
-        try {
-			match.destroy();
-			this.destroy();
-		}
-        catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	@SuppressWarnings("deprecation")
-	public void destroy() throws Throwable {
-		this.finalize();
 	}
 }
