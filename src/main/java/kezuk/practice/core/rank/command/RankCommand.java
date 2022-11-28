@@ -1,7 +1,5 @@
 package kezuk.practice.core.rank.command;
 
-import java.sql.SQLException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;

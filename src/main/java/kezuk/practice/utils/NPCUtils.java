@@ -2,7 +2,6 @@ package kezuk.practice.utils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -46,15 +45,25 @@ public class NPCUtils {
 		}
 		final EntityPlayer entityNPC = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(),((CraftWorld)Bukkit.getWorld("world")).getHandle(), profile, new PlayerInteractManager(((CraftWorld)Bukkit.getWorld("world")).getHandle()));
 		entityNPC.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		entityNPC.teleportTo(location, true);
 		if (id == 0) {
+			if (firstNPC != null) {
+				firstNPC = null;
+			}
 			firstNPC = entityNPC;
 			return;
 		}
 		if (id == 1) {
+			if (secondNPC != null) {
+				secondNPC = null;
+			}
 			secondNPC = entityNPC; 
 			return;
 		}
 		if (id == 2) {
+			if (thirdNPC != null) {
+				thirdNPC = null;
+			}
 			thirdNPC = entityNPC;
 			return;
 		}

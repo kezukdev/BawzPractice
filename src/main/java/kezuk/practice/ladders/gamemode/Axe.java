@@ -48,7 +48,7 @@ public class Axe extends Ladders implements Kit {
     
     @Override
     public int id() {
-    	return 6;
+    	return 7;
     }
 
     @Override

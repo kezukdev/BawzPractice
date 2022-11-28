@@ -20,6 +20,7 @@ import kezuk.practice.core.tag.Tag;
 import kezuk.practice.editor.Editor;
 import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.cache.PlayerCache;
+import kezuk.practice.player.history.Historic;
 import kezuk.practice.player.personnal.PersonnalInventory;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
@@ -39,6 +40,7 @@ public class Profile {
 	private PlayerCache playerCache;
 	private SubState subState;
 	private boolean existData;
+	private Historic historic;
 	public WeakHashMap<UUID, Request> request;
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
@@ -55,6 +57,7 @@ public class Profile {
 				this.elos = new int[ladder.id()];	
 			}
 		}
+		this.historic = new Historic();
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
         this.permissible = Maps.newHashMap(); 
         Practice.getInstance().getRegisterCollections().getProfile().putIfAbsent(uuid, this);
@@ -134,6 +137,10 @@ public class Profile {
 			e.printStackTrace();
 		}
     }
+    
+    public Historic getHistoric() {
+		return historic;
+	}
     
     public static int[] getSplitValue(final String string, final String spliter) {
         final String[] split = string.split(spliter);

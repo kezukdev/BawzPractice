@@ -25,7 +25,7 @@ public class UtilsInventory {
 	private Inventory utilsInventory;
 	
 	public UtilsInventory() {
-		this.leaderboardInventory = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + "Leaderboard:");
+		this.leaderboardInventory = Bukkit.createInventory(null, 18, ChatColor.DARK_GRAY + "Leaderboard:");
 		this.utilsInventory = Bukkit.createInventory((InventoryHolder)null, InventoryType.DISPENSER, ChatColor.DARK_GRAY + "Utils:");
 		this.setUtilsInventory();
 		this.setLeaderboardInventory();
@@ -38,7 +38,7 @@ public class UtilsInventory {
 	            Top global_top = Practice.getInstance().getRegisterObject().getLeaderboard().getGlobal();
 	            for (Ladders ladder : Practice.getInstance().getLadder()) {
 	            	if (ladder.isRanked()) {
-	                    ItemStack current = leaderboardInventory.getItem(ladder.id() + 9);
+	                    ItemStack current = leaderboardInventory.getItem(ladder.id() + 11);
 	                    ItemMeta meta = current.getItemMeta();
 	                    meta.setLore(top[ladder.id()].getLore());
 	                    current.setItemMeta(meta);	
@@ -70,7 +70,7 @@ public class UtilsInventory {
         for(Ladders ladder : Practice.getInstance().getLadder()) {
         	if (ladder.isRanked()) {
                 ItemStack item = ItemSerializer.serialize(new ItemStack(ladder.material()), ladder.data(), ladder.displayName());
-                this.leaderboardInventory.setItem(ladder.id()+9 ,item);	
+                this.leaderboardInventory.setItem(ladder.id()+11 ,item);	
         	}
         }
         ItemStack item = ItemSerializer.serialize(new ItemStack(Material.BAKED_POTATO), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Top " + ChatColor.AQUA + "Global" + ChatColor.GRAY + " * ");
@@ -86,7 +86,7 @@ public class UtilsInventory {
             Top global_top = Practice.getInstance().getRegisterObject().getLeaderboard().getGlobal();
             for (Ladders ladder : Practice.getInstance().getLadder()) {
             	if (ladder.isRanked()) {
-                    ItemStack current = this.leaderboardInventory.getItem(ladder.id() + 9);
+                    ItemStack current = this.leaderboardInventory.getItem(ladder.id() + 11);
                     ItemMeta meta = current.getItemMeta();
 
                     meta.setLore(top[ladder.id()].getLore());

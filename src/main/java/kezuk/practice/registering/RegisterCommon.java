@@ -17,6 +17,7 @@ import kezuk.practice.core.staff.command.ModCommand;
 import kezuk.practice.core.staff.command.MuteCommand;
 import kezuk.practice.core.staff.listener.StaffListeners;
 import kezuk.practice.core.tag.inventory.listener.TagInventoryListener;
+import kezuk.practice.core.tip.TipSchedule;
 import kezuk.practice.event.command.JoinCommand;
 import kezuk.practice.event.host.items.listener.HostInteractItemListener;
 import kezuk.practice.event.inventory.listener.JoinInventoryListener;
@@ -73,13 +74,14 @@ public class RegisterCommon {
 		this.oitcFifthLocation = new Location(Bukkit.getWorld("world"), 3531.695D, 84.0D, 3471.675D, -31.2f, 12.6f);
 		this.oitcSixthLocation = new Location(Bukkit.getWorld("world"), 3500.342D, 72.0D, 3494.811D, 179.0f, -6.9f);
 		this.oitcSeventhLocation = new Location(Bukkit.getWorld("world"), 3446.674D, 84.0D, 3419.450D, -26.0f, -3.4f);
-		this.topOneLoc = new Location(Bukkit.getWorld("world"), 112.589, 125.00000, 6.498, -90.5f, 11.0f);
+		this.topOneLoc = new Location(Bukkit.getWorld("world"), 112.508D, 125.00000D, 6.461D, -90.6f, 8.7f);
 		this.topSecondLoc = new Location(Bukkit.getWorld("world"), 113.594D, 125.00000, 10.392D, 145.9f, 6.8f);
-		this.topThirdLoc = new Location(Bukkit.getWorld("world"), 113.624D, 125.00000D, 2.639D, -48.1f, 9.7f);
+		this.topThirdLoc = new Location(Bukkit.getWorld("world"), 113.474D, 125.00000D, 2.526D, -88.9f, 4.3f);
 		this.topNPC = Arrays.asList(this.topOneLoc, this.topSecondLoc, this.topThirdLoc);
 		this.oitcLocations = Arrays.asList(this.oitcFirstLocation, this.oitcSecondLocation, this.oitcThirdLocation, this.oitcFourthLocation, this.oitcFifthLocation, this.oitcSixthLocation, this.oitcSeventhLocation);
 		this.registerCommand();
 		this.registerListener();
+		new TipSchedule();
 	}
 
 	private void registerListener() {

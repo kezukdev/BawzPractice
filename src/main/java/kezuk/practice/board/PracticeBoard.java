@@ -27,7 +27,7 @@ import kezuk.practice.utils.GameUtils;
 public class PracticeBoard implements BoardAdapter
 {
     private final Practice plugin;
-    private String spacer = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "»--*---------*--«";
+    private String spacer = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "»---*-------*---«";
     DateFormat shortDateFormat = DateFormat.getDateTimeInstance(
             DateFormat.SHORT,
             DateFormat.SHORT);
@@ -38,7 +38,7 @@ public class PracticeBoard implements BoardAdapter
     
     @Override
     public String getTitle(final Player player) {
-        return "§3§opractice";
+        return "§3§opractice  ";
     }
     
     @Override
@@ -76,7 +76,7 @@ public class PracticeBoard implements BoardAdapter
             board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
         }
         for (UUID uuid : match.getSecondList()) {
-            board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
+            board.add(ChatColor.RED + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
         }
         board.add(spacer);
         board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));

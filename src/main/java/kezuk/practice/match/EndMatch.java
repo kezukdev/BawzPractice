@@ -102,6 +102,7 @@ public class EndMatch {
             }
             if(!kill) {
             	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "The fight is finished with a disconnection of the opponent!");
+            	allPlayers.remove(killed);
             }
             if (match.getPlayers() != null && Practice.getInstance().getRegisterCollections().getProfile().get(uuid2).getGlobalState() != GlobalState.EVENT) {
                 player.sendMessage(ChatColor.DARK_AQUA + Bukkit.getServer().getPlayer(killer).getName() + ChatColor.AQUA + " won the ffa match!");

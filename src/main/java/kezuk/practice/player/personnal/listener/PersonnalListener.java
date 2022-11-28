@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import co.aikar.idb.DB;
 import kezuk.practice.Practice;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.state.GlobalState;
@@ -33,14 +34,17 @@ public class PersonnalListener implements Listener {
 			if (event.getCurrentItem().getType().equals(Material.PAINTING)) {
 				profile.getPlayerCache().setScoreboard(profile.getPlayerCache().isScoreboard() ? false : true);
 				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+				DB.executeUpdateAsync("UPDATE playersdata SET scoreboard=? WHERE name=?", Boolean.toString(profile.getPlayerCache().isScoreboard()) , event.getWhoClicked().getName());
 			}
 			if (event.getCurrentItem().getType().equals(Material.PAPER)) {
 				profile.getPlayerCache().setPm(profile.getPlayerCache().isPm() ? false : true);
 				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+				DB.executeUpdateAsync("UPDATE playersdata SET pm=? WHERE name=?", Boolean.toString(profile.getPlayerCache().isPm()) , event.getWhoClicked().getName());
 			}
 			if (event.getCurrentItem().getType().equals(Material.IRON_SWORD)) {
 				profile.getPlayerCache().setDuel(profile.getPlayerCache().isDuel() ? false : true);
 				profile.getPlayerCache().getSettings().setPreviewSettings(event.getWhoClicked().getUniqueId());
+				DB.executeUpdateAsync("UPDATE playersdata SET duel=? WHERE name=?", Boolean.toString(profile.getPlayerCache().isDuel()) , event.getWhoClicked().getName());
 			}
 		}
 	}

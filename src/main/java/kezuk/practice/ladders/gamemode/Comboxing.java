@@ -48,7 +48,7 @@ public class Comboxing extends Ladders implements Kit {
 
     @Override
     public int id() {
-        return 4;
+        return 6;
     }
 
     @Override
