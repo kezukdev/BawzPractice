@@ -31,7 +31,6 @@ public class PlayerCache {
 	private boolean scoreboard;
 	private boolean pm;
 	private boolean duel;
-	private StatisticsInventory statsInv;
 	private SettingsInventory settings;
 	
 	public PlayerCache(final UUID uuid) {
@@ -42,7 +41,6 @@ public class PlayerCache {
 		this.scoreboard = true;
 		this.pm = true;
 		this.duel = true;
-		this.statsInv = new StatisticsInventory(uuid);
 		this.settings = new SettingsInventory();
 		if (Bukkit.getPlayer(uuid).hasPermission("bawz.moderation")) {
 			this.staffCache = new StaffCache(uuid);
@@ -57,10 +55,6 @@ public class PlayerCache {
 			e.printStackTrace();
 		}
 		return muteExpiresOn;
-	}
-	
-	public StatisticsInventory getStatsInv() {
-		return statsInv;
 	}
 	
 	public SettingsInventory getSettings() {

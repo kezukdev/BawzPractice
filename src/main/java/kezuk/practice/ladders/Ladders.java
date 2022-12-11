@@ -31,5 +31,10 @@ public abstract class Ladders {
     {
         return Practice.getInstance().getLadder().stream().filter(ladder -> ladder.displayName().equals(displayName)).findFirst().orElse(null);
     }
+    
+    public static Ladders getLadderByID(Integer id)
+    {
+        return Practice.getInstance().getLadder().stream().filter(ladder -> ladder.id() == id).findFirst().orElse(null);
+    }
 
 }

@@ -53,7 +53,7 @@ public class TagInventoryListener implements Listener {
             	pm.setTag(tag);
             	event.getWhoClicked().closeInventory();
             	final Player player = (Player) event.getWhoClicked();
-            	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You've been set the " + ChatColor.AQUA + tag.getDisplay() + ChatColor.DARK_AQUA + " tag!");
+            	player.sendMessage(ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "You've been set the " + ChatColor.AQUA + tag.getName() + ChatColor.DARK_AQUA + " tag!");
             	DB.executeUpdateAsync("UPDATE playersdata SET tag=? WHERE name=?", ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()), player.getName());	
             	event.setCancelled(true);
         	}

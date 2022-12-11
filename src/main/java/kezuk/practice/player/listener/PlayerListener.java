@@ -2,7 +2,10 @@ package kezuk.practice.player.listener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,6 +30,7 @@ import org.bukkit.potion.PotionEffect;
 import kezuk.practice.Practice;
 import kezuk.practice.core.rank.Rank;
 import kezuk.practice.core.tag.Tag;
+import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.Profile;
 import kezuk.practice.player.items.SpawnItems;
 import kezuk.practice.player.state.GlobalState;
@@ -100,6 +104,18 @@ public class PlayerListener implements Listener {
 			}
 			if (event.getItem().getType().equals(Material.BOOK) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.getPlayer().openInventory(Practice.getInstance().getRegisterObject().getUtilsInventory().getUtilsInventory());
+			}
+			if (event.getItem().getType().equals(Material.PAPER)) {
+				if (event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					if (event.getPlayer().isSneaking()) {
+				        IntStream intStream = Arrays.stream(profile.getHistoric().getMostPlayed());
+				        OptionalInt optionalInt = intStream.max();
+				        int maxAsInt = optionalInt.getAsInt();
+						Practice.getInstance().getRegisterObject().getQueueSystem().addPlayerToQueue(Arrays.asList(event.getPlayer().getUniqueId()), Ladders.getLadderByID(maxAsInt), profile.getHistoric().getRanked(), false);
+						return;
+					}
+					Practice.getInstance().getRegisterObject().getQueueSystem().addPlayerToQueue(Arrays.asList(event.getPlayer().getUniqueId()), Ladders.getLadder(profile.getHistoric().getLastPlayedLadder()), profile.getHistoric().getRanked(), false);
+				}
 			}
 			event.setCancelled(true);
 		}

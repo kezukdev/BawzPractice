@@ -9,6 +9,7 @@ public class MatchStats {
     private int longestCombo;
     private int thrownPotions;
     private int round;
+    private boolean winner;
     private UUID lastAttacker;
 	private Long enderpearlCooldown;
 	private Long nextHitTick;
@@ -33,7 +34,16 @@ public class MatchStats {
         this.thrownPotions = 0;
 		this.removeEnderPearlCooldown();
 		this.nextHitTick = 0L;
+		this.winner = false;
     }
+    
+    public void setWinner(boolean winner) {
+		this.winner = winner;
+	}
+    
+    public boolean isWinner() {
+		return winner;
+	}
     
     public void setLastAttacker(UUID lastAttacker) {
 		this.lastAttacker = lastAttacker;

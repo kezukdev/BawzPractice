@@ -26,7 +26,7 @@ public class EloRange {
 	public EloRange(final UUID uuid, Ladders ladder) {
 		final int elo = Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[ladder.id()];
 		this.range(elo-60, elo+60);
-		if (Practice.getInstance().getRegisterObject().getQueueSystem().getEloRange().size() >= 1) {
+		if (Practice.getInstance().getRegisterObject().getQueueSystem().getEloRange().size() > 0) {
 			this.searchOpponent(uuid);
 		}
 		this.uuid = uuid;

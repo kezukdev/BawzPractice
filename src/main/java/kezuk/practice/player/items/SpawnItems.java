@@ -25,7 +25,7 @@ public class SpawnItems {
         final ItemStack queue = ItemSerializer.serialize(new ItemStack(Material.ANVIL),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Queue Selector", null, true);
         final ItemStack utils = ItemSerializer.serialize(new ItemStack(Material.BOOK),(short) 0, ChatColor.GRAY + "» " + ChatColor.AQUA + "Utils", null, true);
         final ItemStack personnal = ItemSerializer.serialize(new ItemStack(Material.WATCH),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Personnal Management", null, true);
-        final ItemStack rematch = ItemSerializer.serialize(new ItemStack(Material.WATCH),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Re-queue", Arrays.asList("", ChatColor.DARK_GRAY + "(Shift-Click) To playing again in your most played mode"),true);
+        final ItemStack rematch = ItemSerializer.serialize(new ItemStack(Material.PAPER),(short) 0, ChatColor.GRAY + "» " + ChatColor.DARK_AQUA + "Re-queue", Arrays.asList("", ChatColor.DARK_GRAY + "(Shift-Click) To playing again in your most played mode"),true);
         player.getInventory().clear();
         player.getInventory().setItem(2, personnal);
         player.getInventory().setItem(4, queue);

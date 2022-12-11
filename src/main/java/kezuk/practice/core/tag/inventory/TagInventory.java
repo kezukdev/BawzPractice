@@ -48,7 +48,7 @@ public class TagInventory {
 		this.tagClassicInventory.clear();
 		for (Tag tag : Tag.values()) {
 			if (tag.getTagType().equals(TagType.CLASSIC)) {
-	    		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getDisplay());
+	    		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getName());
         		this.tagClassicInventory.addItem(item);
 			}
 		}
@@ -58,7 +58,7 @@ public class TagInventory {
 		this.tagJapanInventory.clear();
 		for (Tag tag : Tag.values()) {
 			if (tag.getTagType().equals(TagType.JAPAN)) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getDisplay());
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getName());
         		this.tagJapanInventory.addItem(item);
 			}
 		}
@@ -68,7 +68,7 @@ public class TagInventory {
 		this.tagRegionInventory.clear();
 		for (Tag tag : Tag.values()) {
 			if (tag.getTagType().equals(TagType.REGION)) {
-        		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getDisplay());
+        		final ItemStack item = ItemSerializer.serialize(new ItemStack(tag.getIcon()), (short)0, tag.getColor() + tag.getName());
         		this.tagRegionInventory.addItem(item);
 			}
 		}

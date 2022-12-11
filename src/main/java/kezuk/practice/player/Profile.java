@@ -22,6 +22,7 @@ import kezuk.practice.ladders.Ladders;
 import kezuk.practice.player.cache.StatisticsCache;
 import kezuk.practice.player.cache.PlayerCache;
 import kezuk.practice.player.personnal.PersonnalInventory;
+import kezuk.practice.player.personnal.subinventory.StatisticsInventory;
 import kezuk.practice.player.state.GlobalState;
 import kezuk.practice.player.state.SubState;
 import kezuk.practice.request.Requesting.Request;
@@ -45,6 +46,7 @@ public class Profile {
 	private Editor editor;
 	private HashMap<UUID, PermissionAttachment> permissible;
 	private PersonnalInventory personnalInventory;
+	private StatisticsInventory stats;
 	
 	public Profile(final UUID uuid) {
 		this.uuid = uuid;
@@ -58,11 +60,18 @@ public class Profile {
 			}
 		}
 		this.historic = new StatisticsCache();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+			if (!ladder.privateGame()) {
+				this.historic.mostPlayed = new int[ladder.id()];	
+			}
+		}
         for(int i = 0; i <= elos.length-1; i++) elos[i] = 1200;
+        for(int i = 0; i <= historic.mostPlayed.length-1; i++) historic.mostPlayed[i] = 0;
         this.permissible = Maps.newHashMap(); 
         Practice.getInstance().getRegisterCollections().getProfile().putIfAbsent(uuid, this);
         this.update();
         this.personnalInventory = new PersonnalInventory(Bukkit.getPlayer(uuid));
+        this.stats = new StatisticsInventory(uuid);
         NPCUtils.showNPCtoPlayer(uuid);
 	}
     
@@ -81,6 +90,10 @@ public class Profile {
 		return personnalInventory;
 	}
     
+    public StatisticsInventory getStats() {
+		return stats;
+	}
+    
     private void load() {
     	try {
         	Calendar calendar = Calendar.getInstance();
@@ -88,6 +101,13 @@ public class Profile {
         	this.setRank(Rank.getRankByName(DB.getFirstRow("SELECT rank FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("rank")));
             this.registerPermissions();
     		this.playerCache = new PlayerCache(uuid);
+    		this.historic.setLastPlayedLadder(DB.getFirstRow("SELECT lastLadder FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("lastLadder"));
+    		this.historic.setAgainst(DB.getFirstRow("SELECT lastOpponent FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("lastOpponent"));
+    		this.historic.setRankedPlayed(DB.getFirstRow("SELECT rankedPlayed FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getInt("rankedPlayed"));
+    		this.historic.setRankedWin(DB.getFirstRow("SELECT rankedWin FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getInt("rankedWin"));
+    		this.historic.setUnrankedPlayed(DB.getFirstRow("SELECT unrankedPlayed FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getInt("unrankedPlayed"));
+    		this.historic.setUnrankedWin(DB.getFirstRow("SELECT unrankedWin FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getInt("unrankedWin"));
+    		this.historic.setRanked(Boolean.valueOf(DB.getFirstRow("SELECT lastRanked FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("lastRanked")));
     		this.playerCache.setScoreboard(Boolean.valueOf(DB.getFirstRow("SELECT scoreboard FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("scoreboard")));
     		this.playerCache.setPm(Boolean.valueOf(DB.getFirstRow("SELECT pm FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("pm")));
     		this.playerCache.setDuel(Boolean.valueOf(DB.getFirstRow("SELECT duel FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("duel")));
@@ -130,6 +150,7 @@ public class Profile {
         	}
         	this.setTag(Tag.getTagByName(DB.getFirstRow("SELECT tag FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("tag")));
             this.elos = getSplitValue(DB.getFirstRow("SELECT elos FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("elos"), ":");
+            this.historic.mostPlayed = getSplitValue(DB.getFirstRow("SELECT mostPlayed FROM playersdata WHERE name=?", Bukkit.getServer().getPlayer(uuid).getName()).getString("mostPlayed"), ":");
         	editor = new Editor(uuid);
             editor.load();
             Bukkit.getPlayer(uuid).sendMessage(ChatColor.GRAY + " * " + ChatColor.AQUA + "All of your data has been loaded!");

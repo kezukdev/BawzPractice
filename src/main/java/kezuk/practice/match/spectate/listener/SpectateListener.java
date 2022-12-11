@@ -25,7 +25,7 @@ public class SpectateListener implements Listener {
 		if(!event.hasItem()) return;
 		if (profile.getGlobalState().equals(GlobalState.SPECTATE) && event.getItem().getType().equals(Material.BLAZE_POWDER) && event.getAction().equals(Action.RIGHT_CLICK_AIR) ^ event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			GameUtils.getMatchManagerBySpectator(event.getPlayer().getUniqueId()).getSpectator().remove(event.getPlayer().getUniqueId());
-    		new SpawnItems(event.getPlayer().getUniqueId(), true);
+    		new SpawnItems(event.getPlayer().getUniqueId(), false);
     		Bukkit.getPlayer(event.getPlayer().getUniqueId()).teleport(Practice.getInstance().getRegisterCommon().getSpawnLocation());
             Practice.getInstance().getRegisterCollections().getProfile().get(event.getPlayer().getUniqueId()).setGlobalState(GlobalState.SPAWN);
     		event.setCancelled(true);

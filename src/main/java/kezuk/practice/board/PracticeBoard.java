@@ -73,10 +73,10 @@ public class PracticeBoard implements BoardAdapter
         board.add(spacer);
         board.add(ChatColor.WHITE + ChatColor.stripColor(match.getLadder().displayName()) + ChatColor.GRAY + " [" + (match.isRanked() ? "§5R" : "§eC") + ChatColor.GRAY + "]");
         for (UUID uuid : match.getFirstList()) {
-            board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
+            board.add(ChatColor.GREEN + Bukkit.getPlayer(uuid).getName() + ChatColor.GRAY + " (" + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()] + ChatColor.GRAY + ")");	
         }
         for (UUID uuid : match.getSecondList()) {
-            board.add(ChatColor.RED + Bukkit.getPlayer(uuid).getName() + ChatColor.WHITE + " elo: " + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()]);	
+            board.add(ChatColor.RED + Bukkit.getPlayer(uuid).getName() + ChatColor.GRAY + " (" + ChatColor.DARK_AQUA + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[match.getLadder().id()] + ChatColor.GRAY + ")");	
         }
         board.add(spacer);
         board.add(ChatColor.GRAY.toString() + "  " + shortDateFormat.format(new Date()));

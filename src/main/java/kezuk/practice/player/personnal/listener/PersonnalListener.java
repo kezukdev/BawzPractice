@@ -28,6 +28,10 @@ public class PersonnalListener implements Listener {
 			if (event.getCurrentItem().getType().equals(Material.DAYLIGHT_DETECTOR)) {
 				event.getWhoClicked().openInventory(profile.getPlayerCache().getSettings().getSettings());
 			}
+			if (event.getCurrentItem().getType().equals(Material.CAULDRON_ITEM)) {
+				profile.getStats().setStatsInventory();
+				event.getWhoClicked().openInventory(profile.getStats().getStats());
+			}
 			event.setCancelled(true);
 		}
 		if (event.getClickedInventory().getName().equalsIgnoreCase(profile.getPlayerCache().getSettings().getSettings().getName()) && profile.getGlobalState().equals(GlobalState.SPAWN)){
