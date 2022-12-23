@@ -40,17 +40,19 @@ public class StatisticsInventory {
 		final String unranked = ChatColor.AQUA + "Win " + ChatColor.GRAY + "(" + ChatColor.WHITE + h.getUnrankedWin() + ChatColor.GRAY + ") │ " + ChatColor.AQUA + "Played " +ChatColor.GRAY + "(" + ChatColor.WHITE + h.getUnrankedPlayed() + ChatColor.GRAY + ")";
 		final ItemStack matchPlayed = ItemSerializer.serialize(new ItemStack(Material.EXP_BOTTLE), (short)0, ChatColor.DARK_GRAY + " » " + ChatColor.DARK_AQUA + "Match Statistics", Arrays.asList("", ChatColor.GRAY + " * " + ChatColor.LIGHT_PURPLE + "Ranked" + ChatColor.GRAY + " * ", ranked, "", ChatColor.GRAY + " * " + ChatColor.YELLOW + "Casual" + ChatColor.GRAY + " * ", unranked));
 		final ItemStack eloStatistics = ItemSerializer.serialize(new ItemStack(Material.FISHING_ROD), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Elo Statistics", null);
-		int[] eloRival = new int[Practice.getInstance().getLadder().size()];
-		try {
-			eloRival = Profile.getSplitValue(DB.getFirstRow("SELECT elos FROM playersdata WHERE name=?", h.getAgainst()).getString("elos"), ":");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (h.getUnrankedPlayed() + h.getRankedPlayed() != 0) {
+			int[] eloRival = new int[Practice.getInstance().getLadder().size()];
+			try {
+				eloRival = Profile.getSplitValue(DB.getFirstRow("SELECT elos FROM playersdata WHERE name=?", h.getAgainst()).getString("elos"), ":");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			final ItemStack lastMatch = ItemSerializer.serialize(new ItemStack(Material.BOOK), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Last Match:", Arrays.asList("", ChatColor.GRAY + " * " + ChatColor.WHITE + " Opponents: " + ChatColor.AQUA + h.getAgainst() + (h.getRanked() ? ChatColor.GRAY + " (" + ChatColor.DARK_AQUA + eloRival[Ladders.getLadder(h.getLastPlayedLadder()).id()] + ChatColor.GRAY + ") ": ""), "    " + this.getLastMatchStats(h.getAgainst(), h.getRanked()), "", ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Ladder" + ChatColor.GRAY + ": " + ChatColor.WHITE + ChatColor.stripColor(h.getLastPlayedLadder())));
+			this.stats.setItem(4, lastMatch);
 		}
-		final ItemStack lastMatch = ItemSerializer.serialize(new ItemStack(Material.BOOK), (short)0, ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Last Match:", Arrays.asList("", ChatColor.GRAY + " * " + ChatColor.WHITE + " Opponents: " + ChatColor.AQUA + h.getAgainst() + (h.getRanked() ? ChatColor.GRAY + " (" + ChatColor.DARK_AQUA + eloRival[Ladders.getLadder(h.getLastPlayedLadder()).id()] + ChatColor.GRAY + ") ": ""), "    " + this.getLastMatchStats(h.getAgainst(), h.getRanked()), "", ChatColor.GRAY + " * " + ChatColor.DARK_AQUA + "Ladder" + ChatColor.GRAY + ": " + ChatColor.WHITE + ChatColor.stripColor(h.getLastPlayedLadder())));
 		this.stats.setItem(0, matchPlayed);
 		this.stats.setItem(1, eloStatistics);
-		this.stats.setItem(4, lastMatch);
 		//final ItemMeta item =this.stats.getItem(1).getItemMeta();
 		//for (Ladders ladder : Practice.getInstance().getLadder()) {
 			//if (ladder.isRanked()) {
