@@ -19,6 +19,8 @@ public class StatisticsCache {
 	private Integer unrankedWin;
 	private Integer rankedWin;
 	public int[] mostPlayed;
+	private Integer hits;
+	private Integer longestCombo;
 	
 	public void setAfterMatch(String ladder, boolean ranked, String opponent, boolean win, final UUID uuid) {
 		this.lastPlayedLadder = ladder;
@@ -46,6 +48,14 @@ public class StatisticsCache {
 			DB.executeUpdateAsync("UPDATE playersdata SET unrankedWin=? WHERE name=?", this.unrankedWin, Bukkit.getServer().getPlayer(uuid).getName());
 		}
 		Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getStats().setStatsInventory();
+	}
+	
+	public Integer getHits() {
+		return hits;
+	}
+	
+	public Integer getLongestCombo() {
+		return longestCombo;
 	}
 	
 	public int[] getMostPlayed() {

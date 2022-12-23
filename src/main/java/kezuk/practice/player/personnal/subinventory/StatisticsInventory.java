@@ -1,8 +1,8 @@
 package kezuk.practice.player.personnal.subinventory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -26,7 +26,7 @@ public class StatisticsInventory {
 
 	private Inventory stats;
 	private UUID uuid;
-	private String[] lore = new String[99];
+	private ArrayList<String> lore = Lists.newArrayList();
 	
 	public StatisticsInventory(final UUID uuid) {
 		this.uuid = uuid;
@@ -52,15 +52,16 @@ public class StatisticsInventory {
 			this.stats.setItem(4, lastMatch);
 		}
 		this.stats.setItem(0, matchPlayed);
+		final ItemMeta item = eloStatistics.getItemMeta();
+		lore.clear();
+		for (Ladders ladder : Practice.getInstance().getLadder()) {
+			if (ladder.isRanked()) {
+				lore.add(ladder.displayName() + ChatColor.WHITE + ": " + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[ladder.id()]);	
+			}
+		}
+		item.setLore(lore);
+		eloStatistics.setItemMeta(item);
 		this.stats.setItem(1, eloStatistics);
-		//final ItemMeta item =this.stats.getItem(1).getItemMeta();
-		//for (Ladders ladder : Practice.getInstance().getLadder()) {
-			//if (ladder.isRanked()) {
-				//lore[ladder.id()] = ladder.displayName() + ChatColor.WHITE + ": " + Practice.getInstance().getRegisterCollections().getProfile().get(uuid).getElos()[ladder.id()];	
-			//}
-		//}
-		//item.setLore(lore);//
-		//this.stats.getItem(1).setItemMeta(item);//
 	}
 	
 	public Inventory getStats() {

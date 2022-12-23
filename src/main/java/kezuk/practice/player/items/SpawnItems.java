@@ -35,6 +35,9 @@ public class SpawnItems {
         	new BukkitRunnable() {
 				@Override
 				public void run() {
+					if (player.getInventory().getItem(0).getType().equals(Material.AIR)) {
+						this.cancel();
+					}
 					if (player.getInventory().getItem(0).getType().equals(Material.PAPER)) {
 						player.getInventory().setItem(0, new ItemStack(Material.AIR));	
 					}
